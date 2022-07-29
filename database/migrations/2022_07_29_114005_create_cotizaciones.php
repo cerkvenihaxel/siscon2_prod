@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEntrantesDetail extends Migration
+class CreateCotizaciones extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateEntrantesDetail extends Migration
      */
     public function up()
     {
-        Schema::create('entrantes_detail', function (Blueprint $table) {
+        Schema::create('cotizaciones', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->softDeletes();
             $table->integer('entrantes_id')->nullable();
             $table->integer('articulos_id')->nullable();
             $table->integer('cantidad')->nullable();
-            
+            $table->double('precio')->nullable();
+            $table->double('total')->nullable();
         });
     }
 
@@ -31,6 +32,6 @@ class CreateEntrantesDetail extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entrantes_detail');
+        Schema::dropIfExists('cotizaciones');
     }
 }
