@@ -39,6 +39,7 @@
 			$this->col[] = ["label"=>"Estado Paciente","name"=>"estado_paciente_id","join"=>"estado_paciente,estado"];
 			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
+			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
@@ -53,6 +54,7 @@
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico'];
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
 			//Solicitud autogenerada por el sistema
 			$columns = [];
 			$columns[] = ['label'=> 'Artículos solicitados', 'name'=>'articulos_id', 'type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large'];
