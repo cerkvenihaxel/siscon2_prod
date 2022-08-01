@@ -17,11 +17,15 @@ class CreateCotizaciones extends Migration
             $table->id();
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('entrantes_id')->nullable();
-            $table->integer('articulos_id')->nullable();
-            $table->integer('cantidad')->nullable();
-            $table->double('precio')->nullable();
-            $table->double('total')->nullable();
+            $table->integer('afiliados_id')->nullable();
+            $table->integer('edad')->nullable();
+            $table->string('nrosolicitud')->nullable();
+            $table->integer('clinicas_id')->nullable();
+            $table->integer('estado_solicitud_id')->nullable();
+            $table->integer('estado_paciente_id')->nullable();
+            $table->date('fecha_cirugia')->nullable();
+            $table->integer('medicos_id')->nullable();
+            $table->string('observaciones')->nullable();
         });
     }
 

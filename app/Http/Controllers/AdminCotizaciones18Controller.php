@@ -5,7 +5,7 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminCotizacionesController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminCotizaciones18Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -30,29 +30,58 @@
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Articulos Id","name"=>"articulos_id","join"=>"articulos,id"];
-			$this->col[] = ["label"=>"Cantidad","name"=>"cantidad"];
-			$this->col[] = ["label"=>"Entrantes Id","name"=>"entrantes_id","join"=>"entrantes,id"];
-			$this->col[] = ["label"=>"Precio","name"=>"precio"];
-			$this->col[] = ["label"=>"Total","name"=>"total"];
+			$this->col[] = ['label'=>'Fecha de carga','name'=>'created_at'];
+			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
+			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
+			$this->col[] = ["label"=>"Edad","name"=>"edad"];
+			$this->col[] = ["label"=>"Nro. Solicitud","name"=>"nrosolicitud"];
+			$this->col[] = ["label"=>"Medico","name"=>"medicos_id","join"=>"medicos,nombremedico"];
+			$this->col[] = ["label"=>"Estado Paciente","name"=>"estado_paciente_id","join"=>"estado_paciente,estado"];
+			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
+			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
+			//$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Articulos Id','name'=>'articulos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'articulos,id'];
-			$this->form[] = ['label'=>'Cantidad','name'=>'cantidad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Entrantes Id','name'=>'entrantes_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'entrantes,id'];
-			$this->form[] = ['label'=>'Precio','name'=>'precio','type'=>'money','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Total','name'=>'total','type'=>'money','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			# END FORM DO NOT REMOVE THIS LINE
+			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true];
+			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre'];
+			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado'];
+			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>2];
+			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico'];
+			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
+			//Solicitud autogenerada por el sistema
+
+			$columns=[];
+			$columns[] = ['label'=>'Artículos','name'=>'articulos_id','type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large'];
+			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0'];
+			$columns[] = ['label'=> 'Garantía (meses)', 'name'=>'garantia', 'type'=>'number', 'validation'=>'required|string|min:5|max:5000'];
+			
+			$columns[] = ['label'=> 'Precio', 'name'=>'precio', 'type'=>'number', 'validation'=>'required|integer|min:0'];
+
+			$columns[] = ['label'=>'Procendencia', 'name'=>'procedencias_id', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'procedencias,procedencia'];
+			$columns[] =['label'=>'Marca', 'name'=>'marcas_id', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'marcas,des_marca'];
+
+			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizaciones_detail', 'type'=>'child','table'=>'cotizaciones_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
+
+			$this->form[] = ['label'=>'Total','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ["label"=>"Articulos Id","name"=>"articulos_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"articulos,id"];
-			//$this->form[] = ["label"=>"Cantidad","name"=>"cantidad","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Entrantes Id","name"=>"entrantes_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"entrantes,id"];
-			//$this->form[] = ["label"=>"Precio","name"=>"precio","type"=>"money","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Total","name"=>"total","type"=>"money","required"=>TRUE,"validation"=>"required|integer|min:0"];
+			//$this->form[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"afiliados,id"];
+			//$this->form[] = ["label"=>"Clinicas Id","name"=>"clinicas_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"clinicas,id"];
+			//$this->form[] = ["label"=>"Edad","name"=>"edad","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
+			//$this->form[] = ["label"=>"Estado Paciente Id","name"=>"estado_paciente_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"estado_paciente,id"];
+			//$this->form[] = ["label"=>"Estado Solicitud Id","name"=>"estado_solicitud_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"estado_solicitud,id"];
+			//$this->form[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia","type"=>"date","required"=>TRUE,"validation"=>"required|date"];
+			//$this->form[] = ["label"=>"Medicos Id","name"=>"medicos_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"medicos,id"];
+			//$this->form[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Observaciones","name"=>"observaciones","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			# OLD END FORM
 
 			/* 
@@ -152,7 +181,18 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = NULL;
+	        $this->script_js = "$(function(){
+				setInterval(function(){
+					var total = 0;
+				$('#table-detallesdelasolicitud tbody .precio').each(function(){
+					var amount += parseInt($(this).text());
+					total += amount;
+				});
+				$('#obvservaciones').text(total);
+				}, 500);
+})
+";
+
 
 
             /*

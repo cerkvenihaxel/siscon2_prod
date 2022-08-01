@@ -11,7 +11,7 @@
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
-			$this->limit = "20";
+			$this->limit = "30";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
 			$this->button_table_action = true;
@@ -44,7 +44,7 @@
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamodal_size'=>'large'];
+			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true];
 			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre'];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
@@ -55,6 +55,8 @@
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
+			
+
 			//Solicitud autogenerada por el sistema
 			$columns = [];
 			$columns[] = ['label'=> 'Artículos solicitados', 'name'=>'articulos_id', 'type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large'];
@@ -91,7 +93,6 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-			$this->sub_module[] = ['label'=>'Cotizacion', 'name'=>'cotizaciones','path'=>'cotizaciones','parent_columns'=>'afiliados_id,edad,tel_afiliado,clinicas_id,medicos_id,tel_medico','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-cart-plus']; 
 
 
 	        /* 
@@ -107,6 +108,7 @@
 	        */
 	        $this->addaction = array();
 
+			
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -119,6 +121,8 @@
 	        | 
 	        */
 	        $this->button_selected = array();
+			$this->button_selected[] = ['label'=>'Activar','icon'=>'fa fa-check','name'=>'set_active'];
+
 
 	                
 	        /* 
@@ -154,7 +158,13 @@
 	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.        
 	        | 
 	        */
-	        $this->table_row_color = array();     	          
+	        $this->table_row_color = array();
+			$this->table_row_color[] = ['condition'=>"[necesidad]==1","color"=>"danger"];
+			$this->table_row_color[] = ['condition'=>"[necesidad]==2","color"=>"warning"];
+			$this->table_row_color[] = ['condition'=>"[necesidad]==3","color"=>"info"];
+
+
+
 
 	        
 	        /*
@@ -165,6 +175,8 @@
 	        |
 	        */
 	        $this->index_statistic = array();
+			//$this->index_statistic[] = ['label'=>'Data Total','count'=>DB::table('entrantes')->count(),'icon'=>'fa fa-check','color'=>'success'];
+
 
 
 
@@ -187,7 +199,7 @@
 	        | $this->pre_index_html = "<p>test</p>";
 	        |
 	        */
-	        $this->pre_index_html = null;
+	        $this->pre_index_html = NULL;
 	        
 	        
 	        
@@ -249,8 +261,12 @@
 	    | @button_name = the name of button
 	    |
 	    */
+	    
 	    public function actionButtonSelected($id_selected,$button_name) {
-	        //Your code here
+	        
+			if($button_name == 'set_active') {
+				DB::table('entrantes')->whereIn('id',$id_selected)->update(['estado_solicitud_id'=>3]);
+			  }
 	            
 	    }
 
@@ -312,7 +328,22 @@
 	    public function hook_before_edit(&$postdata,$id) {        
 	        //Your code here
 
+
+
 	    }
+
+	/*	public function getAdd() {
+  //Create an Auth
+  if(!CRUDBooster::isCreate() && $this->global_privilege==FALSE || $this->button_add==FALSE) {    
+    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+  }
+  
+  $data = [];
+  $data['page_title'] = 'Add Data';
+  
+  //Please use view method instead view method from laravel
+  return $this->view('custom_add_view',$data);
+}*/
 
 	    /* 
 	    | ---------------------------------------------------------------------- 
