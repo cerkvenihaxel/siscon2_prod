@@ -40,6 +40,7 @@
 			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
 			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
+			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"articulos,grupo"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
@@ -55,12 +56,12 @@
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
-			
+			$this->form[] = ['label'=>'Grupo articulos', 'name'=>'grupo_articulos', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'articulos,grupo'];
 
 			//Solicitud autogenerada por el sistema
 			$columns = [];
 			$columns[] = ['label'=> 'Artículos solicitados', 'name'=>'articulos_id', 'type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_select_to'=>'grupo:grupo','datamodal_size'=>'large'];
-			$columns[] = ['label'=> 'Grupo', 'name'=>'grupo', 'type'=>'text', 'validation'=>'required|integer|min:0', 'disabled'=>'disabled', 'width'=>'col-sm-10'];		
+			//$columns[] = ['label'=> 'Grupo', 'name'=>'grupo', 'type'=>'text', 'validation'=>'required|integer|min:0', 'disabled'=>'disabled', 'width'=>'col-sm-10'];		
 			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0'];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'entrantes_detail', 'type'=>'child','table'=>'entrantes_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
@@ -94,8 +95,7 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-
-
+			$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones18/detail/[id]','foreign_key'=>'afiliados_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 	        /* 
 	        | ---------------------------------------------------------------------- 
 	        | Add More Action Button / Menu
@@ -304,6 +304,7 @@
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
 			$postdata['estado_solicitud_id']=1;
+
 	    }
 
 	    /* 
@@ -315,7 +316,6 @@
 	    */
 	    public function hook_after_add($id) {        
 	        //Your code here
-
 	    }
 
 	    /* 
@@ -333,19 +333,7 @@
 
 	    }
 
-	/*	public function getAdd() {
-  //Create an Auth
-  if(!CRUDBooster::isCreate() && $this->global_privilege==FALSE || $this->button_add==FALSE) {    
-    CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
-  }
-  
-  $data = [];
-  $data['page_title'] = 'Add Data';
-  
-  //Please use view method instead view method from laravel
-  return $this->view('custom_add_view',$data);
-}*/
-
+	
 	    /* 
 	    | ---------------------------------------------------------------------- 
 	    | Hook for execute command after edit public static function called
@@ -383,8 +371,5 @@
 	    }
 
 
-
+		}
 	    //By the way, you can still create your own method in here... :) 
-
-
-	}

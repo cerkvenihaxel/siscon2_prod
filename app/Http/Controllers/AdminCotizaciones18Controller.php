@@ -58,14 +58,15 @@
 			//Solicitud autogenerada por el sistema
 
 			$columns=[];
-			$columns[] = ['label'=>'Artículos','name'=>'articulos_id','type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large'];
+			$columns[] = ['label'=>'Artículos','name'=>'articulos_id','type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large','datamodal_select_to'=>'marca:mar'];
 			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0'];
 			$columns[] = ['label'=> 'Garantía (meses)', 'name'=>'garantia', 'type'=>'number', 'validation'=>'required|string|min:5|max:5000'];
 			
 			$columns[] = ['label'=> 'Precio', 'name'=>'precio', 'type'=>'number', 'validation'=>'required|integer|min:0'];
 
 			$columns[] = ['label'=>'Procendencia', 'name'=>'procedencias_id', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'procedencias,procedencia'];
-			$columns[] =['label'=>'Marca', 'name'=>'marcas_id', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'marcas,des_marca'];
+			
+			//$columns[] =['label'=>'Marca', 'name'=>'marca', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10',];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizaciones_detail', 'type'=>'child','table'=>'cotizaciones_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
 
@@ -111,7 +112,6 @@
 	        | 
 	        */
 	        $this->addaction = array();
-
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -256,7 +256,34 @@
 	        
 	    }
 
+		// public function getAdd() {
+		// 	//Create an Auth
+		// 	if(!CRUDBooster::isCreate() && $this->global_privilege==FALSE || $this->button_add==FALSE) {    
+		// 	  CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+		// 	}
+			
+		// 	$data = [];
+		// 	$data['page_title'] = 'Add Data';
+		// 	$data['row'] = DB::table('entrantes')->where('id',$id);
+		// 	//Please use cbView method instead view method from laravel
+		// 	return view('custom_add_view',$data);
+		//   }
 
+		  public function getDetail($id) {
+			//Create an Auth
+			if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {    
+			  CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+			}
+			
+			$data = [];
+			$data['page_title'] = 'Detail Data';
+			$data['visitor'] = DB::table('entrantes')->where('id', $id)->get();
+			
+			//Please use cbView method instead view method from laravel
+			return view('custom_add_view',$data);
+		  }
+	
+	
 	    /*
 	    | ---------------------------------------------------------------------- 
 	    | Hook for button selected
@@ -302,7 +329,6 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
-
 	    }
 
 	    /* 
