@@ -46,17 +46,17 @@
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true];
-			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre'];
-			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado'];
-			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>1];
-			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico'];
-			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
-			$this->form[] = ['label'=>'Grupo articulos', 'name'=>'grupo_articulos', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'articulos,grupo'];
+			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre','required'=>true];
+			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado','required'=>true];
+			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>1,'required'=>true];
+			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true];
+			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad','required'=>true];
+			$this->form[] = ['label'=>'Grupo articulos', 'name'=>'grupo_articulos', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'articulos,grupo','required'=>true];
 
 			//Solicitud autogenerada por el sistema
 			$columns = [];
@@ -95,7 +95,7 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-			$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones18/detail/[id]','foreign_key'=>'afiliados_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+			$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones18/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 	        /* 
 	        | ---------------------------------------------------------------------- 
 	        | Add More Action Button / Menu
@@ -369,6 +369,8 @@
 	        //Your code here
 
 	    }
+
+
 
 
 		}

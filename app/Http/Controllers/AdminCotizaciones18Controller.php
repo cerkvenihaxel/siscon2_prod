@@ -42,22 +42,27 @@
 			//$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
+			$url = $_GET['id'];
+			$custom_element = view('articulosEntrantes')->render();
+
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true];
-			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre'];
-			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado'];
+			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true, 'value'=>DB::table('entrantes')->where('id',$url)->value('afiliados_id'),'disabled'=>'disabled'	];
+			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>DB::table('entrantes')->where('id',$url)->value('clinicas_id'), 'disabled'=>'disabled'];
+			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('edad'), 'readonly'=>true];
+			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('tel_afiliado'),'readonly'=>true];
+			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado', 'value'=>DB::table('entrantes')->where('id',$url)->value('estado_paciente_id'),'disabled'=>'disabled'];
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>2];
-			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico'];
-			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('fecha_cirugia')];
+			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('entrantes')->where('id',$url)->value('medicos_id'),'disabled'=>'disabled'];
+			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('tel_medico'),'readonly'=>true];
+			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('nrosolicitud'), 'readonly'=>true];
+			
+			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 			//$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
 			//Solicitud autogenerada por el sistema
 
-			$columns=[];
+			
 			$columns[] = ['label'=>'Artículos','name'=>'articulos_id','type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large','datamodal_select_to'=>'marca:mar'];
 			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0'];
 			$columns[] = ['label'=> 'Garantía (meses)', 'name'=>'garantia', 'type'=>'number', 'validation'=>'required|string|min:5|max:5000'];
@@ -68,7 +73,12 @@
 			
 			//$columns[] =['label'=>'Marca', 'name'=>'marca', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10',];
 
-			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizaciones_detail', 'type'=>'child','table'=>'cotizaciones_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
+
+
+
+			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizaciones_detail', 'type'=>'child','table'=>'cotizaciones_detail', 'columns'=>$columns, 'width'=>'col-sm-10'];
+
+
 
 			$this->form[] = ['label'=>'Total','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 
@@ -181,16 +191,9 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = "$(function(){
-				setInterval(function(){
-					var total = 0;
-				$('#table-detallesdelasolicitud tbody .precio').each(function(){
-					var amount += parseInt($(this).text());
-					total += amount;
-				});
-				$('#obvservaciones').text(total);
-				}, 500);
-})
+	        $this->script_js = "
+			
+
 ";
 
 
@@ -256,7 +259,7 @@
 	        
 	    }
 
-		// public function getAdd() {
+		// public function getAdd($id) {
 		// 	//Create an Auth
 		// 	if(!CRUDBooster::isCreate() && $this->global_privilege==FALSE || $this->button_add==FALSE) {    
 		// 	  CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
@@ -269,19 +272,19 @@
 		// 	return view('custom_add_view',$data);
 		//   }
 
-		  public function getDetail($id) {
-			//Create an Auth
-			if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {    
-			  CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
-			}
+		//   public function getDetail($id) {
+		// 	//Create an Auth
+		// 	if(!CRUDBooster::isRead() && $this->global_privilege==FALSE || $this->button_edit==FALSE) {    
+		// 	  CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+		// 	}
 			
-			$data = [];
-			$data['page_title'] = 'Detail Data';
-			$data['visitor'] = DB::table('entrantes')->where('id', $id)->get();
+		// 	$data = [];
+		// 	$data['page_title'] = 'Detail Data';
+		// 	$data['visitor'] = DB::table('entrantes')->where('id', $id)->get();
 			
-			//Please use cbView method instead view method from laravel
-			return view('custom_add_view',$data);
-		  }
+		// 	//Please use cbView method instead view method from laravel
+		// 	return view('custom_add_view',$data);
+		//   }
 	
 	
 	    /*
@@ -327,9 +330,13 @@
 	    | @arr
 	    |
 	    */
-	    public function hook_before_add(&$postdata) {        
-	        //Your code here
-	    }
+	    public function hook_before_add(&$postdata) {      
+				//Your code here
+				$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
+			$postdata['medicos_id'] = DB::table('entrantes')->where('id',$url)->value('medicos_id');
+			$postdata['estado_paciente_id'] = DB::table('entrantes')->where('id',$url)->value('estado_paciente_id');
+
+			}
 
 	    /* 
 	    | ---------------------------------------------------------------------- 
@@ -338,9 +345,9 @@
 	    | @id = last insert id
 	    | 
 	    */
-	    public function hook_after_add($id) {        
+	    public function hook_after_add($postdata) {        
 	        //Your code here
-
+			
 	    }
 
 	    /* 
@@ -391,6 +398,14 @@
 	        //Your code here
 
 	    }
+
+
+		public function countArticles($url){
+			$articles_number = DB::table('entrantes_detail')->where('id', $url)->count();
+			return $articles_number;
+		}
+
+
 
 
 
