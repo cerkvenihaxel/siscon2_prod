@@ -5,7 +5,7 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminCotizacionesController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminEstadoSolicitudController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -25,34 +25,22 @@
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "cotizaciones";
+			$this->table = "estado_solicitud";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Articulos Id","name"=>"articulos_id","join"=>"articulos,id"];
-			$this->col[] = ["label"=>"Cantidad","name"=>"cantidad"];
-			$this->col[] = ["label"=>"Entrantes Id","name"=>"entrantes_id","join"=>"entrantes,id"];
-			$this->col[] = ["label"=>"Precio","name"=>"precio"];
-			$this->col[] = ["label"=>"Total","name"=>"total"];
+			$this->col[] = ["label"=>"Estado","name"=>"estado"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Articulos Id','name'=>'articulos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'articulos,id'];
-			$this->form[] = ['label'=>'Cantidad','name'=>'cantidad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Entrantes Id','name'=>'entrantes_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'entrantes,id'];
-			$this->form[] = ['label'=>'Precio','name'=>'precio','type'=>'money','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Total','name'=>'total','type'=>'money','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Estado','name'=>'estado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ["label"=>"Articulos Id","name"=>"articulos_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"articulos,id"];
-			//$this->form[] = ["label"=>"Cantidad","name"=>"cantidad","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Entrantes Id","name"=>"entrantes_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"entrantes,id"];
-			//$this->form[] = ["label"=>"Precio","name"=>"precio","type"=>"money","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Total","name"=>"total","type"=>"money","required"=>TRUE,"validation"=>"required|integer|min:0"];
+			//$this->form[] = ["label"=>"Estado","name"=>"estado","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			# OLD END FORM
 
 			/* 
