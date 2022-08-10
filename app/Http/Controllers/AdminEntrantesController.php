@@ -11,7 +11,7 @@
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
-			$this->limit = "20";
+			$this->limit = "30";
 			$this->orderby = "id,desc";
 			$this->global_privilege = false;
 			$this->button_table_action = true;
@@ -42,20 +42,28 @@
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
 			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"articulos,grupo"];
+<<<<<<< HEAD
 			$this->col[] = ["label"=> "Usuario Carga", "name"=>"userId"];
 
+=======
+>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
+<<<<<<< HEAD
 			$this->form[]= ['label'=>'Fecha de carga', 'name'=>'created_at','type'=>'datetime','validation'=>'required','width'=>'col-sm-10','required'=>true];
 			//$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,nroAfiliado,documento,sexo,localidad','datamodal_size'=>'large','required'=>true];
 			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamodal_select_to'=>'nroAfiliado:nroAfiliado','datamodal_size'=>'large'];
 			$this->form[] = ['label'=>'Nro de Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+=======
+			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true];
+>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre','required'=>true];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado','required'=>true];
+<<<<<<< HEAD
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true];
@@ -75,6 +83,25 @@
 			//$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'select', 'validation'=>'required|integer|min:0', 'width'=>'col-sm-10', 'datatable'=>'cms_users,name', 'value'=>CRUDBooster::myId(), 'readonly'=>true, 'disabled'=>'disabled'];
 			$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','value'=>CRUDBooster::myName(), 'readonly'=>true];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
+=======
+			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>1,'required'=>true];
+			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true];
+			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad','required'=>true];
+			$this->form[] = ['label'=>'Grupo articulos', 'name'=>'grupo_articulos', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'articulos,grupo','required'=>true];
+
+			//Solicitud autogenerada por el sistema
+			$columns = [];
+			$columns[] = ['label'=> 'Artículos solicitados', 'name'=>'articulos_id', 'type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_select_to'=>'grupo:grupo','datamodal_size'=>'large'];
+			//$columns[] = ['label'=> 'Grupo', 'name'=>'grupo', 'type'=>'text', 'validation'=>'required|integer|min:0', 'disabled'=>'disabled', 'width'=>'col-sm-10'];		
+			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0'];
+
+			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'entrantes_detail', 'type'=>'child','table'=>'entrantes_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
+			
+			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -103,10 +130,14 @@
 	        | 
 	        */
 	        $this->sub_module = array();
+<<<<<<< HEAD
 //	        $this->sub_module[] = ['label'=>'Cotizacion', 'name'=>'cotizaciones19/add','path'=>'cotizaciones19','parent_columns'=>'afiliados_id,edad,tel_afiliado,clinicas_id,medicos_id,tel_medico','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-cart-plus']; 
 	 	$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones19/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 
 
+=======
+			$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones18/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 	        /* 
 	        | ---------------------------------------------------------------------- 
 	        | Add More Action Button / Menu
@@ -119,8 +150,13 @@
 	        | 
 	        */
 	        $this->addaction = array();
+<<<<<<< HEAD
 		$this->addaction[] = ['label'=>'URGENTE','url'=>'#','icon'=>'fa fa-exclamation-triangle','color'=>'danger', 'showIf'=>'[necesidad] == "1"'];
 		$this->addaction[] = ['label'=>'PROGRAMADA','url'=>'#','icon'=>'fa fa-calendar-check-o','color'=>'warning', 'showIf'=>'[necesidad] == "2"'];
+=======
+
+			
+>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -133,6 +169,8 @@
 	        | 
 	        */
 	        $this->button_selected = array();
+			$this->button_selected[] = ['label'=>'Activar','icon'=>'fa fa-check','name'=>'set_active'];
+
 
 	                
 	        /* 
@@ -168,10 +206,21 @@
 	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.        
 	        | 
 	        */
+<<<<<<< HEAD
 	        $this->table_row_color = array();     	          
 			$this->table_row_color[] = ['condition'=>"[necesidad]==1","color"=>"danger"];
 			$this->table_row_color[] = ['condition'=>"[necesidad]==2","color"=>"warning"];
 			$this->table_row_color[] = ['condition'=>"[necesidad]==3","color"=>"info"];
+=======
+	        $this->table_row_color = array();
+			$this->table_row_color[] = ['condition'=>"[necesidad]==1","color"=>"danger"];
+			$this->table_row_color[] = ['condition'=>"[necesidad]==2","color"=>"warning"];
+			$this->table_row_color[] = ['condition'=>"[necesidad]==3","color"=>"info"];
+
+
+
+
+>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 	        
 	        /*
 	        | ---------------------------------------------------------------------- 
@@ -181,6 +230,8 @@
 	        |
 	        */
 	        $this->index_statistic = array();
+			//$this->index_statistic[] = ['label'=>'Data Total','count'=>DB::table('entrantes')->count(),'icon'=>'fa fa-check','color'=>'success'];
+
 
 
 
@@ -203,7 +254,7 @@
 	        | $this->pre_index_html = "<p>test</p>";
 	        |
 	        */
-	        $this->pre_index_html = null;
+	        $this->pre_index_html = NULL;
 	        
 	        
 	        
@@ -265,8 +316,12 @@
 	    | @button_name = the name of button
 	    |
 	    */
+	    
 	    public function actionButtonSelected($id_selected,$button_name) {
-	        //Your code here
+	        
+			if($button_name == 'set_active') {
+				DB::table('entrantes')->whereIn('id',$id_selected)->update(['estado_solicitud_id'=>3]);
+			  }
 	            
 	    }
 
@@ -303,6 +358,7 @@
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
 			$postdata['estado_solicitud_id']=1;
+
 	    }
 
 	    /* 
@@ -314,7 +370,6 @@
 	    */
 	    public function hook_after_add($id) {        
 	        //Your code here
-
 	    }
 
 	    /* 
@@ -328,8 +383,11 @@
 	    public function hook_before_edit(&$postdata,$id) {        
 	        //Your code here
 
+
+
 	    }
 
+	
 	    /* 
 	    | ---------------------------------------------------------------------- 
 	    | Hook for execute command after edit public static function called
@@ -369,7 +427,11 @@
 
 
 
-	    //By the way, you can still create your own method in here... :) 
 
+<<<<<<< HEAD
 
 	}
+=======
+		}
+	    //By the way, you can still create your own method in here... :) 
+>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
