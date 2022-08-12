@@ -5,7 +5,7 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminCotizaciones19Controller extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminAdjudicacionesController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -25,97 +25,48 @@
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "cotizaciones";
+			$this->table = "adjudicaciones";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
-		# START COLUMNS DO NOT REMOVE THIS LINE
+			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ['label'=>'Fecha de carga','name'=>'created_at'];
+			$this->col[] = ["label"=>"Adjudicatario","name"=>"adjudicatario"];
 			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
+
+			//$this->col[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","join"=>"afiliados,id"];
+			$this->col[] = ["label"=>"Archivo","name"=>"archivo"];
+			//$this->col[] = ["label"=>"Clinicas Id","name"=>"clinicas_id","join"=>"clinicas,id"];
 			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
 			$this->col[] = ["label"=>"Edad","name"=>"edad"];
-			$this->col[] = ["label"=>"Nro. Solicitud","name"=>"nrosolicitud"];
-			$this->col[] = ["label"=>"Medico","name"=>"medicos_id","join"=>"medicos,nombremedico"];
 			$this->col[] = ["label"=>"Estado Paciente","name"=>"estado_paciente_id","join"=>"estado_paciente,estado"];
 			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
-			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
-			//$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
-			$this->col[] = ["label"=>"Proveedor", "name"=>"proveedor"];
+//			$this->col[] = ["label"=>"Estado Paciente Id","name"=>"estado_paciente_id","join"=>"estado_paciente,id"];
+//			$this->col[] = ["label"=>"Estado Solicitud Id","name"=>"estado_solicitud_id","join"=>"estado_solicitud,id"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
-
+			
 			$url = $_GET['id'];
-			$custom_element = view('articulosEntrantes')->render();
-			# START FORM DO NOT REMOVE THIS LINE
-
-/*			$this->form = [];
-			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true];
-			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre'];
-			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado'];
-			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>2];
-			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico'];
-			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			//$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
-			//Solicitud autogenerada por el sistema
-
-			$columns=[];
-			$columns[] = ['label'=>'Artículos','name'=>'articulos_id','type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large','datamodal_select_to'=>'marca:marca'];
-			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0'];
-			$columns[] = ['label'=> 'Garantía (meses)', 'name'=>'garantia', 'type'=>'number', 'validation'=>'required|string|min:5|max:5000'];
-			$columns[] = ['label'=> 'Precio', 'name'=>'precio', 'type'=>'number', 'validation'=>'required|integer|min:0'];
-			$columns[] = ['label'=>'Procendencia', 'name'=>'procedencias_id', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'procedencias,procedencia'];
 			
-*/
+# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true, 'value'=>DB::table('entrantes')->where('id',$url)->value('afiliados_id'),'disabled'=>'disabled'	];
-			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>DB::table('entrantes')->where('id',$url)->value('clinicas_id')];
-			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('edad'), 'readonly'=>true];
-			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('tel_afiliado'),'readonly'=>true];
-			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado', 'value'=>DB::table('entrantes')->where('id',$url)->value('estado_paciente_id')];
-			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>2];
-			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('fecha_cirugia')];
-			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('entrantes')->where('id',$url)->value('medicos_id')];
-			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('tel_medico'),'readonly'=>true];
-			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('nrosolicitud'), 'readonly'=>true];
-			
-			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
-			//$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
-			//Solicitud autogenerada por el sistema
+			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true, 'value'=>DB::table('cotizaciones')->where('id',$url)->value('afiliados_id'),'disabled'=>'disabled'	];
+			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('nrosolicitud'), 'readonly'=>true];
+			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('clinicas_id')];
+			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('edad'), 'readonly'=>true];
+//			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('tel_afiliado'),'readonly'=>true];
+			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('estado_paciente_id')];
+			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>3, 'readonly'=>true];
+			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('fecha_cirugia')];
+			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('medicos_id')];
+			$this->form[] = ['label'=>'Nombre proveedor adjudicado','name'=>'adjudicatario','type'=>'text','validation'=>'required|required','width'=>'col-sm-10','value'=>DB::table('cotizaciones')->where('id',$url)->value('proveedor')];
+			$this->form[] = ['label'=>'Archivo', 'name'=>'archivo', 'type'=>'upload', 'validation'=>'max:3000', 'width'=>'col-sm-10', 'help'=>'Archivos soportados : JPG, JPEG, PNG, GIF, BMP'];
+			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			# END FORM DO NOT REMOVE THIS LINE
 
-			
-			$columns[] = ['label'=>'Artículos','name'=>'articulos_id','type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large','datamodal_select_to'=>'marca:mar'];
-			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0'];
-			$columns[] = ['label'=> 'Garantía (meses)', 'name'=>'garantia', 'type'=>'number', 'validation'=>'required|string|min:5|max:5000'];
-			
-			$columns[] = ['label'=> 'Precio', 'name'=>'precio', 'type'=>'text', 'validation'=>'required'];
-
-			$columns[] = ['label'=>'Procendencia', 'name'=>'procedencias_id', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'procedencias,procedencia'];
-			$columns[] =['label'=>'Marca', 'name'=>'marca', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10',];
-
-			
-			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizaciones_detail', 'type'=>'child','table'=>'cotizaciones_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
-
-			$this->form[] = ['label'=>'Observacion','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Archivo', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
-			$this->form[] =['label'=>'Proveedor', 'name'=>'proveedor', 'type'=>'text', 'width'=>'col-sm-10', 'value'=>CRUDBooster::myName()];
-			$this->form[] = ['label'=>'Total','name'=>'total','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>'$'];
-
-/*			# START COLUMNS DO NOT REMOVE THIS LINE
-			$this->col = [];
-			$this->col[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","join"=>"afiliados,id"];
-			$this->col[] = ["label"=>"Clinicas Id","name"=>"clinicas_id","join"=>"clinicas,id"];
-			$this->col[] = ["label"=>"Edad","name"=>"edad"];
-			$this->col[] = ["label"=>"Estado Paciente Id","name"=>"estado_paciente_id","join"=>"estado_paciente,id"];
-			$this->col[] = ["label"=>"Estado Solicitud Id","name"=>"estado_solicitud_id","join"=>"estado_solicitud,id"];
-			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
-			# END COLUMNS DO NOT REMOVE THIS LINE
-
-			# START FORM DO NOT REMOVE THIS LINE
+			/*# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
+			$this->form[] = ['label'=>'Adjudicatario','name'=>'adjudicatario','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Afiliados Id','name'=>'afiliados_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'afiliados,id'];
+			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Clinicas Id','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,id'];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Estado Paciente Id','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,id'];
@@ -125,10 +76,12 @@
 			$this->form[] = ['label'=>'Nrosolicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
-
+*/
 			# OLD START FORM
-*/			//$this->form = [];
+			//$this->form = [];
+			//$this->form[] = ["label"=>"Adjudicatario","name"=>"adjudicatario","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"afiliados,id"];
+			//$this->form[] = ["label"=>"Archivo","name"=>"archivo","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Clinicas Id","name"=>"clinicas_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"clinicas,id"];
 			//$this->form[] = ["label"=>"Edad","name"=>"edad","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
 			//$this->form[] = ["label"=>"Estado Paciente Id","name"=>"estado_paciente_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"estado_paciente,id"];
@@ -137,7 +90,7 @@
 			//$this->form[] = ["label"=>"Medicos Id","name"=>"medicos_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"medicos,id"];
 			//$this->form[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Observaciones","name"=>"observaciones","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-//			# OLD END FORM
+			# OLD END FORM
 
 			/* 
 	        | ---------------------------------------------------------------------- 
@@ -152,7 +105,8 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-		$this->sub_module[] = ['label'=>'Adjudicar', 'path'=>'adjudicaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-circle-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+		$this->sub_module[] = ['label'=>'Autorizar', 'path'=>'autorizaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-square','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+	        $this->sub_module[] = ['label'=>'Anular', 'path'=>'anulaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'danger','button_icon'=>'fa fa-ban','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 
 
 	        /* 
@@ -347,11 +301,11 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
+	    DB::table('cotizaciones')->where('proveedor',$postdata['adjudicatario'])->update(['estado_solicitud_id'=>3]);
+	    DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>3]);
 
-//			$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
-//			$postdata['medicos_id'] = DB::table('entrantes')->where('id',$url)->value('medicos_id');
-//			$postdata['estado_paciente_id'] = DB::table('entrantes')->where('id',$url)->value('estado_paciente_id');
-			DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>2]);
+//	    DB::table('cotizaciones')->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id' => 3]);
+//	    DB::table('cotizaciones')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>3]);
 
 	    }
 
@@ -364,9 +318,6 @@
 	    */
 	    public function hook_after_add($id) {        
 	        //Your code here
-//					$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
-//			$postdata['medicos_id'] = DB::table('entrantes')->where('id',$url)->value('medicos_id');
-//			$postdata['estado_paciente_id'] = DB::table('entrantes')->where('id',$url)->value('estado_paciente_id');				
 
 	    }
 
@@ -404,8 +355,7 @@
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
-		
-		DB::table('cotizaciones')->where('id', $id)->delete();
+
 	    }
 
 	    /* 

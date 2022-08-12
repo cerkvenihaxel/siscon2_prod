@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-<<<<<<< HEAD
+//<<<<<<< HEAD
     return view('crudbooster::login');
-=======
+//=======
 return view('crudbooster::login');
     
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 });

@@ -42,28 +42,28 @@
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
 			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"articulos,grupo"];
-<<<<<<< HEAD
-			$this->col[] = ["label"=> "Usuario Carga", "name"=>"userId"];
+//<<<<<<< HEAD
+//			$this->col[] = ["label"=> "Usuario Carga", "name"=>"userId"];
 
-=======
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+//=======
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-<<<<<<< HEAD
+//<<<<<<< HEAD
 			$this->form[]= ['label'=>'Fecha de carga', 'name'=>'created_at','type'=>'datetime','validation'=>'required','width'=>'col-sm-10','required'=>true];
 			//$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,nroAfiliado,documento,sexo,localidad','datamodal_size'=>'large','required'=>true];
 			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamodal_select_to'=>'nroAfiliado:nroAfiliado','datamodal_size'=>'large'];
 			$this->form[] = ['label'=>'Nro de Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-=======
-			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true];
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+//=======
+//			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true];
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre','required'=>true];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado','required'=>true];
-<<<<<<< HEAD
+//<<<<<<< HEAD
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true];
@@ -81,10 +81,10 @@
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'entrantes_detail', 'type'=>'child','table'=>'entrantes_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
 			
 			//$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'select', 'validation'=>'required|integer|min:0', 'width'=>'col-sm-10', 'datatable'=>'cms_users,name', 'value'=>CRUDBooster::myId(), 'readonly'=>true, 'disabled'=>'disabled'];
-			$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','value'=>CRUDBooster::myName(), 'readonly'=>true];
+//			$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','value'=>CRUDBooster::myName(), 'readonly'=>true];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
-=======
-			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>1,'required'=>true];
+//=======
+/*			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>1,'required'=>true];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true];
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
@@ -101,7 +101,8 @@
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'entrantes_detail', 'type'=>'child','table'=>'entrantes_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
 			
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+*/
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -130,14 +131,14 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //	        $this->sub_module[] = ['label'=>'Cotizacion', 'name'=>'cotizaciones19/add','path'=>'cotizaciones19','parent_columns'=>'afiliados_id,edad,tel_afiliado,clinicas_id,medicos_id,tel_medico','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-cart-plus']; 
 	 	$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones19/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 
 
-=======
-			$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones18/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+//=======
+//			$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones18/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 	        /* 
 	        | ---------------------------------------------------------------------- 
 	        | Add More Action Button / Menu
@@ -150,13 +151,13 @@
 	        | 
 	        */
 	        $this->addaction = array();
-<<<<<<< HEAD
+//<<<<<<< HEAD
 		$this->addaction[] = ['label'=>'URGENTE','url'=>'#','icon'=>'fa fa-exclamation-triangle','color'=>'danger', 'showIf'=>'[necesidad] == "1"'];
 		$this->addaction[] = ['label'=>'PROGRAMADA','url'=>'#','icon'=>'fa fa-calendar-check-o','color'=>'warning', 'showIf'=>'[necesidad] == "2"'];
-=======
+//=======
 
 			
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -206,12 +207,12 @@
 	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.        
 	        | 
 	        */
-<<<<<<< HEAD
+//<<<<<<< HEAD
 	        $this->table_row_color = array();     	          
 			$this->table_row_color[] = ['condition'=>"[necesidad]==1","color"=>"danger"];
 			$this->table_row_color[] = ['condition'=>"[necesidad]==2","color"=>"warning"];
 			$this->table_row_color[] = ['condition'=>"[necesidad]==3","color"=>"info"];
-=======
+//=======
 	        $this->table_row_color = array();
 			$this->table_row_color[] = ['condition'=>"[necesidad]==1","color"=>"danger"];
 			$this->table_row_color[] = ['condition'=>"[necesidad]==2","color"=>"warning"];
@@ -220,7 +221,7 @@
 
 
 
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 	        
 	        /*
 	        | ---------------------------------------------------------------------- 
@@ -428,10 +429,11 @@
 
 
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
 	}
-=======
-		}
+//=======
+	
 	    //By the way, you can still create your own method in here... :) 
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+

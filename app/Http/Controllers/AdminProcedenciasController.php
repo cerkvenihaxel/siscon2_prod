@@ -5,11 +5,11 @@
 	use DB;
 	use CRUDBooster;
 
-<<<<<<< HEAD:app/Http/Controllers/AdminProcedenciasController.php
-	class AdminProcedenciasController extends \crocodicstudio\crudbooster\controllers\CBController {
-=======
+//<<<<<<< HEAD:app/Http/Controllers/AdminProcedenciasController.php
+//	class AdminProcedenciasController extends \crocodicstudio\crudbooster\controllers\CBController {
+//=======
 	class AdminCotizaciones18Controller extends \crocodicstudio\crudbooster\controllers\CBController {
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202:app/Http/Controllers/AdminCotizaciones18Controller.php
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202:app/Http/Controllers/AdminCotizaciones18Controller.php
 
 	    public function cbInit() {
 
@@ -34,9 +34,9 @@
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-<<<<<<< HEAD:app/Http/Controllers/AdminProcedenciasController.php
+//<<<<<<< HEAD:app/Http/Controllers/AdminProcedenciasController.php
 			$this->col[] = ["label"=>"Procedencia","name"=>"procedencia"];
-=======
+//=======
 			$this->col[] = ['label'=>'Fecha de carga','name'=>'created_at'];
 			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
 			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
@@ -47,7 +47,7 @@
 			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
 			//$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202:app/Http/Controllers/AdminCotizaciones18Controller.php
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202:app/Http/Controllers/AdminCotizaciones18Controller.php
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			$url = $_GET['id'];
@@ -55,14 +55,14 @@
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-<<<<<<< HEAD:app/Http/Controllers/AdminProcedenciasController.php
+//<<<<<<< HEAD:app/Http/Controllers/AdminProcedenciasController.php
 			$this->form[] = ['label'=>'Procedencia','name'=>'procedencia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
 			//$this->form[] = ["label"=>"Procedencia","name"=>"procedencia","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-=======
+//=======
 			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true, 'value'=>DB::table('entrantes')->where('id',$url)->value('afiliados_id'),'disabled'=>'disabled'	];
 			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>DB::table('entrantes')->where('id',$url)->value('clinicas_id'), 'disabled'=>'disabled'];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('edad'), 'readonly'=>true];
@@ -109,7 +109,7 @@
 			//$this->form[] = ["label"=>"Medicos Id","name"=>"medicos_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"medicos,id"];
 			//$this->form[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Observaciones","name"=>"observaciones","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
->>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202:app/Http/Controllers/AdminCotizaciones18Controller.php
+//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202:app/Http/Controllers/AdminCotizaciones18Controller.php
 			# OLD END FORM
 
 			/* 

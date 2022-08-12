@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCotizaciones extends Migration
+class CreateAutorizaciones extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateCotizaciones extends Migration
      */
     public function up()
     {
-        Schema::create('cotizaciones', function (Blueprint $table) {
+        Schema::create('autorizaciones', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->softDeletes();
-            $table->integer('afiliados_id')->nullable();
+  	    $table->integer('afiliados_id')->nullable();
             $table->integer('edad')->nullable();
             $table->string('nrosolicitud')->nullable();
             $table->integer('clinicas_id')->nullable();
@@ -25,6 +24,8 @@ class CreateCotizaciones extends Migration
             $table->integer('estado_paciente_id')->nullable();
             $table->date('fecha_cirugia')->nullable();
             $table->integer('medicos_id')->nullable();
+            $table->string('autorizado')->nullable();
+	    $table->string('archivo')->nullable();
             $table->string('observaciones')->nullable();
         });
     }
@@ -36,6 +37,6 @@ class CreateCotizaciones extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cotizaciones');
+        Schema::dropIfExists('autorizaciones');
     }
 }
