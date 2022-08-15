@@ -5,11 +5,11 @@
 		use DB;
 		use CRUDBooster;
 
-		class ApiEntrantesController extends \crocodicstudio\crudbooster\controllers\ApiController {
+		class ApiSolicitudesApiController extends \crocodicstudio\crudbooster\controllers\ApiController {
 
 		    function __construct() {    
 				$this->table       = "entrantes";        
-				$this->permalink   = "entrantes";    
+				$this->permalink   = "solicitudes_api";    
 				$this->method_type = "get";    
 		    }
 		

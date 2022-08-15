@@ -21,3 +21,7 @@ return view('crudbooster::login');
     
 //>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 });
+
+Route::get('/buscador', function () {
+    return view('buscadorApos');
+});
