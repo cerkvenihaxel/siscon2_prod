@@ -57,7 +57,8 @@
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>3, 'readonly'=>true];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('fecha_cirugia')];
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('medicos_id')];
-			$this->form[] = ['label'=>'Nombre proveedor adjudicado','name'=>'adjudicatario','type'=>'text','validation'=>'required|required','width'=>'col-sm-10','value'=>DB::table('cotizaciones')->where('id',$url)->value('proveedor')];
+//			$this->form[] = ['label'=>'Nombre proveedor adjudicado','name'=>'adjudicatario','type'=>'text','validation'=>'required|required','width'=>'col-sm-10','value'=>DB::table('cotizaciones')->where('id',$url)->value('proveedor')];
+			$this->form[] = ['label'=>'Nombre proveedor adjudicado','name'=>'adjudicatario','type'=>'text','validation'=>'required|required','width'=>'col-sm-10','value'=>DB::table('cotizaciones')->where('id',$url)->value('proveedor'), 'readonly'=>true];
 			$this->form[] = ['label'=>'Archivo', 'name'=>'archivo', 'type'=>'upload', 'validation'=>'max:3000', 'width'=>'col-sm-10', 'help'=>'Archivos soportados : JPG, JPEG, PNG, GIF, BMP'];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
@@ -303,6 +304,10 @@
 	        //Your code here
 	    DB::table('cotizaciones')->where('proveedor',$postdata['adjudicatario'])->update(['estado_solicitud_id'=>3]);
 	    DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>3]);
+
+	    DB::table('cotizaciones')->where('proveedor','!=',$postdata['adjudicatario'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>7]);
+		
+	    DB::table('adjudicaciones')->where('adjudicatario','!=', $postdata['adjudicatario'])->where('nrosolicitud',$postdata['nrosolicitud'])->delete();
 
 //	    DB::table('cotizaciones')->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id' => 3]);
 //	    DB::table('cotizaciones')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>3]);

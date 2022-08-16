@@ -46,6 +46,7 @@
 			# END COLUMNS DO NOT REMOVE THIS LINE
 */
 			$url = $_GET['id'];
+			$custom_element = view('cotizacionesSolicitud')->render();
 
 
 			$this->form = [];
@@ -58,7 +59,10 @@
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>4, 'readonly'=>true];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>DB::table('adjudicaciones')->where('id',$url)->value('fecha_cirugia')];
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('adjudicaciones')->where('id',$url)->value('medicos_id')];
-			$this->form[] = ['label'=>'Autorizado','name'=>'autorizado','type'=>'text','validation'=>'required|required','width'=>'col-sm-10'];
+//			$this->form[] = ['label'=>'Autorizado','name'=>'autorizado','type'=>'text','validation'=>'required|required','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Autorizado','name'=>'autorizado','type'=>'text','validation'=>'required|required','width'=>'col-sm-10' , 'value'=>DB::table('adjudicaciones')->where('id',$url)->value('adjudicatario'), 'readonly'=>true];			
+			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
+
 			$this->form[] = ['label'=>'Archivo', 'name'=>'archivo', 'type'=>'upload', 'validation'=>'max:3000', 'width'=>'col-sm-10', 'help'=>'Archivos soportados : JPG, JPEG, PNG, GIF, BMP'];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			
@@ -299,9 +303,15 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
-	DB::table('cotizaciones')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
+DB::table('adjudicaciones')->where('adjudicatario',$postdata['autorizado'])->update(['estado_solicitud_id'=>4]);
+	DB::table('cotizaciones')->where('proveedor',$postdata['autorizado'])->update(['estado_solicitud_id'=>4]);
 	DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
-	DB::table('adjudicaciones')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
+
+	DB::table('autorizaciones')->where('autorizado','!=', $postdata['autorizado'])->where('nrosolicitud',$postdata['nrosolicitud'])->delete();
+
+//	DB::table('cotizaciones')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
+//	DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
+//	DB::table('adjudicaciones')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
 
 	    }
 

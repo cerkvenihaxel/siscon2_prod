@@ -237,7 +237,24 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = NULL;
+	        $this->script_js = "
+			
+			$(function() {
+
+				setInterval(function() {
+				var total = 0;
+				$('#table-detallesdelasolicitud tbody .precio').each(function() {
+					var amount = parseFloat($(this).text());
+					total += amount;
+				})
+				total = total.toFixed(2);
+				$('#total').val(total);
+				
+			}, 500);
+
+		});
+			
+			";;
 
 
             /*
@@ -325,7 +342,12 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-	            
+		$privilege = CRUDBooster::myPrivilegeId();
+			
+		if($privilege != 17 && $privilege != 1 && $privilege != 3){
+		$query->where('proveedor',CRUDBooster::myName());
+		}
+	            	            
 	    }
 
 	    /*

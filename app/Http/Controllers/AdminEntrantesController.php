@@ -334,9 +334,15 @@
 	    | @query = current sql query 
 	    |
 	    */
+
 	    public function hook_query_index(&$query) {
 	        //Your code here
+	if(CRUDBooster::myPrivilegeId() == 6) {
+			$medicoName = CRUDBooster::myName();
+			$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
+			$query->where('medicos_id', $medicoId);
 	            
+	    }	            
 	    }
 
 	    /*
