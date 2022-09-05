@@ -1,4 +1,4 @@
-@extends('crudbooster::buscador_apos')
+@extends('layoutBuscador')
 
 @section('content')
 
@@ -11,14 +11,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
-<body>
+<body >
+    <div class="container">
     <img id="logo" src="/LOGOAPOS2.png" height="200" class="img-fluid img-thumbnail">
     <style>
         #logo {
             display: block;
             margin-left: auto;
             margin-right: auto;
-            padding: 2rem;
+            padding: 3rem;
+            border: 0;
         }</style>
     <form action="" method="GET">
         <input class="form-control" type="text" name="busqueda" placeholder="Búsqueda por Número de Afiliado"> <br>
@@ -26,7 +28,9 @@
     </form>
     
     <br><br><br>
+    </div>
 
+    <div class="container">
     @php
        if(isset($_GET['busqueda'])){
            $id = $_GET['busqueda'];
@@ -141,6 +145,7 @@
         }
 
     @endphp
+    </div>
 </html>
 
 
