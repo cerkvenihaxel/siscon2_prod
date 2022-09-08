@@ -41,7 +41,7 @@
 			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
 			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
-			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"articulos,grupo"];
+			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"grupos,des_grupo"];
 //<<<<<<< HEAD
 //			$this->col[] = ["label"=> "Usuario Carga", "name"=>"userId"];
 
@@ -347,6 +347,7 @@
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
 			$postdata['estado_solicitud_id']=1;
+			$postdata['medicos_id']= $IDMEDICO;
 
 	    }
 

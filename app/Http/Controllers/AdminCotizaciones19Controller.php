@@ -47,6 +47,15 @@
 
 			$url = $_GET['id'];
 			$custom_element = view('articulosEntrantes')->render();
+			function adminPrivilegeId(){
+		
+			$privilege = CRUDBooster::myPrivilegeId();
+			if($privilege == 1 || $privilege == 17){
+				return false;
+			}else{
+				return true;
+			}
+		}
 
 			# START FORM DO NOT REMOVE THIS LINE
 
@@ -77,21 +86,16 @@
 
 
 			$this->form = [];
-
-			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true, 'value'=>DB::table('entrantes')->where('id',$url)->value('afiliados_id')];
-
-			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>DB::table('entrantes')->where('id',$url)->value('clinicas_id'),'readonly'=>true];
+			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, , Sexo, Localidad','datamodal_size'=>'large', 'required'=>true, 'value'=>DB::table('entrantes')->where('id',$url)->value('afiliados_id'),'disabled'=>'disabled', 'readonly'=>true];
+			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>DB::table('entrantes')->where('id',$url)->value('clinicas_id'), 'readonly'=>true, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('edad'), 'readonly'=>true];
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('tel_afiliado'),'readonly'=>true];
-			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado', 'value'=>DB::table('entrantes')->where('id',$url)->value('estado_paciente_id'), 'readonly'=>true];
-
-			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>2, 'disabled'=>CRUDBooster::myPrivilegeId()!=1 && CRUDBooster::myPrivilegeId() !=17 ? true:false];
-
+			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado', 'value'=>DB::table('entrantes')->where('id',$url)->value('estado_paciente_id'), 'readonly'=>true, 'disabled'=>adminPrivilegeId()];
+			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,estado','value'=>2, 'readonly'=>true, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'text','validation'=>'required','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('fecha_cirugia'), 'readonly'=>true];
-			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('entrantes')->where('id',$url)->value('medicos_id'), 'readonly'=>true];
+			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('entrantes')->where('id',$url)->value('medicos_id'), 'readonly'=>true, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('tel_medico'),'readonly'=>true];
-			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('nrosolicitud'), 'readonly'=>true];
-			
+			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('nrosolicitud'), 'readonly'=>true];			
 
 			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 			//$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10', 'datatable'=>'necesidad,necesidad'];
@@ -112,7 +116,7 @@
 
 			$this->form[] = ['label'=>'Observacion','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Adjunte su presupuesto aquí', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
-			$this->form[] =['label'=>'Proveedor', 'name'=>'proveedor', 'type'=>'text','readonly'=>true, 'width'=>'col-sm-10', 'value'=>CRUDBooster::myName()];
+			$this->form[] =['label'=>'Proveedor', 'name'=>'proveedor', 'type'=>'text','width'=>'col-sm-10', 'value'=>CRUDBooster::myName(),'readonly'=> adminPrivilegeId()];
 			$this->form[] = ['label'=>'Total','name'=>'total','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>'$'];
 
 /*			# START COLUMNS DO NOT REMOVE THIS LINE
@@ -382,11 +386,11 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
-
-//			$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
-//			$postdata['medicos_id'] = DB::table('entrantes')->where('id',$url)->value('medicos_id');
-//			$postdata['estado_paciente_id'] = DB::table('entrantes')->where('id',$url)->value('estado_paciente_id');
 			DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>2]);
+			$postdata['estado_solicitud_id'] = 2;
+			$postdata['clinicas_id'] = DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->value('clinicas_id');
+			$postdata['medicos_id'] = DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->value('medicos_id');
+			$postdata['estado_paciente_id'] = DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->value('estado_paciente_id');
 
 	    }
 
