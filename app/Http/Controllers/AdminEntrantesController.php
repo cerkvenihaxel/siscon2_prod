@@ -42,6 +42,8 @@
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
 			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"grupos,des_grupo"];
+
+			$this->col[] = ["label"=>"Días transcurridos", "name"=>"(DATEDIFF(CURDATE(), created_at)) as dias_transcurridos"];
 //<<<<<<< HEAD
 //			$this->col[] = ["label"=> "Usuario Carga", "name"=>"userId"];
 
@@ -49,6 +51,41 @@
 //>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
+
+			function adminPrivilegeId(){
+		
+				$privilege = CRUDBooster::myPrivilegeId();
+				if($privilege == 1 || $privilege == 17 || $privilege == 5){
+					return false;
+				}else{
+					return true;
+				}
+			}
+
+			function proveedorPrivilegeId(){
+		
+				$privilege = CRUDBooster::myPrivilegeId();
+				if($privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6){
+					return true;
+				}else{
+					return false;
+				}
+			}
+
+				$id = DB::table('entrantes')->where('id', Request::get('id'))->value('id');
+			function contadordeDias(){
+				$fecha_de_carga = DB::table('entrantes')->where('id', Request::get('id'))->value('created_at');
+				$fecha_actual = date('Y-m-d');
+				$fecha_de_carga = $fecha_de_carga->created_at;
+				$fecha_de_carga = date('Y-m-d', strtotime($fecha_de_carga));
+				$fecha_de_carga = strtotime($fecha_de_carga);
+				$fecha_actual = strtotime($fecha_actual);
+				$diferencia = $fecha_actual - $fecha_de_carga;
+				$dias = floor($diferencia / (60 * 60 * 24));
+				return $dias;
+
+			}
+		
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 //<<<<<<< HEAD
@@ -62,11 +99,12 @@
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Estado Paciente','name'=>'estado_paciente_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_paciente,estado','required'=>true];
 //<<<<<<< HEAD
-			$IDMEDICO = DB::table('medicos')->where('nombremedico',CRUDBooster::myName())->value('id');
 
-			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1, 'disabled'=>CRUDBooster::myPrivilegeId()!=1 && CRUDBooster::myPrivilegeId() !=17 ? true:false];
+			adminPrivilegeId() == true ? $IDMEDICO = DB::table('medicos')->where('nombremedico',CRUDBooster::myName())->value('id') : $IDMEDICO = "";
+
+			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','required'=>true];
-			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true,'value'=> CRUDBooster::myPrivilegeId() == 6 ? $IDMEDICO : " ",'disabled'=> CRUDBooster::myPrivilegeId() == 6 ? true : false];
+			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true, 'value'=>$IDMEDICO, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true,'readonly'=>'true','value'=>'APOS'.date('dmHis')];
 			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'datatable'=>'necesidad,necesidad'];
@@ -114,7 +152,7 @@
 	        */
 	        $this->sub_module = array();
 
-		$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones19/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(CRUDBOOSTER::myPrivilegeId() != 2 && CRUDBOOSTER::myPrivilegeId() != 3 && CRUDBOOSTER::myPrivilegeId() != 5 && CRUDBOOSTER::myPrivilegeId() != 6) ? "1":"0"];
+		$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones19/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=> contadorDeDias() > 3 ? "1":"0"];
 
 
 
@@ -133,7 +171,12 @@
 //<<<<<<< HEAD
 		$this->addaction[] = ['label'=>'URGENTE','url'=>'#','icon'=>'fa fa-exclamation-triangle','color'=>'danger', 'showIf'=>'[necesidad] == "1"'];
 		$this->addaction[] = ['label'=>'PROGRAMADA','url'=>'#','icon'=>'fa fa-calendar-check-o','color'=>'warning', 'showIf'=>'[necesidad] == "2"'];
-//=======
+		
+
+		$PRIVILEGIO=CRUDBooster::myPrivilegeId();
+		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 17", 'confirmation'=>true];
+		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 17", 'confirmation'=>true];
+		//=======
 
 			
 //>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
@@ -347,7 +390,7 @@
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
 			$postdata['estado_solicitud_id']=1;
-			$postdata['medicos_id']= $IDMEDICO;
+			
 
 	    }
 
@@ -360,6 +403,12 @@
 	    */
 	    public function hook_after_add($id) {        
 	        //Your code here
+			if(adminPrivilegeId()){
+			$medicoName = CRUDBooster::myName();
+			$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
+			DB::table('entrantes')->where('id', $id)->update(['medicos_id' => $medicoId]);
+			}
+			
 	    }
 
 	    /* 
@@ -412,8 +461,16 @@
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
-
 	    }
+
+		public function getSetStatus($status,$id) {
+			DB::table('entrantes')->where('id',$id)->update(['estado_solicitud_id'=> $status]);
+			//This will redirect back and gives a message
+			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue auditada con éxito!","info");
+		 }
+
+		
+
 
 
 
