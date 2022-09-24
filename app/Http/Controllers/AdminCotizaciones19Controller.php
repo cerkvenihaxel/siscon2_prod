@@ -43,6 +43,8 @@
 			$this->col[] = ["label"=>"Proveedor", "name"=>"proveedor"];
 			$this->col[] = ["label"=>"Precio total", "name"=>"total"];
 
+			$this->col[] = ["label"=>"Días transcurridos", "name"=>"(DATEDIFF(CURDATE(), created_at)) as dias_transcurridos"];
+
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			$url = $_GET['id'];
@@ -384,7 +386,7 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
-			DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>2]);
+//			DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>2]);
 			$postdata['afiliados_id'] = DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->value('afiliados_id');
 			$postdata['estado_solicitud_id'] = 2;
 			$postdata['clinicas_id'] = DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->value('clinicas_id');

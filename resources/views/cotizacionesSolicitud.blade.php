@@ -1,7 +1,7 @@
 <?php 
 
 $id = $_GET['id'];
-$solicitud = DB::table('adjudicaciones')->where('id', $id)->value('nrosolicitud');
+$solicitud = DB::table('cotizaciones')->where('id', $id)->value('nrosolicitud');
 $proveedores = DB::table('cotizaciones')->where('nrosolicitud', $solicitud)->get(); 
 
 foreach ($proveedores as $p) {

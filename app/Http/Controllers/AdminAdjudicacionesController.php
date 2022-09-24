@@ -29,23 +29,20 @@
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
+
 			$this->col = [];
 			$this->col[] = ["label"=>"Adjudicatario","name"=>"adjudicatario"];
 			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
-
-			//$this->col[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","join"=>"afiliados,id"];
-			$this->col[] = ["label"=>"Archivo","name"=>"archivo"];
-			//$this->col[] = ["label"=>"Clinicas Id","name"=>"clinicas_id","join"=>"clinicas,id"];
+			$this->col[] = ["label"=>"Número de solicitud","name"=>"nrosolicitud"];
+			$this->col[] = ["label"=>"Edad","name"=>"edad"];
 			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
 			$this->col[] = ["label"=>"Edad","name"=>"edad"];
 			$this->col[] = ["label"=>"Estado Paciente","name"=>"estado_paciente_id","join"=>"estado_paciente,estado"];
 			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
-//			$this->col[] = ["label"=>"Estado Paciente Id","name"=>"estado_paciente_id","join"=>"estado_paciente,id"];
-//			$this->col[] = ["label"=>"Estado Solicitud Id","name"=>"estado_solicitud_id","join"=>"estado_solicitud,id"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 			
 			$url = $_GET['id'];
-			
+			$custom_element = view('cotizacionesSolicitud')->render();
 # START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamoda_columns_alias'=>'Nombre y Apellido, Documento, Sexo, Localidad','datamodal_size'=>'large', 'required'=>true, 'value'=>DB::table('cotizaciones')->where('id',$url)->value('afiliados_id'),'disabled'=>'disabled'	];
@@ -59,6 +56,7 @@
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('medicos_id')];
 //			$this->form[] = ['label'=>'Nombre proveedor adjudicado','name'=>'adjudicatario','type'=>'text','validation'=>'required|required','width'=>'col-sm-10','value'=>DB::table('cotizaciones')->where('id',$url)->value('proveedor')];
 			$this->form[] = ['label'=>'Nombre proveedor adjudicado','name'=>'adjudicatario','type'=>'text','validation'=>'required|required','width'=>'col-sm-10','value'=>DB::table('cotizaciones')->where('id',$url)->value('proveedor'), 'readonly'=>true];
+			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo', 'name'=>'archivo', 'type'=>'upload', 'validation'=>'max:3000', 'width'=>'col-sm-10', 'help'=>'Archivos soportados : JPG, JPEG, PNG, GIF, BMP'];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
