@@ -24,7 +24,7 @@
 			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
-			$this->button_export = false;
+			$this->button_export = true;
 			$this->table = "presentacion";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
@@ -335,7 +335,8 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
-		DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>6]);
+
+
 	    }
 
 	    /* 
@@ -347,6 +348,9 @@
 	    */
 	    public function hook_after_add($id) {        
 	        //Your code here
+	
+	DB::table('entrantes')->where('nrosolicitud', Request::input('nroSolicitud'))->update(['estado_solicitud_id'=>6]);
+
 
 	    }
 

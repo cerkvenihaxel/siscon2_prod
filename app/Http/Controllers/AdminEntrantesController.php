@@ -44,6 +44,8 @@
 			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"grupos,des_grupo"];
 
 			$this->col[] = ["label"=>"Días transcurridos", "name"=>"(DATEDIFF(CURDATE(), created_at)) as dias_transcurridos"];
+			$this->col[] = ["label"=>"Fecha expiracion", "name"=>"fecha_expiracion"];
+
 //<<<<<<< HEAD
 //			$this->col[] = ["label"=> "Usuario Carga", "name"=>"userId"];
 
@@ -103,6 +105,7 @@
 
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label' => 'Fecha de Expiración (sólo para proveedores)', 'name' => 'fecha_expiracion', 'type' => 'text','validation' => 'required|date', 'width' => 'col-sm-10', 'readonly'=>adminPrivilegeId(), 'value'=>date('Y-m-d', strtotime("+2 days"))];
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true, 'value'=>$IDMEDICO, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true,'readonly'=>'true','value'=>'APOS'.date('dmHis')];
@@ -120,7 +123,8 @@
 			//$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'select', 'validation'=>'required|integer|min:0', 'width'=>'col-sm-10', 'datatable'=>'cms_users,name', 'value'=>CRUDBooster::myId(), 'readonly'=>true, 'disabled'=>'disabled'];
 //			$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','value'=>CRUDBooster::myName(), 'readonly'=>true];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
-
+			$this->form[] = ['label'=>'Diagnostico','name'=>'diagnostico','type'=>'textarea','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Archivo/Foto de receta', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
 
 			# END FORM DO NOT REMOVE THIS LINE
 
@@ -408,6 +412,10 @@
 			DB::table('entrantes')->where('id', $id)->update(['medicos_id' => $medicoId]);
 			}
 			
+			$necesidad = DB::table('entrantes')->where('id', $id)->value('necesidad');
+			$necesidad2 = $necesidad * $necesidad;
+			DB::table('entrantes')->where('id', $id)->update(['fecha_expiracion' => date('Y-m-d', strtotime("+$necesidad2 days"))]);
+
 	    }
 
 	    /* 

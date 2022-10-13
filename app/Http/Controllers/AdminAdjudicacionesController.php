@@ -31,6 +31,7 @@
 			# START COLUMNS DO NOT REMOVE THIS LINE
 
 			$this->col = [];
+			$this->col [] = ["label"=>"Fecha creación","name"=>"created_at"];
 			$this->col[] = ["label"=>"Adjudicatario","name"=>"adjudicatario"];
 			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
 			$this->col[] = ["label"=>"Número de solicitud","name"=>"nrosolicitud"];
@@ -59,6 +60,8 @@
 			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo', 'name'=>'archivo', 'type'=>'upload', 'validation'=>'max:3000', 'width'=>'col-sm-10', 'help'=>'Archivos soportados : JPG, JPEG, PNG, GIF, BMP'];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label' =>'Codigo Cotización (Validación)', 'name' =>'codigocotizado', 'type' =>'text', 'validation' =>'required|min:1|max:255', 'width' =>'col-sm-10', 'value'=>DB::table('cotizaciones')->where('id',$url)->value('id'), 'readonly'=>true];
+
 			# END FORM DO NOT REMOVE THIS LINE
 
 			/*# START FORM DO NOT REMOVE THIS LINE
@@ -300,15 +303,8 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
-	    DB::table('cotizaciones')->where('proveedor',$postdata['adjudicatario'])->update(['estado_solicitud_id'=>3]);
-	    DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>3]);
 
-	    DB::table('cotizaciones')->where('proveedor','!=',$postdata['adjudicatario'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>7]);
-		
-	    DB::table('adjudicaciones')->where('adjudicatario','!=', $postdata['adjudicatario'])->where('nrosolicitud',$postdata['nrosolicitud'])->delete();
 
-//	    DB::table('cotizaciones')->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id' => 3]);
-//	    DB::table('cotizaciones')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>3]);
 
 	    }
 
@@ -319,8 +315,23 @@
 	    | @id = last insert id
 	    | 
 	    */
-	    public function hook_after_add($id) {        
-	        //Your code here
+	    public function hook_after_add($id) {       
+
+		// ! PRIMER PASO CAMBIAR ESTADO DE ENTRANTES 
+
+		 DB::table('entrantes')->where('nrosolicitud', Request::input('nrosolicitud'))->update(['estado_solicitud_id' => 3]);
+		
+		// ! SEGUNDO PASO CAMBIAR ESTADO DE COTIZACIONES a ADJUDICADAS
+
+		 DB::table('cotizaciones')->where('nrosolicitud', Request::input('nrosolicitud'))->where('proveedor', Request::input('adjudicatario'))->where('id', Request::input('codigocotizado'))->update(['estado_solicitud_id' => 3]);
+
+		// ! TERCER PASO CAMBIAR ESTADO DE COTIZACIONES a NO ADJUDICADAS
+
+	 	 DB::table('cotizaciones')->where('nrosolicitud', Request::input('nrosolicitud'))->where('id', '!=', Request::input('codigocotizado'))->update(['estado_solicitud_id' => 7]);
+
+		// ! CUARTO PASO ELIMINAR CUALQUIER ADJUDICADO ERRONEO CON LA MISMA SOLICITUD 
+
+		DB::table('adjudicaciones')->where('id', '!=', $id)->where('nrosolicitud', Request::input('nrosolicitud'))->delete();
 
 	    }
 

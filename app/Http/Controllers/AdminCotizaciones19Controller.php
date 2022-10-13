@@ -89,7 +89,8 @@
 
 			$this->form = [];
 
-			$this->form[] = ['label'=>'Número Afiliado','name'=>'afiliados_id','type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'afiliados,apeynombres','datatable_ajax'=>false,'required'=>true, 'value'=>DB::table('entrantes')->where('id',$url)->value('afiliados_id'),'disabled'=>'disabled', 'readonly'=>true];
+			$this->form[] = ['label'=>'Número ID','name'=>'afiliados_id','type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'afiliados,apeynombres','datatable_ajax'=>false,'required'=>true, 'value'=>DB::table('entrantes')->where('id',$url)->value('afiliados_id'),'disabled'=>'disabled', 'readonly'=>true];
+			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliadoName','type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true, 'value'=>DB::table('afiliados')->where('id',$AFILIADO)->value('apeynombres'),'disabled'=>'disabled', 'readonly'=>true];
 			$this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>DB::table('entrantes')->where('id',$url)->value('clinicas_id'), 'readonly'=>true, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('edad'), 'readonly'=>true];
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('entrantes')->where('id',$url)->value('tel_afiliado'),'readonly'=>true];
@@ -106,9 +107,12 @@
 
 			
 			$columns[] = ['label'=>'Artículos','name'=>'articulos_id','type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large','datamodal_select_to'=>'marca:marca','required'=>true];
-			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|gt:1', 'required'=>true];
 			$columns[] = ['label'=> 'Garantía (meses)', 'name'=>'garantia', 'type'=>'number', 'validation'=>'required|string|min:5|max:5000','required'=>true];
-			$columns[] = ['label'=> 'Precio', 'name'=>'precio', 'type'=>'number', 'validation'=>'required|numeric|gt:0','required'=>true];
+
+			$columns[] = ['label'=>'Precio Unitario','name'=>'precio_unitario','type'=>'text', 'help'=>'Ingrese el precio unitario del artículo, si utiliza centavos, utilice el punto (.) como separador decimal'];
+			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|gt:1', 'required'=>true, 'help'=>'Ingrese la cantidad de artículos, al finalizar presione ENTER'];
+			// SUB TOTAL 
+			$columns[] = ['label'=> 'Subtotal', 'name'=>'precio', 'type'=>'number', 'validation'=>'required|numeric|gt:0','required'=>true, 'formula'=>"[precio_unitario] * [cantidad]", 'readonly'=>adminPrivilegeId()];
 			$columns[] = ['label'=>'Procendencia', 'name'=>'procedencias_id', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-9', 'datatable'=>'procedencias,procedencia','required'=>true];
 			$columns[] =['label'=>'Marca', 'name'=>'marca', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true];
 
@@ -403,6 +407,10 @@
 	    | 
 	    */
 	    public function hook_after_add($id) {        
+
+			$afiliadoId = DB::table('cotizaciones')->where('id',$id)->value('afiliados_id');
+			DB::table('cotizaciones')->where('id',$id)->update(['afiliadoName'=>DB::table('afiliados')->where('id',$afiliadoId)->value('apeynombres')]);
+
 	        //Your code here
 //					$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
 //			$postdata['medicos_id'] = DB::table('entrantes')->where('id',$url)->value('medicos_id');
@@ -431,7 +439,9 @@
 	    | 
 	    */
 	    public function hook_after_edit($id) {
-	        //Your code here 
+		        //Your code here 
+			$afiliadoId = DB::table('cotizaciones')->where('id',$id)->value('afiliados_id');
+			DB::table('cotizaciones')->where('id',$id)->update(['afiliadoName'=>DB::table('afiliados')->where('id',$afiliadoId)->value('apeynombres')]);
 
 	    }
 

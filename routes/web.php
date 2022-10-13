@@ -25,3 +25,16 @@ return view('crudbooster::login');
 Route::get('/buscador', function () {
     return view('buscadorApos');
 });
+
+Route::get('/asistencia-medico', function () {
+    return view('asistenciaMedico');
+});
+
+
+Route::get('/asistencia-salon', function () {
+    return view('asistenciaSalon');
+});
+
+Route::get('/asistencia-protesis', function () {
+    return view('asistenciaProtesis');
+});

@@ -30,10 +30,16 @@
 
 
 			$this->col = [];
-			$this->col[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
+			$this->col [] = ["label"=>"Fecha creación","name"=>"created_at"];
+			$this->col[] = ["label"=>"Autorizado","name"=>"autorizado"];
+			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
+			$this->col[] = ["label"=>"Número de solicitud","name"=>"nrosolicitud"];
 			$this->col[] = ["label"=>"Edad","name"=>"edad"];
-			$this->col[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud"];
-			$this->col[] = ["label"=>"Clinicas Id","name"=>"clinicas_id","join"=>"clinicas,nombre"];	
+			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
+			$this->col[] = ["label"=>"Edad","name"=>"edad"];
+			$this->col[] = ["label"=>"Estado Paciente","name"=>"estado_paciente_id","join"=>"estado_paciente,estado"];
+			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];	
+
 		# START COLUMNS DO NOT REMOVE THIS LINE
 /*			$this->col = [];
 			$this->col[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","join"=>"afiliados,id"];
