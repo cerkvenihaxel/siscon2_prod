@@ -28,6 +28,17 @@
 			$this->table = "adjudicaciones";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
+
+	function adminPrivilegeId(){
+		
+				$privilege = CRUDBooster::myPrivilegeId();
+				if($privilege == 1 || $privilege == 17){
+					return false;
+				}else{
+					return true;
+				}
+			}
+
 			# START COLUMNS DO NOT REMOVE THIS LINE
 
 			$this->col = [];
@@ -36,6 +47,7 @@
 			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
 			$this->col[] = ["label"=>"Número de solicitud","name"=>"nrosolicitud"];
 			$this->col[] = ["label"=>"Edad","name"=>"edad"];
+			$this->col[] = ["label"=>"Medico solicitante", "name"=>"medicos_id", "join"=>"medicos,nombremedico"];
 			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
 			$this->col[] = ["label"=>"Edad","name"=>"edad"];
 			$this->col[] = ["label"=>"Estado Paciente","name"=>"estado_paciente_id","join"=>"estado_paciente,estado"];
@@ -107,8 +119,9 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-		$this->sub_module[] = ['label'=>'Autorizar', 'path'=>'autorizaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-square','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
-	        $this->sub_module[] = ['label'=>'Anular', 'path'=>'anulaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'danger','button_icon'=>'fa fa-ban','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+		
+		$this->sub_module[] = ['label'=>'Autorizar', 'path'=>'autorizaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-square','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(adminPrivilegeId()) ? "0" : "1"];
+	        $this->sub_module[] = ['label'=>'Anular', 'path'=>'anulaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'danger','button_icon'=>'fa fa-ban','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(adminPrivilegeId()) ? "0" : "1"];
 
 
 	        /* 

@@ -67,12 +67,28 @@
 			function proveedorPrivilegeId(){
 		
 				$privilege = CRUDBooster::myPrivilegeId();
-				if($privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6){
+				if($privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17){
+					return true;
+				}else{
+					return false;
+				}
+			}			
+
+			function proveedorAdminPrivilegeId(){
+
+				$privilege = CRUDBooster::myPrivilegeId();
+				if($privilege != 1 && $privilege !=2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 33 && $privilege != 34 && $privilege != 35){
 					return true;
 				}else{
 					return false;
 				}
 			}
+
+
+
+
+
+
 
 				$id = DB::table('entrantes')->where('id', Request::get('id'))->value('id');
 			function contadordeDias(){
@@ -85,6 +101,8 @@
 				$diferencia = $fecha_actual - $fecha_de_carga;
 				$dias = floor($diferencia / (60 * 60 * 24));
 				return $dias;
+
+
 
 			}
 		
@@ -110,6 +128,8 @@
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true,'readonly'=>'true','value'=>'APOS'.date('dmHis')];
 			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'datatable'=>'necesidad,necesidad'];
+			$this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'dataenum'=>'Si;No'];
+
 			$this->form[] = ['label'=>'Especialidad', 'name'=>'grupo_articulos', 'type'=>'select2', 'validation'=>'required','required'=>true, 'width'=>'col-sm-10', 'datatable'=>'grupos,des_grupo'];
 
 			//Solicitud autogenerada por el sistema
@@ -155,8 +175,7 @@
 	        */
 	        $this->sub_module = array();
 
-		$this->sub_module[] = ['label'=>'Cotizaciones', 'path'=>'cotizaciones19/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(CRUDBooster::myPrivilegeId() == 2) ? "0" : "1"];
-
+		$this->sub_module[] = ['label'=>'Cotizar solicitud', 'path'=>'cotizaciones19/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(proveedorPrivilegeId()) ? "1" : "0"];
 
 
 	        /* 
@@ -366,11 +385,13 @@
 			$medicoName = CRUDBooster::myName();
 			$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
 			$query->where('medicos_id', $medicoId);
-	if(CRUDBooster::myPrivilegeId() != 1 && CRUDBooster::myPrivilegeId() != 2 && CRUDBooster::myPrivilegeId() != 3 && CRUDBooster::myPrivilegeId() != 6 && CRUDBooster::myPrivilegeId() != 17) {
-		$query->where('estado_solicitud_id', '<', 3);
-	    }	
-	            
 	    }	            
+	if(proveedorAdminPrivilegeId()){
+		$query->where('fecha_expiracion','>=',date('Y-m-d'));
+	}
+	
+
+
 	    }
 
 	    /*

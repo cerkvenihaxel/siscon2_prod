@@ -106,7 +106,7 @@ h1.heading {
     <div class="container-fostrap">
         <div>
             <h1 class="heading">
-                Asistencia Virtual para salón (APOS)
+                Asistencia Virtual para proveedores
             </h1>
         </div>
         <div class="content">
@@ -114,7 +114,7 @@ h1.heading {
                 <div class="row">
                     <div class="col-xs-12 col-sm-4">
                         <div class="card">
-                            <a class="img-card" href="/pdf/salonAsist.pdf">
+                            <a class="img-card" href="/pdf/asistProveedor.pdf">
                             <img src="/pdflogo.png" />
                           </a>
                             <div class="card-content">
@@ -127,7 +127,7 @@ h1.heading {
                                 </p>
                             </div>
                             <div class="card-read-more">
-                                <a href="/pdf/salonAsist.pdf" target="_blank" class="btn btn-link btn-block">
+                                <a href="/pdf/asistProveedor.pdf" target="_blank" class="btn btn-link btn-block">
                                     Ir al instructivo
                                 </a>
                             </div>
@@ -138,19 +138,19 @@ h1.heading {
                     </div>
                     <div class="col-xs-12 col-sm-4">
                         <div class="card">
-                            <a class="img-card" href="https://www.youtube.com/channel/UCuLMYDQWm1Vks9kAMlLSgsg/videos">
+                            <a class="img-card" href="https://www.youtube.com/watch?v=52Kl2XK79-s">
                             <img src="/youtube.png" />
                           </a>
                             <div class="card-content">
                                 <h4 class="card-title">
-                                    <a href="https://www.youtube.com/channel/UCuLMYDQWm1Vks9kAMlLSgsg/videos"> Videotutorial
+                                    <a> Videotutorial
                                   </a>
                                 </h4>
                                 <p class="">
                                     ¿Necesitas ayuda? En el videotutorial se explica paso a paso como utilizar la plataforma.                                </p>
                             </div>
                             <div class="card-read-more">
-                                <a href="https://www.youtube.com/channel/UCuLMYDQWm1Vks9kAMlLSgsg/videos" target="_blank" class="btn btn-link btn-block">
+                                <a href="https://www.youtube.com/watch?v=52Kl2XK79-s" target="_blank" class="btn btn-link btn-block">
                                     Ir a los videotutoriales
                                 </a>
                             </div>

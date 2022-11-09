@@ -15,8 +15,8 @@ class AdminCmsUsersController extends CBController {
 		$this->primary_key         = 'id';
 		$this->title_field         = "name";
 		$this->button_action_style = 'button_icon';	
-		$this->button_import 	   = FALSE;	
-		$this->button_export 	   = FALSE;	
+		$this->button_import 	   = TRUE;	
+		$this->button_export 	   = TRUE;	
 		# END CONFIGURATION DO NOT REMOVE THIS LINE
 	
 		# START COLUMNS DO NOT REMOVE THIS LINE

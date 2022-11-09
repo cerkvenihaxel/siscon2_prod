@@ -38,3 +38,7 @@ Route::get('/asistencia-salon', function () {
 Route::get('/asistencia-protesis', function () {
     return view('asistenciaProtesis');
 });
+
+Route::get('/asistencia-proveedores', function () {
+    return view('asistenciaProveedor');
+});

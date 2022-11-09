@@ -30,24 +30,27 @@
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-		
 			$this->col[] = ["label"=>"Nombre","name"=>"nombremedico"];
+			$this->col[] = ["label"=>"Número de Documento","name"=>"dni"];
 			$this->col[] = ["label"=>"Matricula","name"=>"matricula"];
 			$this->col[] = ["label"=>"Especialidad","name"=>"especialidad"];
+			$this->col[] = ["label"=>"Número de Teléfono","name"=>"telefono"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Nombre','name'=>'nombremedico','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Dni','name'=>'dni','validation'=>'required','width'=>'col-sm-9'];
 			$this->form[] = ['label'=>'Matricula','name'=>'matricula','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Especialidad','name'=>'especialidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Telefono','name'=>'telefono','validation'=>'required','width'=>'col-sm-9'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ["label"=>"Especialidad","name"=>"especialidad","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Matricula","name"=>"matricula","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Nombremedico","name"=>"nombremedico","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ['label'=>'Nombre','name'=>'nombremedico','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Matricula','name'=>'matricula','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Especialidad','name'=>'especialidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# OLD END FORM
 
 			/* 
