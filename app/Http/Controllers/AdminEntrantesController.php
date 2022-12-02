@@ -388,6 +388,11 @@
 
 	    public function hook_query_index(&$query) {
 	        //Your code here
+
+	$cotizaciones = DB::table('cotizaciones')->where('proveedor', CRUDBooster::myName())->get();
+
+
+
 	if(CRUDBooster::myPrivilegeId() == 6) {
 			$medicoName = CRUDBooster::myName();
 			$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
@@ -395,6 +400,11 @@
 	    }	            
 	if(proveedorAdminPrivilegeId()){
 		$query->where('fecha_expiracion','>=',date('Y-m-d'));
+
+	foreach ($cotizaciones as $cotizacion) {
+			$query->where('nrosolicitud', '!=', $cotizacion->nrosolicitud);
+			} 
+
 	}
 	
 
