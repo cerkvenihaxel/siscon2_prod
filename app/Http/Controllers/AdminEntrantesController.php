@@ -77,7 +77,7 @@
 			function proveedorAdminPrivilegeId(){
 
 				$privilege = CRUDBooster::myPrivilegeId();
-				if($privilege != 1 && $privilege !=2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 33 && $privilege != 34 && $privilege != 35){
+				if($privilege != 1 && $privilege !=2 && $privilege != 3 && $privilege !=4 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 33 && $privilege != 34 && $privilege != 35){
 					return true;
 				}else{
 					return false;
@@ -128,6 +128,7 @@
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true,'readonly'=>'true','value'=>'APOS'.date('dmHis')];
 			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'datatable'=>'necesidad,necesidad'];
+			$this->form[] = ['label'=>'Sufrió un accidente?', 'name'=>'accidente', 'type'=>'select', 'width'=>'col-sm-10','dataenum'=>'Si;No'];
 			$this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'dataenum'=>'Si;No'];
 
 			$this->form[] = ['label'=>'Especialidad', 'name'=>'grupo_articulos', 'type'=>'select2', 'validation'=>'required','required'=>true, 'width'=>'col-sm-10', 'datatable'=>'grupos,des_grupo'];
@@ -144,7 +145,13 @@
 //			$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','value'=>CRUDBooster::myName(), 'readonly'=>true];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Diagnostico','name'=>'diagnostico','type'=>'textarea','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Archivo/Foto de receta', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+
+//			$this->form[] = ['label'=>'Archivo/Foto de receta', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+			$this->form[] = ['label'=>'Archivo 1', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+			$this->form[] = ['label'=>'Archivo 2', 'name'=>'archivo2','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+			$this->form[] = ['label'=>'Archivo 3', 'name'=>'archivo3','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+			$this->form[] = ['label'=>'Archivo 4', 'name'=>'archivo4','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+
 
 			# END FORM DO NOT REMOVE THIS LINE
 

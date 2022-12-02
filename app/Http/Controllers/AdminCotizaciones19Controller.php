@@ -420,6 +420,8 @@
 	    public function hook_after_add($id) {        
 
 			$afiliadoId = DB::table('cotizaciones')->where('id',$id)->value('afiliados_id');
+			$nroSolicitud = DB::table('cotizaciones')->where('id',$id)->value('nrosolicitud');
+//			DB::table('entrantes')->where('nrosolicitud',$nroSolicitud)->update(['estado_solicitud_id'=>2]);
 			DB::table('cotizaciones')->where('id',$id)->update(['afiliadoName'=>DB::table('afiliados')->where('id',$afiliadoId)->value('apeynombres')]);
 
 	        //Your code here

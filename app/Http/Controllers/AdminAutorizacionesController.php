@@ -24,7 +24,7 @@
 			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
-			$this->button_export = false;
+			$this->button_export = CRUDBooster::myPrivilegeId()== 1 ? true : false;;
 			$this->table = "autorizaciones";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 

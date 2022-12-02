@@ -36,7 +36,18 @@ class AdminCmsUsersController extends CBController {
 		// $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Please leave empty if not change");
 		$this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Please leave empty if not change");
 		$this->form[] = array("label"=>"Password Confirmation","name"=>"password_confirmation","type"=>"password","help"=>"Please leave empty if not change");
+
+
 		# END FORM DO NOT REMOVE THIS LINE
+
+//		$this->form[] = array("label"=>"Estado","name"=>"status","type"=>"radio","dataenum"=>['Activo','Inactivo'],'required'=>true,'validation'=>'required|in:Active,Inactive');
+		$this->form[] = array("label"=>"Telefono","name"=>"telefono",'required'=>true,'validation'=>'required|min:8');
+		$this->form[] = array("label"=>"Direccion","name"=>"domicilio",'required'=>true,'validation'=>'required|min:3');
+		$this->form[] = array("label"=>"Pais","name"=>"pais",'required'=>true,'validation'=>'required|min:3');
+		$this->form[] = array("label"=>"Provincia","name"=>"provincia",'required'=>true,'validation'=>'required|min:3');
+		$this->form[] = array("label"=>"Localidad","name"=>"departamento",'required'=>true,'validation'=>'required|min:3');
+		$this->form[] = array("label"=>"Condicion fiscal","name"=>"condicion_fiscal",'required'=>true,'validation'=>'required|min:3');
+		$this->form[] = array("label"=>"CUIL/CUIT","name"=>"cuil_cuit",'required'=>true,'validation'=>'required|min:3');
 				
 	}
 
