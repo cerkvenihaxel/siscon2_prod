@@ -67,7 +67,7 @@
 			function proveedorPrivilegeId(){
 		
 				$privilege = CRUDBooster::myPrivilegeId();
-				if($privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17){
+				if($privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 37){
 					return true;
 				}else{
 					return false;
@@ -77,7 +77,7 @@
 			function proveedorAdminPrivilegeId(){
 
 				$privilege = CRUDBooster::myPrivilegeId();
-				if($privilege != 1 && $privilege !=2 && $privilege != 3 && $privilege !=4 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 33 && $privilege != 34 && $privilege != 35){
+				if($privilege != 1 && $privilege !=2 && $privilege != 3 && $privilege !=4 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 33 && $privilege != 34 && $privilege != 35 && $privilege != 37){
 					return true;
 				}else{
 					return false;
@@ -137,7 +137,8 @@
 			$columns = [];
 			$columns[] = ['label'=> 'Artículos solicitados', 'name'=>'articulos_id', 'type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo,articuloId','datamodal_select_to'=>'grupo:grupo','datamodal_size'=>'large', 'required'=>true];
 			$columns[] = ['label'=> 'Grupo', 'name'=>'grupo', 'type'=>'text', 'validation'=>'required|integer|min:0', 'disabled'=>'disabled', 'width'=>'col-sm-10', 'readonly'=>true];		
-			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0'];
+
+			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'entrantes_detail', 'type'=>'child','table'=>'entrantes_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
 			
@@ -205,6 +206,8 @@
 		$PRIVILEGIO=CRUDBooster::myPrivilegeId();
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 17", 'confirmation'=>true];
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 17", 'confirmation'=>true];
+		$this->addaction[] = ['label'=>'RENOVAR FECHA DE EXPIRACION', 'url'=>CRUDBooster::mainpath('set-date/'.date('Y-m-d', strtotime("+2 days")).'/[id]'),'icon'=>'fa fa-calendar','color'=>'warning','showIf'=>"$PRIVILEGIO == 1", 'confirmation'=>true];
+
 		//=======
 
 			
@@ -511,10 +514,25 @@
 		public function getSetStatus($status,$id) {
 			DB::table('entrantes')->where('id',$id)->update(['estado_solicitud_id'=> $status]);
 			//This will redirect back and gives a message
+
+			$medicoName = DB::table('entrantes')->where('id',$id)->value('medicos_id');
+			$medicoId = DB::table('medicos')->where('id', $medicoName)->value('nombremedico');
+			$config['content'] = "Hola $medicoId, su solicitud fue auditada. Revise el estado en sus solicitudes cargadas.";
+
+			$id = DB::table('cms_users')->where('name',$medicoId)->value('id');
+			$config['id_cms_users'] = [$id];
+
+
+
 			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue auditada con éxito!","info");
 		 }
 
-		
+		 public function getSetDate($date, $id){
+
+			DB::table('entrantes')->where('id',$id)->update(['fecha_expiracion'=> $date]);
+
+			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La fecha de expiración fue modificada con éxito!","info");
+		 }		
 
 
 

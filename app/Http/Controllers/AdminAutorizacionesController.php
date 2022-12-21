@@ -115,7 +115,7 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-	  	$this->sub_module[] = ['label'=>'Agregar a presentacion final', 'path'=>'presentacion/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-paper-plane-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+	  	$this->sub_module[] = ['label'=>'Agregar a presentacion final', 'path'=>'presentacion/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-paper-plane-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"CRUDBOOSTER::myPrivilegeId() == 1"];
 
 
 	        /* 
@@ -131,6 +131,9 @@
 	        */
 	        $this->addaction = array();
 
+		$PRIVILEGIO=CRUDBooster::myPrivilegeId();
+
+		$this->addaction[] = ['label'=>'ANULAR','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"$PRIVILEGIO == 1", 'confirmation'=>true];
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -311,7 +314,7 @@
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
   	DB::table('adjudicaciones')->where('adjudicatario',$postdata['autorizado'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
-	DB::table('cotizaciones')->where('proveedor',$postdata['autorizado'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
+	DB::table('cotizaciones')->where('proveedor',$postdata['autorizado'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>6]);
 	DB::table('entrantes')->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
 
 
@@ -331,6 +334,17 @@
 	    */
 	    public function hook_after_add($id) {        
 	        //Your code here
+
+			$proveedorName = DB::table('cotizaciones')->where('nrosolicitud',Request::input('nrosolicitud'))->value('proveedor');
+			$config['content'] = "Hola $proveedorName, su solicitud fue AUTORIZADA. Revise el estado en sus solicitudes cargadas y contáctese con el médico para pactar entregar del material.";
+			
+			
+			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
+			$id = DB::table('cms_users')->where('name',$proveedorName)->value('id');
+			$config['id_cms_users'] = [$id];
+
+			CRUDBooster::sendNotification($config);
+
 
 	    }
 
@@ -383,6 +397,23 @@
 
 	    }
 
+	public function getSetStatus($status,$id) {
+			DB::table('autorizaciones')->where('id',$id)->update(['estado_solicitud_id'=> $status]);
+			//This will redirect back and gives a message
+		
+$proveedorName = DB::table('cotizaciones')->where('nrosolicitud',Request::input('nrosolicitud'))->value('proveedor');
+			$config['content'] = "Hola $proveedorName, su solicitud fue ANULADA. Revise el estado en sus solicitudes cotizadas.";
+			
+			
+			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
+			$id = DB::table('cms_users')->where('name',$proveedorName)->value('id');
+			$config['id_cms_users'] = [$id];
+
+			CRUDBooster::sendNotification($config);
+
+
+	CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue anulada con éxito!","info");
+		 }
 
 
 	    //By the way, you can still create your own method in here... :) 

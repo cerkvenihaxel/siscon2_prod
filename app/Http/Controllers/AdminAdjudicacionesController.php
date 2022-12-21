@@ -346,6 +346,22 @@
 
 		DB::table('adjudicaciones')->where('id', '!=', $id)->where('nrosolicitud', Request::input('nrosolicitud'))->delete();
 
+
+// ! NOTIFICACIONES PARA EL PROVEEDOR QUE SU SOLICITUD FUE ADJUDICADA 
+			$proveedorName = Request::input('adjudicatario');
+
+
+			$config['content'] = "Hola $proveedorName, su solicitud fue adjudicada. Revise el estado en sus solicitudes cargadas.";
+			
+			
+			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
+			$id = DB::table('cms_users')->where('name',$proveedorName)->value('id');
+			$config['id_cms_users'] = [$id];
+
+			CRUDBooster::sendNotification($config);
+
+
+
 	    }
 
 	    /* 

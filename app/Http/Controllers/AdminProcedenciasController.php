@@ -8,7 +8,7 @@
 //<<<<<<< HEAD:app/Http/Controllers/AdminProcedenciasController.php
 //	class AdminProcedenciasController extends \crocodicstudio\crudbooster\controllers\CBController {
 //=======
-	class AdminCotizaciones18Controller extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminProcedenciasController extends \crocodicstudio\crudbooster\controllers\CBController {
 //>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202:app/Http/Controllers/AdminCotizaciones18Controller.php
 
 	    public function cbInit() {
@@ -37,15 +37,7 @@
 //<<<<<<< HEAD:app/Http/Controllers/AdminProcedenciasController.php
 			$this->col[] = ["label"=>"Procedencia","name"=>"procedencia"];
 //=======
-			$this->col[] = ['label'=>'Fecha de carga','name'=>'created_at'];
-			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
-			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
-			$this->col[] = ["label"=>"Edad","name"=>"edad"];
-			$this->col[] = ["label"=>"Nro. Solicitud","name"=>"nrosolicitud"];
-			$this->col[] = ["label"=>"Medico","name"=>"medicos_id","join"=>"medicos,nombremedico"];
-			$this->col[] = ["label"=>"Estado Paciente","name"=>"estado_paciente_id","join"=>"estado_paciente,estado"];
-			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
-			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
+			
 			//$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 //>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202:app/Http/Controllers/AdminCotizaciones18Controller.php
 			# END COLUMNS DO NOT REMOVE THIS LINE

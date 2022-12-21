@@ -72,11 +72,21 @@
 				return $fecha;
 			}
 
+
+			function getEspecialidad($url){
+				$nroSolicitud = getNroSolicitud($url);
+				$grupo = DB::table('entrantes')->where('nrosolicitud', $nroSolicitud)->value('grupo_articulos');
+				$especialidad = DB::table('grupos')->where('id', $grupo)->value('des_grupo');
+
+				return $especialidad;
+			}
+
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
 			$this->col[] = ["label"=>"Nombre Afiliado","name"=>"nombreAfiliado"];
 			$this->col[] = ["label"=>"Número Afiliado","name"=>"nroAfiliado"];
 			$this->col[] = ["label"=>"Número Solicitud","name"=>"nroSolicitud"];
+			$this->col[] = ["label"=>"Especialidad", "name"=>"grupo_articulos"];
 			$this->col[] = ["label"=>"Proveedor","name"=>"proveedor"];
 			$this->col[] = ["label"=>"Material Entregado","name"=>"materialEntregado"];
 			$this->col[] = ["label"=>"Médico Prestador","name"=>"medicoPrestador"];
@@ -88,6 +98,7 @@
 			$this->col[] = ["label"=>"Foja Quirúrgica","name"=>"fojaQuirurgica"];
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fechaCirugia"];
 			$this->col[] = ["label"=>"Fecha Entrega","name"=>"fechaEntrega"];
+			$this->col[] = ["label"=>"Mes de presentacion", "name"=>"mes"];
 			$this->col[] = ["label"=>"Precio Total","name"=>"precioTotal"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
@@ -96,6 +107,7 @@
 			$this->form[] = ['label'=>'Nombre Afiliado','name'=>'nombreAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNombre($url)];
 			$this->form[] = ['label'=>'Nro Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNroAfiliado($url)];
 			$this->form[] = ['label'=>'Nro Solicitud','name'=>'nroSolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNroSolicitud($url)];
+			$this->form[] = ['label'=> 'Especialidad', 'name' => 'grupo_articulos', 'type' =>'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'value' => getEspecialidad($url)];
 			$this->form[] = ['label'=>'Proveedor', 'name' => 'proveedor', 'type' => 'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'value'=> getProveedor($url)];
 			$this->form[] = ['label'=>'Material Entregado','name'=>'materialEntregado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Medico Prestador','name'=>'medicoPrestador','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getMedicoPrestador($url)];
@@ -107,7 +119,8 @@
 			$this->form[] = ['label'=>'Fecha Entrega','name'=>'fechaEntrega','type'=>'date','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Stickers','name'=>'stickers','type'=>'select','dataenum'=>'SI;NO','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Foja Quirurgica','name'=>'fojaQuirurgica','type'=>'select','dataenum'=>'SI;NO','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Precio Total','name'=>'precioTotal','type'=>'money','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'MES DE PRESENTACION', 'name'=>'mes', 'type'=>'select', 'dataenum'=>'ENERO;FEBRERO;MARZO;ABRIL;MAYO;JUNIO;JULIO;AGOSTO;SEPTIEMBRE;OCTUBRE;NOVIEMBRE;DICIEMBRE', 'validation'=>'required', 'width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Precio Total','name'=>'precioTotal','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM

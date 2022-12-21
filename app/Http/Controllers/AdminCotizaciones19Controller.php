@@ -24,13 +24,14 @@
 			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
-			$this->button_export = false;
+			$this->button_export = CRUDBooster::myPrivilegeId()== 1 ? true : false;;
 			$this->table = "cotizaciones";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
 			$this->col[] = ['label'=>'Fecha de carga','name'=>'created_at'];
+			$this->col[] = ['label'=>'Fecha de carga del médico','name'=>'fecha_solicitud'];
 			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
 			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
 			$this->col[] = ["label"=>"Edad","name"=>"edad"];
@@ -42,7 +43,7 @@
 			//$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			$this->col[] = ["label"=>"Proveedor", "name"=>"proveedor"];
 			$this->col[] = ["label"=>"Precio total", "name"=>"total"];
-
+			$this->col[] = ["label"=>"Días transcurridos (desde la cotización)", "name"=>"(DATEDIFF(CURDATE(), created_at)) as dias_transcurridos2"];
 			$this->col[] = ["label"=>"Días transcurridos (desde la carga) ", "name"=>"(DATEDIFF(CURDATE(), fecha_solicitud)) as dias_transcurridos"];
 
 			# END COLUMNS DO NOT REMOVE THIS LINE
@@ -199,6 +200,10 @@
 	        | 
 	        */
 	        $this->addaction = array();
+
+		 	$PRIVILEGIO=CRUDBooster::myPrivilegeId();
+
+			$this->addaction[] = ['label'=>'ANULAR','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"$PRIVILEGIO == 1", 'confirmation'=>true];
 
 
 	        /* 
@@ -376,7 +381,7 @@
 	        //Your code here
 		$privilege = CRUDBooster::myPrivilegeId();
 			
-		if($privilege != 17 && $privilege != 1 && $privilege != 3){
+		if($privilege != 17 && $privilege != 1 && $privilege != 3 && $privilege !=37 ){
 		$query->where('proveedor',CRUDBooster::myName());
 		}
 	            	            
@@ -486,6 +491,25 @@
 
 
 	    //By the way, you can still create your own method in here... :) 
+
+
+	public function getSetStatus($status,$id) {
+			DB::table('cotizaciones')->where('id',$id)->update(['estado_solicitud_id'=> $status]);
+			//This will redirect back and gives a message
+
+			$proveedorName = DB::table('cotizaciones')->where('nrosolicitud',Request::input('nrosolicitud'))->value('proveedor');
+			$config['content'] = "Hola $proveedorName, su solicitud fue ANULADA. Revise el estado en sus solicitudes cotizadas.";
+			
+			
+			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
+			$id = DB::table('cms_users')->where('name',$proveedorName)->value('id');
+			$config['id_cms_users'] = [$id];
+
+			CRUDBooster::sendNotification($config);
+
+
+			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue anulada con éxito!","info");
+		 }
 
 
 	}

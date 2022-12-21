@@ -42,3 +42,8 @@ Route::get('/asistencia-protesis', function () {
 Route::get('/asistencia-proveedores', function () {
     return view('asistenciaProveedor');
 });
+
+
+Route::get('/informes', function () {
+    return view('informeReportes');
+});
