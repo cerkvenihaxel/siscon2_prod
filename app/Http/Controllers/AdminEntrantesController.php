@@ -64,6 +64,18 @@
 				}
 			}
 
+
+			function medicoPrivilegeId(){
+		
+				$privilege = CRUDBooster::myPrivilegeId();
+				if($privilege == 1 || $privilege == 17 || $privilege == 6){
+					return false;
+				}else{
+					return true;
+				}
+			}
+
+
 			function proveedorPrivilegeId(){
 		
 				$privilege = CRUDBooster::myPrivilegeId();
@@ -144,7 +156,7 @@
 			
 			//$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'select', 'validation'=>'required|integer|min:0', 'width'=>'col-sm-10', 'datatable'=>'cms_users,name', 'value'=>CRUDBooster::myId(), 'readonly'=>true, 'disabled'=>'disabled'];
 //			$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','value'=>CRUDBooster::myName(), 'readonly'=>true];
-			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true, 'reaonly'=>medicoPrivilegeId()];
 			$this->form[] = ['label'=>'Diagnostico','name'=>'diagnostico','type'=>'textarea','width'=>'col-sm-10'];
 
 //			$this->form[] = ['label'=>'Archivo/Foto de receta', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
@@ -456,6 +468,13 @@
 			$necesidad = DB::table('entrantes')->where('id', $id)->value('necesidad');
 			$necesidad2 = $necesidad * $necesidad;
 			DB::table('entrantes')->where('id', $id)->update(['fecha_expiracion' => date('Y-m-d', strtotime("+$necesidad2 days"))]);
+
+			$config['content'] = "Se ha ingresado una nueva solicitud médica";
+			$config['to'] = CRUDBooster::adminPath('entrantes/detail/'.$id);
+			$config['id_cms_users'] = [1];
+
+			CRUDBooster::sendNotification($config);
+
 
 	    }
 
