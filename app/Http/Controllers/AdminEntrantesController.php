@@ -462,6 +462,7 @@
 			if(adminPrivilegeId()){
 			$medicoName = CRUDBooster::myName();
 			$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
+			$medicoCms = DB::table('cms_users')->where('name', $medicoName)->value('id');
 			DB::table('entrantes')->where('id', $id)->update(['medicos_id' => $medicoId]);
 			}
 			
@@ -469,9 +470,10 @@
 			$necesidad2 = $necesidad * $necesidad;
 			DB::table('entrantes')->where('id', $id)->update(['fecha_expiracion' => date('Y-m-d', strtotime("+$necesidad2 days"))]);
 
+
 			$config['content'] = "Se ha ingresado una nueva solicitud médica";
 			$config['to'] = CRUDBooster::adminPath('entrantes/detail/'.$id);
-			$config['id_cms_users'] = [1];
+			$config['id_cms_users'] = [1, $medicoCms];
 
 			CRUDBooster::sendNotification($config);
 
