@@ -147,9 +147,8 @@
 
 			//Solicitud autogenerada por el sistema
 			$columns = [];
-			$columns[] = ['label'=> 'Artículos solicitados', 'name'=>'articulos_id', 'type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo,articuloId','datamodal_select_to'=>'grupo:grupo','datamodal_size'=>'large', 'required'=>true];
+			$columns[] = ['label'=> 'Artículos solicitados', 'name'=>'articulos_id', 'type'=>'datamodal', 'datamodal_table'=>'articulos', 'validation'=>'required','datamodal_columns'=>'des_articulo,articuloId','datamodal_select_to'=>'grupo:grupo','datamodal_size'=>'large', 'required'=>true];
 			$columns[] = ['label'=> 'Grupo', 'name'=>'grupo', 'type'=>'text', 'validation'=>'required|integer|min:0', 'disabled'=>'disabled', 'width'=>'col-sm-10', 'readonly'=>true];		
-
 			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'entrantes_detail', 'type'=>'child','table'=>'entrantes_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
@@ -165,6 +164,7 @@
 			$this->form[] = ['label'=>'Archivo 3', 'name'=>'archivo3','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
 			$this->form[] = ['label'=>'Archivo 4', 'name'=>'archivo4','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
 
+			$this->form[] = ['label'=>'Codigo validación de artículos','name'=>'codigo_validacion','type'=>'number','validation'=>'required|gt:0','required'=>true,'width'=>'col-sm-10','help'=>'Por favor, algún cargue artículo para validar este campo', 'readonly'=>true];
 
 			# END FORM DO NOT REMOVE THIS LINE
 
@@ -310,7 +310,25 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = NULL;
+	        $this->script_js = "
+			
+			$(function() {
+
+				setInterval(function() {
+				var total = 0;
+				$('#table-detallesdelasolicitud tbody .cantidad').each(function() {
+					var amount = parseFloat($(this).text());
+					total += amount;
+				})
+				total = total.toFixed(2);
+				$('#codigo_validacion').val(total);
+				
+			}, 500);
+
+		});
+			
+			";;
+
 
 
             /*
