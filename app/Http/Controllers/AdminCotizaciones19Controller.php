@@ -429,6 +429,15 @@
 //			DB::table('entrantes')->where('nrosolicitud',$nroSolicitud)->update(['estado_solicitud_id'=>2]);
 			DB::table('cotizaciones')->where('id',$id)->update(['afiliadoName'=>DB::table('afiliados')->where('id',$afiliadoId)->value('apeynombres')]);
 
+			$proveedorName = DB::table('cotizaciones')->where('id',$id)->value('proveedor');
+			$proveedorCMS = DB::table('cms_users')->where('name', $proveedorName)->value('id');
+
+			$config['content'] = "$proveedorName ha ingresado una nueva cotización";
+			$config['to'] = CRUDBooster::adminPath('cotizaciones19/detail/'.$id);
+			$config['id_cms_users'] = [1, $proveedorCMS];
+
+			CRUDBooster::sendNotification($config);
+
 	        //Your code here
 //					$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
 //			$postdata['medicos_id'] = DB::table('entrantes')->where('id',$url)->value('medicos_id');
