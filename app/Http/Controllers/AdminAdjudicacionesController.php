@@ -350,17 +350,28 @@
 // ! NOTIFICACIONES PARA EL PROVEEDOR QUE SU SOLICITUD FUE ADJUDICADA 
 			$proveedorName = Request::input('adjudicatario');
 
+			$aposNum = DB::table('adjudicaciones')->where('id', $id)->value('nrosolicitud');
 
-			$config['content'] = "Proveedor: $proveedorName, su solicitud fue adjudicada. Revise el estado en sus solicitudes cargadas.";
-			
-			
-			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
+			$medicoId = DB::table('entrantes')->where('nrosolicitud',$aposNum)->value('medicos_id');
+			$medicoName = DB::table('medicos')->where('id', $medicoId)->value('nombremedico');
+			$medicoCMS = DB::table('cms_users')->where('name', $medicoName)->value('id');
+
 			$id = DB::table('cms_users')->where('name',$proveedorName)->value('id');
+
+
+			$config['content'] = "Proveedor: $proveedorName, la solicitud cargada por el médico $medicoName. Revise el estado en sus solicitudes cargadas.";
+			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
 			$config['id_cms_users'] = [1, $id];
 
+			$notif['content'] = "Medico: $medicoName, su solicitud fue adjudicada. Revise el estado de la misma.";
+			$notif['to'] = CRUDBooster::adminPath('entrantes?q='.Request::input('nrosolicitud'));
+			$notif['id_cms_users'] = [$medicoCMS];
+
 			CRUDBooster::sendNotification($config);
+			CRUDBooster::sendNotification($notif);
 
 
+			
 
 	    }
 
