@@ -351,12 +351,12 @@
 			$proveedorName = Request::input('adjudicatario');
 
 
-			$config['content'] = "Hola $proveedorName, su solicitud fue adjudicada. Revise el estado en sus solicitudes cargadas.";
+			$config['content'] = "Proveedor: $proveedorName, su solicitud fue adjudicada. Revise el estado en sus solicitudes cargadas.";
 			
 			
 			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
 			$id = DB::table('cms_users')->where('name',$proveedorName)->value('id');
-			$config['id_cms_users'] = [$id];
+			$config['id_cms_users'] = [1, $id];
 
 			CRUDBooster::sendNotification($config);
 

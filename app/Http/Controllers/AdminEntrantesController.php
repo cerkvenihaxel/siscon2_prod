@@ -476,8 +476,6 @@
 			$config['id_cms_users'] = [1, $medicoCms];
 
 			CRUDBooster::sendNotification($config);
-
-
 	    }
 
 	    /* 
