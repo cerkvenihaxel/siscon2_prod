@@ -52,7 +52,7 @@
 			# END COLUMNS DO NOT REMOVE THIS LINE
 */
 			$url = $_GET['id'];
-//			$custom_element = view('cotizacionesSolicitud')->render();
+			$custom_element = view('adjudicacionesSolicitud')->render();
 
 
 			$this->form = [];
@@ -67,7 +67,7 @@
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>DB::table('adjudicaciones')->where('id',$url)->value('medicos_id')];
 //			$this->form[] = ['label'=>'Autorizado','name'=>'autorizado','type'=>'text','validation'=>'required|required','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Autorizado','name'=>'autorizado','type'=>'text','validation'=>'required|required','width'=>'col-sm-10' , 'value'=>DB::table('adjudicaciones')->where('id',$url)->value('adjudicatario'), 'readonly'=>true];			
-//			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
+			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 
 			$this->form[] = ['label'=>'Archivo', 'name'=>'archivo', 'type'=>'upload', 'validation'=>'max:3000', 'width'=>'col-sm-10', 'help'=>'Archivos soportados : JPG, JPEG, PNG, GIF, BMP'];
 			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
