@@ -32,7 +32,16 @@
 /*  */
 			$url = $_GET['id']; // THIS VARIABLE GETS THE ID OF THE LIST
 
-
+				function proveedorPrivilegeId(){
+		
+					$privilege = CRUDBooster::myPrivilegeId();
+					if($privilege != 1 && $privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 37){
+						return true;
+					}else{
+						return false;
+					}
+				}	
+			
 			function getNombre($url){
 				$nro = DB::table('autorizaciones')->where('id',$url)->value('afiliados_id');
 				$nombre = DB::table('afiliados')->where('id',$nro)->value('apeynombres');
@@ -326,6 +335,10 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
+			if(proveedorPrivilegeId()){
+				$proveedorName = CRUDBooster::myName();
+				$query->where('proveedor', $proveedorName);
+			}
 	            
 	    }
 

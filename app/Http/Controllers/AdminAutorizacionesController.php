@@ -28,6 +28,15 @@
 			$this->table = "autorizaciones";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
+			function proveedorPrivilegeId(){
+		
+				$privilege = CRUDBooster::myPrivilegeId();
+				if($privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 37){
+					return true;
+				}else{
+					return false;
+				}
+			}	
 
 			$this->col = [];
 			$this->col [] = ["label"=>"Fecha creación","name"=>"created_at"];
@@ -115,7 +124,7 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-	  	$this->sub_module[] = ['label'=>'Agregar a presentacion final', 'path'=>'presentacion/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-paper-plane-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"CRUDBOOSTER::myPrivilegeId() == 1"];
+	  	$this->sub_module[] = ['label'=>'Agregar a presentacion final', 'path'=>'presentacion/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-paper-plane-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 
 
 	        /* 
@@ -291,7 +300,11 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-	            
+			if(proveedorPrivilegeId()){
+				$proveedorName = CRUDBooster::myName();
+				$query->where('autorizado', $proveedorName);
+			}
+
 	    }
 
 	    /*
