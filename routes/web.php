@@ -47,3 +47,7 @@ Route::get('/asistencia-proveedores', function () {
 Route::get('/informes', function () {
     return view('informeReportes');
 });
+
+Route::get('/tyc', function () {
+    return view('tyc');
+});
