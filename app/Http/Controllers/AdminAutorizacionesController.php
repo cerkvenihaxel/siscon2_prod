@@ -31,7 +31,7 @@
 			function proveedorPrivilegeId(){
 		
 				$privilege = CRUDBooster::myPrivilegeId();
-				if($privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 37){
+				if($privilege != 1 && $privilege != 2 && $privilege != 3 && $privilege != 5 && $privilege != 6 && $privilege != 17 && $privilege != 37){
 					return true;
 				}else{
 					return false;
