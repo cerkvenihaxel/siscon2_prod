@@ -118,7 +118,8 @@
 			$this->form[] = ['label'=>'Nro Solicitud','name'=>'nroSolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNroSolicitud($url)];
 			$this->form[] = ['label'=> 'Especialidad', 'name' => 'grupo_articulos', 'type' =>'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'value' => getEspecialidad($url)];
 			$this->form[] = ['label'=>'Proveedor', 'name' => 'proveedor', 'type' => 'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'value'=> getProveedor($url)];
-			$this->form[] = ['label'=>'Material Entregado','name'=>'materialEntregado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Material Entregado','name'=>'materialEntregado','type'=>'select2','select2_multiple'=>true,'validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'datatable'=>'articulos,des_articulo'];
+		
 			$this->form[] = ['label'=>'Medico Prestador','name'=>'medicoPrestador','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getMedicoPrestador($url)];
 			$this->form[] = ['label'=>'Institucion','name'=>'institucion','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getInstitucion($url)];
 			$this->form[] = ['label'=>'Nro Remito','name'=>'nroRemito','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
@@ -361,6 +362,9 @@
 	    */
 	    public function hook_before_add(&$postdata) {        
 	        //Your code here
+			
+			
+			//$postdata['materialEntregado'] = implode("," , Request::input('materialEntregado'));
 
 
 	    }
@@ -376,10 +380,13 @@
 	        //Your code here
 	
 	DB::table('entrantes')->where('nrosolicitud', Request::input('nroSolicitud'))->update(['estado_solicitud_id'=>6]);
+	$materialNumber = DB::table('presentacion')->where('id', $id)->value('materialEntregado');
+	$materialName = DB::table('articulos')->where('id', $materialNumber)->value('des_articulo');
 
+	DB::table('presentacion')->where('id', $id)->update(['materialEntregado'=> $materialName]);
 
 	    }
-
+	
 	    /* 
 	    | ---------------------------------------------------------------------- 
 	    | Hook for manipulate data input before update data is execute
