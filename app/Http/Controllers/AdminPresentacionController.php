@@ -130,6 +130,8 @@
 			$this->form[] = ['label'=>'Stickers','name'=>'stickers','type'=>'select','dataenum'=>'SI;NO','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Foja Quirurgica','name'=>'fojaQuirurgica','type'=>'select','dataenum'=>'SI;NO','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'MES DE PRESENTACION', 'name'=>'mes', 'type'=>'select', 'dataenum'=>'ENERO;FEBRERO;MARZO;ABRIL;MAYO;JUNIO;JULIO;AGOSTO;SEPTIEMBRE;OCTUBRE;NOVIEMBRE;DICIEMBRE', 'validation'=>'required', 'width'=>'col-sm-10'];
+			$this->form[] = ['label'=> 'Procedencia', 'name'=>'procedencia', 'type'=>'select', 'dataenum'=>'NACIONAL;NTERNACIONAL', 'validation'=>'required', 'width'=>'col-sm-10'];
+			$this->form[] = ['label'=> 'Coseguro', 'name'=>'coseguro', 'type'=>'select', 'dataenum'=>'AFILIADO NACIONAL (20%); AFILIADO INTERNACIONAL (60%); APOS NACIONAL (80%); APOS INTERNACIONAL (40%)', 'validation'=>'required', 'width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Precio Total','name'=>'precioTotal','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
