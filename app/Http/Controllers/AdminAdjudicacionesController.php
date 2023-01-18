@@ -361,7 +361,7 @@
 
 			$config['content'] = "Proveedor: $proveedorName, la solicitud cargada por el médico $medicoName. Revise el estado en sus solicitudes cargadas.";
 			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
-			$config['id_cms_users'] = [1, $id];
+			$config['id_cms_users'] = [1, $id, 178];
 
 			$notif['content'] = "Medico: $medicoName, su solicitud fue adjudicada. Revise el estado de la misma.";
 			$notif['to'] = CRUDBooster::adminPath('entrantes?q='.Request::input('nrosolicitud'));

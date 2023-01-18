@@ -354,7 +354,7 @@
 			
 			$config['to'] = CRUDBooster::adminPath('cotizaciones19?q='.Request::input('nrosolicitud'));
 			$id = DB::table('cms_users')->where('name',$proveedorName)->value('id');
-			$config['id_cms_users'] = [$id];
+			$config['id_cms_users'] = [$id, 178];
 
 			CRUDBooster::sendNotification($config);
 

@@ -491,7 +491,7 @@
 
 			$config['content'] = "Se ha ingresado una nueva solicitud médica";
 			$config['to'] = CRUDBooster::adminPath('entrantes/detail/'.$id);
-			$config['id_cms_users'] = [1, $medicoCms];
+			$config['id_cms_users'] = [1, $medicoCms, 178];
 
 			CRUDBooster::sendNotification($config);
 	    }
