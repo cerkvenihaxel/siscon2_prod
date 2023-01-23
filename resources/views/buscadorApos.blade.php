@@ -42,107 +42,122 @@
               else{
 
 
-           $data = DB::table('entrantes')->where('nroAfiliado', $id)->get();
+           $idAfiliado = DB::table('entrantes')->where('nroAfiliado', $id)->get();
+
            
-           foreach ($data as $b) {
-            $art = $b->id;
-            $nombre = $b->afiliados_id;
-            $medicoID = $b->medicos_id;
-            $clinicaID = $b->clinicas_id;
-            $estadopacienteID = $b->estado_paciente_id;
-            $estadosolicitudID = $b->estado_solicitud_id;
+           
+           $nombreAfiliado = DB::table('afiliados')->where('nroAfiliado', $id)->value('apeynombres');
 
-            # code...
-           }
-          
-           $articles = DB::table('entrantes_detail')->where('entrantes_id', $art)->get();
+           $fecha = date("d-m-Y H:i:s"); 
 
-           foreach($articles as $a){
-            $articulo = $a->articulos_id;
-           }
+           echo "<h1>Nombre del afiliado: ".$nombreAfiliado."</h1>";
 
-           $art = DB::table('articulos')->where('id', $articulo)->get();
+           echo "<h3>Fecha de consulta: ".$fecha."</h3>";
 
-              foreach($art as $a){
-                $articuloSolicitud = $a->des_articulo;
-              }
+          echo "<div class='table-responsive'>";
+             echo "<h2>Solicitud cargada por el médico</h2>";
+              echo "<table class='table table-striped table-bordered table-hover table-condensed'>";
+                echo "<thead>";
+                    echo "<tr>";
+                            echo "<th>Fecha creada</th>";
+                            echo "<th>Numero de solicitud</th>";
+                            echo "<th>Nombre del Afiliado</th>";
+                            echo "<th>Nombre del médico</th>";
+                            echo "<th>Nombre paciente</th>";
+                            echo "<th>Observación</th>";
+                            echo "<th>Artículos requeridos</th>";
+                            echo "<th>Cantidad</th>";
+                    echo "</tr>";
+                echo "</thead>";
+                echo "<tbody>";
+                    foreach($idAfiliado as $entrantes){
+                        echo "<tr>";
+                            echo "<td>".$entrantes->created_at."</td>";
+                            echo "<td>".$entrantes->nrosolicitud."</td>";
+                            echo "<td>".$nombreAfiliado."</td>";
+                            echo "<td>".$medicos_id = DB::table('medicos')->where('id', $entrantes->medicos_id)->value('nombremedico')."</td>";
+                            echo "<td>".$entrantes->afiliados_id."</td>";
+                            echo "<td>".$entrantes->observaciones."</td>";
+                            
+                            //Articulo lógica 
 
+                            $articulos = DB::table('entrantes_detail')->where('entrantes_id', $entrantes->id)->get('articulos_id');
+                            $cantidad = DB::table('entrantes_detail')->where('entrantes_id', $entrantes->id)->value('cantidad');
 
-           $apeynombres = DB::table('afiliados')->where('id', $nombre)->get();
-           $medicos = DB::table('medicos')->where('id', $medicoID)->get();
-           $clinicas = DB::table('clinicas')->where('id', $clinicaID)->get();
-           $estadopaciente = DB::table('estado_paciente')->where('id', $estadopacienteID)->get();
-           $estadosolicitud = DB::table('estado_solicitud')->where('id', $estadosolicitudID)->get();
+                            foreach ($articulos as $articulo){  
+                                echo "<td>". $articulosNombre = DB::table('articulos')->where('id', $articulo->articulos_id)->value('des_articulo')."</td>";
+                                echo "<td>".$cantidad."</td>";
+                            }
+                            
+                        echo "</tr>";
+                    }
+                echo "</tbody>";
 
+            echo "</table>";
 
-          foreach ($apeynombres as $ayn) {
-            $apeynom = $ayn->apeynombres;
-          }
-            foreach ($medicos as $med) {
-            $medico = $med->nombremedico;
-            }
-            
-            foreach ($clinicas as $cli) {
-            $clinica = $cli->nombre;
-            }
-
-            foreach ($estadopaciente as $est) {
-            $estadoPaciente = $est->estado;
-            }
-
-            foreach($estadosolicitud as $est){
-            $estadoSolicitud = $est->estado;
-            }
-
-              echo "<div class='panel panel-default'>";
-                echo "<div class='table-responsive'>";
-                echo "<table class='table table-hover'>";
+            echo "<div class='table-responsive'>";
+            echo "<h2>Cotización de proveedores</h2>";
+                 echo "<table class='table table-striped table-bordered table-hover table-condensed'>";
                     echo "<thead>";
                         echo "<tr>";
-                            echo "<th>Nombre Afiliado </th>";
-                            echo "<th>Número de Afiliado</th>";
-                            echo "<th>Médico solicitante</th>";
-                            echo "<th>Clínica</th>";
-                            echo "<th>Estado Paciente</th>";
-                            echo "<th>Estado Solicitud</th>";
-                            echo "<th>Fecha de carga</th>";
-                            echo "<th>Observación</th>";
+                            echo "<th>Fecha de cotización</th>";
+                            echo "<th>Número de Solicitud</th>";
+                            echo "<th>Nombre del proveedor</th>";
                         echo "</tr>";
                     echo "</thead>";
+
                     echo "<tbody>";
-                        foreach ($data as $d) {
-                            echo "<tr key=".$d->entrantes_id.">";
-                                echo "<td>".$d->afiliados_id = $apeynom."</td>";
-                                echo "<td>".$d->nroAfiliado."</td>";
-                                echo "<td>".$d->medicos_id = $medico."</td>";
-                                echo "<td>".$d->clinicas_id = $clinica."</td>";
-                                echo "<td>".$d->estado_paciente_id = $estadoPaciente."</td>";
-                                echo "<td>".$d->estado_solicitud_id = $estadoSolicitud."</td>";
-                                echo "<td>".$d->created_at."</td>";
-                                echo "<td>".$d->observaciones."</td>";
+                        foreach($idAfiliado as $idAfi){
+                            $cotizaciones = DB::table('cotizaciones')->where('nrosolicitud', $idAfi->nrosolicitud)->get();
+                        
+                            foreach($cotizaciones as $cotizacion){
+                            echo "<tr>";
+                                echo "<td>".$cotizacion->created_at."</td>";
+                                echo "<td>".$cotizacion->nrosolicitud."</td>";
+                                echo "<td>".$cotizacion->proveedor."</td>";
                             echo "</tr>";
+                        }
+
                         }
                     echo "</tbody>";
 
+                echo "</table>";
+
+            echo "</div>";
+
+            echo "<div class='table-responsive'>";
+            echo "<h2>Adjudicaciones de solicitud</h2>";
+                 echo "<table class='table table-striped table-bordered table-hover table-condensed'>";
                     echo "<thead>";
                         echo "<tr>";
-                            echo "<th>Artículo solicitado</th>";
-                            echo "<th>Grupo </th>";
-                            echo "<th>Cantidad</th>";
+                            echo "<th>Fecha de adjudicación</th>";
+                            echo "<th>Número de Solicitud</th>";
+                            echo "<th>Nombre del proveedor adjudicado</th>";
                         echo "</tr>";
                     echo "</thead>";
+
                     echo "<tbody>";
-                        foreach ($articles as $a) {
-                            echo "<tr key=".$a->entrantes_id.">";
-    	                        echo "<td>".DB::table('articulos')->where('id', $a->articulos_id)->value('des_articulo')."</td>";
-                                echo "<td>".$a->grupo."</td>";
-                                echo "<td>".$a->cantidad."</td>";
+                        foreach($idAfiliado as $idAfi){
+                            $ordenes = DB::table('adjudicaciones')->where('nrosolicitud', $idAfi->nrosolicitud)->get();
+                        
+                            foreach($ordenes as $orden){
+                            echo "<tr>";
+                                echo "<td>".$orden->created_at."</td>";
+                                echo "<td>".$orden->nrosolicitud."</td>";
+                                echo "<td>".$orden->adjudicatario."</td>";
+                               
                             echo "</tr>";
                         }
-                       
 
-                    } 
+                        }
+                    echo "</tbody>";
+
+                echo "</table>";
+                       
+               
         }
+
+    }
 
     @endphp
     </div>
