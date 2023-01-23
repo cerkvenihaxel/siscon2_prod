@@ -439,7 +439,7 @@
 
 			$config['content'] = "$proveedorName ha ingresado una nueva cotización";
 			$config['to'] = CRUDBooster::adminPath('cotizaciones19/detail/'.$id);
-			$config['id_cms_users'] = [1, $proveedorCMS, $medicoCMS, 178];
+			$config['id_cms_users'] = [1, $proveedorCMS, $medicoCMS, 178, 11, 32, 92];
 
 			CRUDBooster::sendNotification($config);
 
