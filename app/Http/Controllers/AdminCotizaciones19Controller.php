@@ -54,7 +54,7 @@
 	function adminPrivilegeId(){
 		
 			$privilege = CRUDBooster::myPrivilegeId();
-			if($privilege == 1 || $privilege == 17 || $privilege == 33 || $privilege == 34 || $privilege == 35){
+			if($privilege == 1 || $privilege == 17 || $privilege == 33 || $privilege == 34 || $privilege == 35 || $privilege == 28 || $privilege = 97 || $privilege = 56){
 				return false;
 			}else{
 				return true;
@@ -203,7 +203,7 @@
 
 		 	$PRIVILEGIO=CRUDBooster::myPrivilegeId();
 
-			$this->addaction[] = ['label'=>'ANULAR','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"$PRIVILEGIO == 1", 'confirmation'=>true];
+			$this->addaction[] = ['label'=>'ANULAR','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"$PRIVILEGIO== 1 || $PRIVILEGIO == 17", 'confirmation'=>true];
 
 
 	        /* 
@@ -211,7 +211,7 @@
 	        | Add More Button Selected
 	        | ----------------------------------------------------------------------     
 	        | @label       = Label of action 
-	        | @icon 	   = Icon from fontawesome
+	        | @icon 	   = Icon from fontawesome	
 	        | @name 	   = Name of button 
 	        | Then about the action, you should code at actionButtonSelected method 
 	        | 
