@@ -486,7 +486,7 @@
 			
 			$necesidad = DB::table('entrantes')->where('id', $id)->value('necesidad');
 			$necesidad2 = $necesidad * $necesidad;
-			DB::table('entrantes')->where('id', $id)->update(['fecha_expiracion' => date('Y-m-d H:i:s', strtotime("+$necesidad2 days +$necesidad2 hours"))]);
+			DB::table('entrantes')->where('id', $id)->update(['fecha_expiracion' => date('Y-m-d H-i-s', strtotime("+$necesidad2 days +$necesidad2 hours"))]);
 
 
 			$config['content'] = "Se ha ingresado una nueva solicitud médica";
