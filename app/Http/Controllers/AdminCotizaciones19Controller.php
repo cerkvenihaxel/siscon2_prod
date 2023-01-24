@@ -429,6 +429,8 @@
 //			DB::table('entrantes')->where('nrosolicitud',$nroSolicitud)->update(['estado_solicitud_id'=>2]);
 			DB::table('cotizaciones')->where('id',$id)->update(['afiliadoName'=>DB::table('afiliados')->where('id',$afiliadoId)->value('apeynombres')]);
 
+			DB::table('cotizaciones')->where('id', $id)->update('stamp_user', CRUDBooster::myName());
+
 			$proveedorName = DB::table('cotizaciones')->where('id',$id)->value('proveedor');
 			$proveedorCMS = DB::table('cms_users')->where('name', $proveedorName)->value('id');
 
