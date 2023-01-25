@@ -40,6 +40,7 @@
 			$this->col[] = ["label"=>"Estado Paciente","name"=>"estado_paciente_id","join"=>"estado_paciente,estado"];
 			$this->col[] = ["label"=>"Estado Solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado"];
 			$this->col[] = ["label"=>"Fecha Cirugia","name"=>"fecha_cirugia"];
+			$this->col[] = ["label"=>"Sufrió accidente", "name"=>"accidente"]; 
 			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"grupos,des_grupo"];
 
