@@ -13,6 +13,7 @@
 
 <body >
     <div class="container">
+
     <img id="logo" src="/LOGOAPOS2.png" height="200" class="img-fluid img-thumbnail">
     <style>
         #logo {
@@ -29,6 +30,7 @@
     
     <br><br><br>
     </div>
+
 
     <div class="container">
     @php
@@ -53,6 +55,12 @@
            echo "<h1>Nombre del afiliado: ".$nombreAfiliado."</h1>";
 
            echo "<h3>Fecha de consulta: ".$fecha."</h3>";
+            @endphp
+           <button onClick="window.print()">Imprimir </button>
+           @php
+            
+           
+
 
           echo "<div class='table-responsive'>";
              echo "<h2>Solicitud cargada por el médico</h2>";

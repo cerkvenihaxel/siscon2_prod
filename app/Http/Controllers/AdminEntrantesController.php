@@ -219,7 +219,7 @@
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 17", 'confirmation'=>true];
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 17", 'confirmation'=>true];
 		$this->addaction[] = ['label'=>'RENOVAR FECHA DE EXPIRACION', 'url'=>CRUDBooster::mainpath('set-date/'.date('Y-m-d', strtotime("+2 days")).'/[id]'),'icon'=>'fa fa-calendar','color'=>'warning','showIf'=>"$PRIVILEGIO == 1", 'confirmation'=>true];
-
+		
 		//=======
 
 			
@@ -285,6 +285,7 @@
 			$this->table_row_color[] = ['condition'=>"[necesidad]==3","color"=>"info"];
 
 
+			$allUsers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178 ];
 
 
 //>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
@@ -487,13 +488,18 @@
 			$necesidad = DB::table('entrantes')->where('id', $id)->value('necesidad');
 			$necesidad2 = $necesidad * $necesidad;
 			DB::table('entrantes')->where('id', $id)->update(['fecha_expiracion' => date('Y-m-d H-i-s', strtotime("+$necesidad2 days +$necesidad2 hours"))]);
-
+			
 
 			$config['content'] = "Se ha ingresado una nueva solicitud médica";
 			$config['to'] = CRUDBooster::adminPath('entrantes/detail/'.$id);
 			$config['id_cms_users'] = [1, $medicoCms, 11, 32, 92, 178];
 
+			$chngmail['content'] = "URGENTE ℹ️ Cambie su correo electrónico en el perfil de usuario para recibir notificaciones de su correo personal o laboral.";
+			$chngmail['to'] = CRUDBooster::adminPath('users/profile');
+			$chngmail['id_cms_users'] =  $allUsers;
+
 			CRUDBooster::sendNotification($config);
+			CRUDBooster::sendNotification($chngmail);
 	    }
 
 	    /* 

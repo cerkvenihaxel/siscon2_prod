@@ -171,6 +171,9 @@
 			//$this->form[] = ["label"=>"Observaciones","name"=>"observaciones","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 //			# OLD END FORM
 
+
+			$allProveedores = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32];
+
 			/* 
 	        | ---------------------------------------------------------------------- 
 	        | Sub Module
@@ -429,7 +432,9 @@
 //			DB::table('entrantes')->where('nrosolicitud',$nroSolicitud)->update(['estado_solicitud_id'=>2]);
 			DB::table('cotizaciones')->where('id',$id)->update(['afiliadoName'=>DB::table('afiliados')->where('id',$afiliadoId)->value('apeynombres')]);
 
-			DB::table('cotizaciones')->where('id', $id)->update('stamp_user', CRUDBooster::myName());
+			$stampName = CRUDBooster::myName();
+
+			DB::table('cotizaciones')->where('id', $id)->update(array('stamp_user' => $stampName));
 
 			$proveedorName = DB::table('cotizaciones')->where('id',$id)->value('proveedor');
 			$proveedorCMS = DB::table('cms_users')->where('name', $proveedorName)->value('id');
@@ -443,7 +448,11 @@
 			$config['to'] = CRUDBooster::adminPath('cotizaciones19/detail/'.$id);
 			$config['id_cms_users'] = [1, $proveedorCMS, $medicoCMS, 178, 11, 32, 92];
 
+			$present['content'] = "NUEVA NOTIFICACIÓN ℹ️ Se habilitó el módulo de PRESENTACIÓN FINAL por favor revise el manual para cargar sus solicitudes previamente AUTORIZADAS.";
+			$present['to'] = url('pdf/asistProveedor.pdf');
+			$present['id_cms_users'] = $allProveedores;
 			CRUDBooster::sendNotification($config);
+			CRUDBooster::sendNotification($present);
 
 	        //Your code here
 //					$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
