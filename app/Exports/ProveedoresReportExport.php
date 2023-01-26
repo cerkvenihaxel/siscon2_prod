@@ -11,23 +11,28 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 
-class ArticulosReportExport implements FromView, ShouldAutoSize
+class ProveedoresReportExport implements FromView, ShouldAutoSize
 {
     use Exportable;
 
-    public function __construct($data, $data2, $cot)
+    public function __construct($data, $data2, $cot, $adj, $total)
     {
         $this->data = $data;
         $this->data2 = $data2;
         $this->cot = $cot;
+        $this->adj = $adj;
+        $this->total = $total;
+       
+       
+       
     
     }
 
     public function view(): View
     {
-        return view('articulosExport', [
-            'data' => $this->data, 'id' => $this->data2, 'cot' => $this->cot
+        return view('proveedoresExport', [
+            'data' => $this->data, 'id' => $this->data2, 'cot' => $this->cot, 'adj' => $this->adj, 'total' => $this->total
         ]);
     }
-   
+    
 }
