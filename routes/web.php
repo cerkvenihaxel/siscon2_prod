@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ArticulosReportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,3 +51,21 @@ Route::get('/informes', function () {
 Route::get('/tyc', function () {
     return view('tyc');
 });
+
+Route::get('/form', function () {
+    return view('datePicker');
+});
+
+Route::post('/dateRange', [ArticulosReportController::class, 'dateRange'])->name('dateRange');
+
+Route::get('/your-view', function () {
+    return view('your-view');
+});
+
+Route::get('/exportExcel', [ArticulosReportController::class, 'exportExcel'])->name('exportExcel');
+
+//prueba exportar excel completo
+
+Route::post('exportExcelAll', [ArticulosReportController::class, 'exportExcelAll'])->name('exportExcelAll');
+
+Route::get('/searchFilter', [ArticulosReportController::class, 'searchFilter'])->name('searchFilter');

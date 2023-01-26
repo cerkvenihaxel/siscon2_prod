@@ -11,7 +11,6 @@ foreach ($proveedores as $p) {
 
 
 ?>
-
 <div class="panel panel-default">
    
         <table class="table">
