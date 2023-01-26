@@ -207,7 +207,6 @@
 		 	$PRIVILEGIO=CRUDBooster::myPrivilegeId();
 
 			$this->addaction[] = ['label'=>'ANULAR','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"$PRIVILEGIO== 1 || $PRIVILEGIO == 17", 'confirmation'=>true];
-			$this->addaction[] = ['label'=>'Ver comparativa','url'=>('/comparativa_cotizaciones?id=[id]'),'icon'=>'fa fa-search','color'=>'primary','showIf'=>"$PRIVILEGIO== 1 || $PRIVILEGIO == 17", 'confirmation'=>true];
 
 
 	        /* 
