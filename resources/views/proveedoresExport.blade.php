@@ -50,3 +50,28 @@
 </tbody>
 
 </table>
+
+<table>
+    <thead>
+        <tr>
+            <th>Fecha de adjudicación</th>
+            <th>Número de solicitud</th>
+            <th>Afiliado</th>
+            <th>Medico</th>
+            <th>Clínica</th>
+            <th>Fecha de cirugía</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($adj as $a)
+        <tr>
+            <td>{{ $a->created_at }}</td>
+            <td>{{ $a->nrosolicitud }}</td>
+            <td>{{ $afiliado = DB::table('afiliados')->where('id', $a->afiliados_id )->value('apeynombres')}}</td>
+            <td>{{ $medico = DB::table('medicos')->where('id', $a->medicos_id )->value('nombremedico')}}</td>
+            <td>{{ $clinica = DB::table('clinicas')->where('id', $a->clinicas_id )->value('nombre')}}</td>
+            <td>{{ $a->fecha_cirugia }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
