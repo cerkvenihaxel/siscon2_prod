@@ -16,12 +16,15 @@ use App\Http\Controllers\FullCalendarController;
 */
 
 Route::get('/', function () {
-//<<<<<<< HEAD
+
     return view('crudbooster::login');
-//=======
+
 return view('crudbooster::login');
     
-//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
+});
+
+Route::get('/comparativa', function () {
+    return view('cotizacionesSolicitud2');
 });
 
 Route::get('/buscador', function () {
