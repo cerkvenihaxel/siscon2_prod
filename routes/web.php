@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticulosReportController;
 use App\Http\Controllers\ProveedoresReportController;
+use App\Http\Controllers\MedicosReportController;
+
 use App\Http\Controllers\FullCalendarController;
 
 /*
@@ -57,6 +59,10 @@ Route::get('/informesProveedor', function () {
     return view('informeReportesProv');
 });
 
+Route::get('/informesMedico', function () {
+    return view('informeReportesMed');
+});
+
 
 Route::get('/tyc', function () {
     return view('tyc');
@@ -66,7 +72,7 @@ Route::get('/tyc', function () {
 
 Route::post('/dateRange', [ArticulosReportController::class, 'dateRange'])->name('dateRange');
 Route::post('/dateRangeProv', [ProveedoresReportController::class, 'dateRangeProv'])->name('dateRangeProv');
-
+Route::post('/dateRangeMed', [MedicosReportController::class, 'dateRangeMed'])->name('dateRangeMed');
 
 
 Route::get('/your-view', function () {
@@ -76,12 +82,20 @@ Route::get('/proveedorView', function () {
     return view('proveedorViewReport');
 });
 
+Route::get('/medicoView', function () {
+    return view('medicoViewReport');
+});
+
+
 Route::get('/exportExcel', [ArticulosReportController::class, 'exportExcel'])->name('exportExcel');
 //prueba exportar excel completo
 Route::post('exportExcelAll', [ArticulosReportController::class, 'exportExcelAll'])->name('exportExcelAll');
 
 Route::get('/exportExcelProv', [ProveedoresReportController::class, 'exportExcelProv'])->name('exportExcelProv');
 Route::post('/exportExcelProvAll', [ProveedoresReportController::class, 'exportExcelProvAll'])->name('exportExcelProvAll');
+
+Route::get('/exportExcelMed', [MedicosReportController::class, 'exportExcelMed'])->name('exportExcelMed');
+Route::post('/exportExcelMedAll', [MedicosReportController::class, 'exportExcelMedAll'])->name('exportExcelMedAll');
 
 Route::get('/searchFilter', [ArticulosReportController::class, 'searchFilter'])->name('searchFilter');
 

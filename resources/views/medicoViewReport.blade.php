@@ -20,24 +20,22 @@
 
 <body>
     <div class="container-fluid">
-    <h1> Reporte de solicitudes cotizadas</h1>
+    <h1> Reporte de solicitudes entrantes</h1>
     <h1> Periodo de tiempo = {{ $start_date }} - {{ $end_date}}</h1>
     <h1> Fecha de consulta = {{ $fecha }}</h1>
-    <h2> Nombre del proveedor = {{$id}}</h2>
+    <h2> Nombre del médico = {{ $medicoName = DB::table('medicos')->where('id',$id)->value('nombremedico')}}</h2>
     <div class="table-responsive">
     <table class='table table-hover table-striped table-bordered'>
-        <h3>Solicitudes cotizadas = {{ count($data)}}</h3>
+        <h3>Solicitudes realizadas = {{ count($data)}}</h3>
     <thead>
         <tr>
-            <th>Fecha de cotización</th>
+            <th>Fecha de pedido</th>
             <th>Numero de solicitud</th>
             <th>Nombre del afiliado</th>
-            <th>Nombre del medico</th>
             <th>Clínica</th>
             <th>Fecha de cirugía</th>
-            <th> Artículos cotizados </th>
-            <th> Total de la cotización </th>
-            <th> Ver cotización </th>
+            <th> Artículos solicitados </th>
+            <th> Ver solicitud </th>
         </tr>
     </thead>
     <tbody>
@@ -49,7 +47,6 @@
             <td>{{ $item->nrosolicitud }}</td>
             <td>{{ $nombreAfiliado = DB::table('afiliados')->where('id',
                 $item->afiliados_id)->value('apeynombres')}}</td>
-            <td>{{ $nombreMedico = DB::table('medicos')->where('id', $item->medicos_id)->value('nombremedico') }}</td>
             <td>{{ $clinicasNombre= DB::table('clinicas')->where('id', $item->clinicas_id)->value('nombre')}}</td>
             <td> {{ $item->fecha_cirugia }}</td>
             <td>
@@ -57,28 +54,23 @@
                     <thead>
                         <tr>
                             <th>Artículo</th>
-                            <th>Precio unitario</th>
                             <th>Cantidad</th>
-                            <th>Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($cotDetail as $item2)
+                        @foreach ($entDetail as $item2)
                         @if ($item->id == $item2->entrantes_id)
                         <tr>
                             <td>{{ $nombreArticulo = DB::table('articulos')->where('id', $item2->articulos_id)->value('des_articulo') }}</td>
-                            <td>{{ $item2->precio_unitario }}</td>
                             <td>{{ $item2->cantidad }}</td>
-                            <td>$ {{ $item2->precio }}</td>
                         </tr>
                         @endif
                         @endforeach
                     </tbody>
                 </table>
             </td>    
-            <td> {{ $item->total }}</td>
             <td>
-                <a href='/admin/cotizaciones19/detail/{{$item->id}}' class="btn btn-primary">Ver cotización</a>
+                <a href='/admin/entrantes/detail/{{$item->id}}' class="btn btn-primary">Ver cotización</a>
             </td>
             
 
@@ -98,7 +90,7 @@
             <th>Fecha de adjudicación</th>
             <th>Nombre y Apellido Afiliado</th>
             <th>Número de solicitud</th>
-            <th>Médico Solicitante</th>
+            <th>Proveedor Adjudicado</th>
             <th>Clínica</th>
             <th>Fecha de cirugía</th>
             <th> Ver adjudicación </th>
@@ -111,7 +103,7 @@
             <td>{{ $a->created_at }}</td>
             <td>{{ $afiliado = DB::table('afiliados')->where('id', $a->afiliados_id )->value('apeynombres')}}</td>
             <td>{{ $a->nrosolicitud }}</td>
-            <td>{{ $medico = DB::table('medicos')->where('id', $a->medicos_id)->value('nombremedico') }}</td>
+            <td>{{ $a->adjudicatario }}</td>
             <td>{{ $clinica = DB::table('clinicas')->where('id', $a->clinicas_id )->value('nombre')}}</td>
             <td>{{ $a->fecha_cirugia }}</td>
             <td> <a href='/admin/adjudicaciones/detail/{{$a->id}}' class="btn btn-primary">Ver adjudicación</a></td>
