@@ -1,3 +1,5 @@
+
+
 <?php 
 
 $id = $_GET['id'];
@@ -11,6 +13,8 @@ foreach ($proveedores as $p) {
 
 
 ?>
+
+
 
 <div class="panel panel-default">
    

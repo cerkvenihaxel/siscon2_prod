@@ -28,6 +28,10 @@ Route::get('/buscador', function () {
     return view('buscadorApos');
 });
 
+Route::get('/comparativa_cotizaciones', function () {
+    return view('cotizacionesSolicitud2');
+});
+
 Route::get('/asistencia-medico', function () {
     return view('asistenciaMedico');
 });
