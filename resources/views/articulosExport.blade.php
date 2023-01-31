@@ -8,10 +8,23 @@
     </tr>
 </table>
 
+<table>
+    <tr>
+        <th> Cantidad de solicitudes realizadas </th>
+        <th> Cantidad total de pedidos del artículo </th>
+        
+    </tr>
+    <tr>
+        <td>{{ count($data)}}</td>
+        <td>{{ $cantidadTotal = DB::table('entrantes_detail')->where('articulos_id', $id)->sum('cantidad') }}</td>
+    </tr>
+</table>
+
+
 <table class='table table-hover table-striped table-bordered'>
 <thead>
     <tr>
-        <th>Fecha</th>
+        <th>Fecha de pedido del médico</th>
         <th>Numero de solicitud</th>
         <th>Nombre del afiliado</th>
         <th>Nombre del medico</th>
