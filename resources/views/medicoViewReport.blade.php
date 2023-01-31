@@ -70,7 +70,7 @@
                 </table>
             </td>    
             <td>
-                <a href='/admin/entrantes/detail/{{$item->id}}' class="btn btn-primary">Ver cotización</a>
+                <a href='/admin/entrantes/detail/{{$item->id}}' class="btn btn-primary">Ver solicitud</a>
             </td>
             
 
