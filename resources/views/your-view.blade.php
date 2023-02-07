@@ -24,6 +24,8 @@
     <h2>Nombre del Articulo Solicitado = {{ $nombreArticulo }}</h2>
     <h2>Numero de Articulo Solicitado = {{ $id }}</h2>
     <h2>Fecha de consulta = {{ $fecha }}</h2>
+    <h2> Cantidad de solicitudes = {{ count($data) }}</h2>
+    <h2> Cantidad total de pedidos del artículo = {{ $cantidadTotal = DB::table('entrantes_detail')->where('articulos_id', $id)->sum('cantidad') }}</h2>
     <table class='table table-hover table-striped table-bordered'>
         <h3>Datos de la solicitud del médico</h3>
     <thead>
