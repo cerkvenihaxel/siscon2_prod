@@ -65,6 +65,7 @@
     </tr>
 </thead>
 <tbody>
+    @if($cot>0)
     @foreach ($cot as $item2)
     <tr>
         <td>{{ $item2->created_at }}</td>
@@ -78,7 +79,9 @@
 
     
     @endforeach
-
+    @else
+    <tr>
+        <td colspan="8">No hay cotizaciones para este artículo</td>
     </tr>
 </tbody>
 
