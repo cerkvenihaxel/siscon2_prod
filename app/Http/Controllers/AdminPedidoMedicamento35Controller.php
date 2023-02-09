@@ -17,10 +17,11 @@
 				}else{
 					return true;
 				}}
+
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
 			$this->limit = "20";
-			$this->orderby = "id,desc";
+			$this->orderby = "";
 			$this->global_privilege = false;
 			$this->button_table_action = true;
 			$this->button_bulk_action = true;
@@ -36,7 +37,6 @@
 			$this->table = "pedido_medicamento";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
-			
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
 			$this->col[] = ["label"=>"Fecha de carga","name"=>"created_at" ];
@@ -62,7 +62,7 @@
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true,'readonly'=>'true','value'=>'APOS-MED-'.date('dmHis')];
 			$this->form[] = ['label'=>'Institución','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre','required'=>true];
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true, 'value'=>$IDMEDICO, 'disabled'=>adminPrivilegeId()];
-			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Este;Oeste'];
+			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Este;Oeste;Centro'];
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
 			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
@@ -143,7 +143,10 @@
 	        | 
 	        */
 	        $this->addaction = array();
-
+		$PRIVILEGIO=CRUDBooster::myPrivilegeId();
+		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 1", 'confirmation'=>true];
+		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 1", 'confirmation'=>true];
+	        /* 
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -395,7 +398,28 @@
 
 	    }
 
+	public function getSetStatus($status,$id) {
+			DB::table('pedido_medicamento')->where('id',$id)->update(['estado_solicitud_id'=> $status]);
+			//This will redirect back and gives a message
 
+			$medicoName = DB::table('pedido_medicamento')->where('id',$id)->value('medicos_id');
+			$medicoId = DB::table('medicos')->where('id', $medicoName)->value('nombremedico');
+			$config['content'] = "Hola $medicoId, su solicitud fue auditada. Revise el estado en sus solicitudes cargadas.";
+			$id = DB::table('cms_users')->where('name',$medicoId)->value('id');
+			$config['id_cms_users'] = [$id];
+			CRUDBooster::sendNotification($config);
+
+
+
+			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue auditada con éxito!","info");
+		 }
+
+		 public function getSetDate($date, $id){
+
+			DB::table('entrantes')->where('id',$id)->update(['fecha_expiracion'=> $date]);
+
+			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La fecha de expiración fue modificada con éxito!","info");
+		 }	
 
 	    //By the way, you can still create your own method in here... :) 
 
