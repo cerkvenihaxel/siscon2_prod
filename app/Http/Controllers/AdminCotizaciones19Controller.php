@@ -447,7 +447,7 @@
 
 			$config['content'] = "$proveedorName ha ingresado una nueva cotización";
 			$config['to'] = CRUDBooster::adminPath('cotizaciones19/detail/'.$id);
-			$config['id_cms_users'] = [1, $proveedorCMS, $medicoCMS, 178, 11, 32, 92];
+			$config['id_cms_users'] = [1, $proveedorCMS, $medicoCMS, 178, 11, 32, 92, 8];
 
 			$present['content'] = "NUEVA NOTIFICACIÓN ℹ️ Se habilitó el módulo de PRESENTACIÓN FINAL por favor revise el manual para cargar sus solicitudes previamente AUTORIZADAS.";
 			$present['to'] = url('pdf/asistProveedor.pdf');

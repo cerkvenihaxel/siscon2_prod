@@ -493,7 +493,7 @@
 
 			$config['content'] = "Se ha ingresado una nueva solicitud médica";
 			$config['to'] = CRUDBooster::adminPath('entrantes/detail/'.$id);
-			$config['id_cms_users'] = [1, $medicoCms, 11, 32, 92, 178];
+			$config['id_cms_users'] = [1, $medicoCms, 11, 32, 92, 178, 8];
 
 			$chngmail['content'] = "URGENTE ℹ️ Cambie su correo electrónico en el perfil de usuario para recibir notificaciones de su correo personal o laboral.";
 			$chngmail['to'] = CRUDBooster::adminPath('users/profile');
