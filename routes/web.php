@@ -68,7 +68,9 @@ Route::get('/tyc', function () {
     return view('tyc');
 });
 
-
+Route::get('/escritorioAdmin', function(){
+    return view('desktopStatistics');
+});
 
 Route::post('/dateRange', [ArticulosReportController::class, 'dateRange'])->name('dateRange');
 Route::post('/dateRangeProv', [ProveedoresReportController::class, 'dateRangeProv'])->name('dateRangeProv');
