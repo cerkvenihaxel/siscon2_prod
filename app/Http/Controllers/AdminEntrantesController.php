@@ -425,7 +425,7 @@
 	        //Your code here
 
 	$cotizaciones = DB::table('cotizaciones')->where('proveedor', CRUDBooster::myName())->get();
-
+	$cotizacionesAdmin = DB::table('cotizaciones')->where('stamp_user', CRUDBooster::myName())->get();
 
 
 	if(CRUDBooster::myPrivilegeId() == 6) {
@@ -435,13 +435,16 @@
 	    }	            
 	if(proveedorAdminPrivilegeId()){
 		$query->where('fecha_expiracion','>=',date('Y-m-d'));
-
-	foreach ($cotizaciones as $cotizacion) {
+		foreach ($cotizaciones as $cotizacion) {
 			$query->where('nrosolicitud', '!=', $cotizacion->nrosolicitud);
 			} 
-
 	}
-	
+
+	if( CRUDBooster::myPrivilegeId() == 33 || CRUDBooster::myPrivilegeId() == 34 || CRUDBooster::myPrivilegeId() == 35){
+	foreach ($cotizacionesAdmin as $cotizacion) {
+		$query->where('nrosolicitud', '!=', $cotizacion->nrosolicitud);
+		} 
+	}
 
 
 	    }

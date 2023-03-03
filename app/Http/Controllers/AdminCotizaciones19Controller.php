@@ -385,9 +385,11 @@
 	        //Your code here
 		$privilege = CRUDBooster::myPrivilegeId();
 			
-		if($privilege != 17 && $privilege != 1 && $privilege != 3 && $privilege !=37 ){
+		if($privilege != 17 && $privilege != 1 && $privilege != 3 && $privilege !=37 && $privilege != 34  && $privilege != 35 && $privilege != 33){
 		$query->where('proveedor',CRUDBooster::myName());
 		}
+		else if( $privilege == 37 || $privilege == 34 || $privilege == 35 || $privilege == 33){
+			$query->where('stamp_user',CRUDBooster::myName());}
 	            	            
 	    }
 
