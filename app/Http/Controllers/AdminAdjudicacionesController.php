@@ -119,8 +119,9 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-		
-		$this->sub_module[] = ['label'=>'Autorizar', 'path'=>'autorizaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-square','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(adminPrivilegeId()) ? "0" : "1"];
+
+			$this->sub_module[] = ['label'=>'Ver cotización','path'=>"cotizaciones19/detail/2552?return_url=http%3A%2F%2Fsiscon.info%2Fadmin%2Fcotizaciones19%3Ffilter_column%255Bcotizaciones.created_at%255D%255Btype%255D%3D%26filter_column%255Bcotizaciones.created_at%255D%255Bsorting%255D%3D%26filter_column%255Bcotizaciones.fecha_solicitud%255D%255Btype%255D%3D%26filter_column%255Bcotizaciones.fecha_solicitud%255D%255Bsorting%255D%3D%26filter_column%255Bafiliados.apeynombres%255D%255Btype%255D%3D%26filter_column%255Bafiliados.apeynombres%255D%255Bsorting%255D%3D%26filter_column%255Bclinicas.nombre%255D%255Btype%255D%3D%26filter_column%255Bclinicas.nombre%255D%255Bsorting%255D%3D%26filter_column%255Bcotizaciones.edad%255D%255Btype%255D%3D%26filter_column%255Bcotizaciones.edad%255D%255Bsorting%255D%3D%26filter_column%255Bcotizaciones.nrosolicitud%255D%255Btype%255D%3D%253D%26filter_column%255Bcotizaciones.nrosolicitud%255D%255Bvalue%255D%3D{{$aposNum}}%26filter_column%255Bcotizaciones.nrosolicitud%255D%255Bsorting%255D%3D%26filter_column%255Bmedicos.nombremedico%255D%255Btype%255D%3D%26filter_column%255Bmedicos.nombremedico%255D%255Bsorting%255D%3D%26filter_column%255Bestado_paciente.estado%255D%255Btype%255D%3D%26filter_column%255Bestado_paciente.estado%255D%255Bsorting%255D%3D%26filter_column%255Bestado_solicitud.estado%255D%255Btype%255D%3D%26filter_column%255Bestado_solicitud.estado%255D%255Bsorting%255D%3D%26filter_column%255Bcotizaciones.fecha_cirugia%255D%255Btype%255D%3D%26filter_column%255Bcotizaciones.fecha_cirugia%255D%255Bsorting%255D%3D%26filter_column%255Bcotizaciones.proveedor%255D%255Btype%255D%3Dlike%26filter_column%255Bcotizaciones.proveedor%255D%255Bvalue%255D%3D{{$proveedorName}}%26filter_column%255Bcotizaciones.proveedor%255D%255Bsorting%255D%3D%26filter_column%255Bcotizaciones.total%255D%255Btype%255D%3D%26filter_column%255Bcotizaciones.total%255D%255Bsorting%255D%3D%26filter_column%255Bdias_transcurridos2%255D%255Btype%255D%3D%26filter_column%255Bdias_transcurridos2%255D%255Bsorting%255D%3D%26filter_column%255Bdias_transcurridos%255D%255Btype%255D%3D%26filter_column%255Bdias_transcurridos%255D%255Bsorting%255D%3D%26lasturl%3Dhttp%253A%252F%252Fsiscon.info%252Fadmin%252Fcotizaciones19",'button_color'=>'success','button_icon'=>'fa fa-search'];
+		    $this->sub_module[] = ['label'=>'Autorizar', 'path'=>'autorizaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-square','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(adminPrivilegeId()) ? "0" : "1"];
 	        $this->sub_module[] = ['label'=>'Anular', 'path'=>'anulaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'danger','button_icon'=>'fa fa-ban','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(adminPrivilegeId()) ? "0" : "1"];
 
 
@@ -293,7 +294,14 @@
 	    |
 	    */
 	    public function hook_query_index(&$query) {
-	        //Your code here
+
+			/* $cotizacionesAdmin = DB::table('cotizaciones')->where('stamp_user', CRUDBooster::myName())->get();
+
+	        if(CRUDBooster::myPrivilegeId() == 33 || CRUDBooster::myPrivilegeId() == 34 || CRUDBooster::myPrivilegeId() == 35) {
+	            foreach($cotizacionesAdmin as $ca){
+					$query->where('nrosolicitud', $ca->nrosolicitud);
+				}
+	        } */
 	            
 	    }
 
