@@ -65,11 +65,13 @@
 			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Este;Oeste;Centro'];
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
+			$this->form[] = ['label'=>'Provincia', 'name'=>'provincia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10','dataenum'=>'Buenos Aires; Catamarca; Chaco; Chubut; Ciudad Autónoma de Buenos Aires; Córdoba; Corrientes; Entre Ríos; Formosa; Jujuy; La Pampa; La Rioja; Mendoza; Misiones; Neuquén; Río Negro; Salta; San Juan; San Luis; Santa Cruz; Santa Fe; Santiago del Estero; Tierra del Fuego; Antártida e Islas del Atlántico Sur'];
 			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Receta Post-datada','name'=>'postdatada','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'postdatada,cantidad'];
+			$this->form[] = ['label'=>'Receta Post-datada','name'=>'postdatada','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'postdatada,cantidad'];
 			$this->form[] = ['label'=>'Fecha Vencimiento','name'=>'fecha_vencimiento','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Patologías','name'=>'patologia','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'dataenum'=>'Si;No'];
 			
 
