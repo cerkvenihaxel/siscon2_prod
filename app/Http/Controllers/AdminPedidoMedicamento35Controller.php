@@ -333,8 +333,10 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
+            $postdata['estado_solicitud_id']=1;
 
-	    }
+
+        }
 
 	    /*
 	    | ----------------------------------------------------------------------
