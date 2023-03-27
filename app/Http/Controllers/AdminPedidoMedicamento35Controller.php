@@ -66,9 +66,9 @@
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
 			$this->form[] = ['label'=>'Provincia', 'name'=>'provincia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10','dataenum'=>'Buenos Aires; Catamarca; Chaco; Chubut; Ciudad Autónoma de Buenos Aires; Córdoba; Corrientes; Entre Ríos; Formosa; Jujuy; La Pampa; La Rioja; Mendoza; Misiones; Neuquén; Río Negro; Salta; San Juan; San Luis; Santa Cruz; Santa Fe; Santiago del Estero; Tierra del Fuego; Antártida e Islas del Atlántico Sur'];
-			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>date('Y-m-d')];
 			$this->form[] = ['label'=>'Receta Post-datada','name'=>'postdatada','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'postdatada,cantidad'];
-			$this->form[] = ['label'=>'Fecha Vencimiento','name'=>'fecha_vencimiento','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Fecha Vencimiento','name'=>'fecha_vencimiento','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>date('Y-m-d', strtotime('+1 month'))];
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Patologías','name'=>'patologia','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
@@ -132,18 +132,21 @@
 	        */
 	        $this->sub_module = array();
 
+            $this->sub_module[] = ['label'=>'Autorizar solicitud', 'path'=>'cotizaciones19/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"[estado_solicitud_id] == 8"];
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add More Action Button / Menu
-	        | ----------------------------------------------------------------------
-	        | @label       = Label of action
-	        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
-	        | @icon        = Font awesome class icon. e.g : fa fa-bars
-	        | @color 	   = Default is primary. (primary, warning, succecss, info)
-	        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
-	        |
-	        */
+
+
+            /*
+            | ----------------------------------------------------------------------
+            | Add More Action Button / Menu
+            | ----------------------------------------------------------------------
+            | @label       = Label of action
+            | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
+            | @icon        = Font awesome class icon. e.g : fa fa-bars
+            | @color 	   = Default is primary. (primary, warning, succecss, info)
+            | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
+            |
+            */
 	        $this->addaction = array();
 		$PRIVILEGIO=CRUDBooster::myPrivilegeId();
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 1", 'confirmation'=>true];
