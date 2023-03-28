@@ -66,7 +66,7 @@
 
 			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 
-
+            $this->form[] = ['label'=>'Seleccionar Proveedor','name'=>'proveedor','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'proveedores_convenio,nombre','required'=>true];
             $this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 
             $this->form[] = ['label'=>'Archivo 1', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
