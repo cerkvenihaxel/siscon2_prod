@@ -132,7 +132,7 @@
 	        */
 	        $this->sub_module = array();
 
-            $this->sub_module[] = ['label'=>'Autorizar solicitud', 'path'=>'cotizaciones19/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"[estado_solicitud_id] == 8"];
+            $this->sub_module[] = ['label'=>'Autorizar solicitud', 'path'=>'convenio_oficina_os/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-check','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"[estado_solicitud_id] == 8"];
 
 
 
