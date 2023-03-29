@@ -92,18 +92,14 @@
                 @foreach($pedidoDetail as $pD)
                     <td>{{$pD->articuloZafiro_id}}</td>
                     <td>{{$monodroga = DB::table('articulosZafiro')->where('id', $pD->articuloZafiro_id)->value('des_monodroga')}}</td>
-                    <td> {{$pD->cantidad}}</td>
+                    <td>{{$pD->cantidad}}</td>
                     <td>
                         <a href="https://ar.kairosweb.com/?s={{$monodroga}}">
                             LINK
-
                         </a>
                     </td>
                 @endforeach
-
-
             </tr>
-            </tbody>
             </tbody>
         </table>
     </div>
