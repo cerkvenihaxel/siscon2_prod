@@ -87,7 +87,6 @@
             </tr>
             </thead>
             <tbody>
-            <tbody>
             <tr>
                 @foreach($pedidoDetail as $pD)
                     <td>{{$pD->articuloZafiro_id}}</td>
