@@ -151,7 +151,9 @@
 		$PRIVILEGIO=CRUDBooster::myPrivilegeId();
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 1", 'confirmation'=>true];
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 1", 'confirmation'=>true];
-	        /*
+		$this->addaction[] = ['label'=>'Anular solicitud','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO == 1", 'confirmation'=>true];
+   
+		/*
 
 	        /*
 	        | ----------------------------------------------------------------------

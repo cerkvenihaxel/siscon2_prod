@@ -86,6 +86,7 @@
             <tr>
                 <th>Código</th>
                 <th>Monodroga</th>
+                <th>Nombre comercial || presentación </th>
                 <th>Cantidad</th>
                 <th>Ver precio en Kairos web</th>
             </tr>
@@ -95,6 +96,7 @@
                     <tr>
                     <td>{{$pD->articuloZafiro_id}}</td>
                     <td>{{$monodroga = DB::table('articulosZafiro')->where('id', $pD->articuloZafiro_id)->value('des_monodroga')}}</td>
+                    <td>{{ DB::table('articulosZafiro')->where('id', $pD->articuloZafiro_id)->value('des_articulo') }} || {{ DB::table('articulosZafiro')->where('id', $pD->articuloZafiro_id)->value('presentacion') }} </td>
                     <td>{{$pD->cantidad}}</td>
                     <td>
                         <a href="https://ar.kairosweb.com/?s={{$monodroga}}">
