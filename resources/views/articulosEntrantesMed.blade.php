@@ -13,6 +13,7 @@ $data = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $
                 <tr>
                     <th>Código de artículos </th>
                     <th>Nombre del artículo</th>
+                    <th>Nombre comercial || presentación </th>
                     <th>Cantidad</th>
                 </tr>
             </thead>
@@ -20,7 +21,8 @@ $data = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $
               @foreach ($data as $d)
                 <tr key={{$d->pedido_medicamento_id}}>
                     <td>{{ $d->articuloZafiro_id }}</td>
-                    <td>{{ DB::table('articulosZafiro')->where('id', $d->articuloZafiro_id)->value('des_articulo') }}</td>
+                    <td>{{ DB::table('articulosZafiro')->where('id', $d->articuloZafiro_id)->value('des_monodroga') }}</td>
+                    <td>{{ DB::table('articulosZafiro')->where('id', $d->articuloZafiro_id)->value('des_articulo') }} || {{ DB::table('articulosZafiro')->where('id', $d->articuloZafiro_id)->value('presentacion') }} </td>
                     <td>{{ $d->cantidad }}</td>
                 </tr> 
                   

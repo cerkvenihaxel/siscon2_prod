@@ -26,7 +26,8 @@
             </li>
         </ul>
     </nav>
-    <div class="container bg-light mt-3">
+    <div class="bg-light mt-3">
+    <div class="container">
         <div class="card border-primary mb-3">
             <div class="card-header bg-primary text-white">Datos del paciente - Buscar</div>
             <div class="card-body">
@@ -113,5 +114,7 @@
                 <button class="btn btn-primary" onclick="window.print()">Imprimir</button>
             </div>
         </div>
+
+    </div>
     </body>
 
