@@ -119,7 +119,7 @@
 	        |
 	        */
 	        $this->sub_module = array();
-            $this->sub_module[] = ['label'=>'Generar pedido', 'path'=>'cotizacion_convenio/add/?id[]=[id]','foreign_key'=>'convenio_oficina_os_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(proveedorPrivilegeId()) ? "1" : "0"];
+            $this->sub_module[] = ['label'=>'Generar pedido', 'path'=>'cotizacion_convenio/add/?id[]=[id]','foreign_key'=>'convenio_oficina_os_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 
 
 	        /*
