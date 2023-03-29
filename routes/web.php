@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticulosReportController;
 use App\Http\Controllers\ProveedoresReportController;
 use App\Http\Controllers\MedicosReportController;
-
+use App\Http\Controllers\MedicacionBusquedaController;
 use App\Http\Controllers\FullCalendarController;
 
 /*
@@ -23,7 +23,7 @@ Route::get('/', function () {
     return view('crudbooster::login');
 
 return view('crudbooster::login');
-    
+
 });
 
 Route::get('/comparativa', function () {
@@ -105,3 +105,5 @@ Route::get('fullcalendar', [FullCalendarController::class, 'index']);
 Route::post('fullcalendar/create', [FullCalendarController::class, 'create']);
 Route::post('fullcalendar/update', [FullCalendarController::class, 'update']);
 Route::post('fullcalendar/delete', [FullCalendarController::class, 'destroy']);
+
+Route::get('/medicacion_requerida/{id}', [MedicacionBusquedaController::class, 'showMeds']);

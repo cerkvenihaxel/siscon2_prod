@@ -37,6 +37,7 @@
             $this->col[] = ["label"=>"Número de solicitud","name"=>"nrosolicitud" ];
             $this->col[] = ["label"=>"Médico Solicitante","name"=>"medicos_id","join"=>"medicos,nombremedico" ];
             $this->col[] = ["label"=>"Estado solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado" ];
+            $this->col[] = ["label"=>"Proveedor Seleccionado","name"=>"proveedor","join"=>"proveedores_convenio,nombre" ];
             # END COLUMNS DO NOT REMOVE THIS LINE
 
 			$url = $_GET['id'];
@@ -66,7 +67,7 @@
 
 			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 
-            $this->form[] = ['label'=>'Seleccionar Proveedor','name'=>'proveedor','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'proveedores_convenio,nombre','required'=>true];
+            $this->form[] = ['label'=>'Proveedor seleccionado','name'=>'proveedor','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'proveedores_convenio,nombre','required'=>true];
             $this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 
             $this->form[] = ['label'=>'Archivo 1', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
@@ -134,18 +135,18 @@
 	        |
 	        */
 	        $this->addaction = array();
+            $this->addaction[] = ['label'=>'Ver medicación requerida','url'=>'/medicacion_requerida/[id]','icon'=>'fa fa-eye','target'=>'_blank','color'=>'warning'];
 
-
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add More Button Selected
-	        | ----------------------------------------------------------------------
-	        | @label       = Label of action
-	        | @icon 	   = Icon from fontawesome
-	        | @name 	   = Name of button
-	        | Then about the action, you should code at actionButtonSelected method
-	        |
-	        */
+            /*
+            | ----------------------------------------------------------------------
+            | Add More Button Selected
+            | ----------------------------------------------------------------------
+            | @label       = Label of action
+            | @icon 	   = Icon from fontawesome
+            | @name 	   = Name of button
+            | Then about the action, you should code at actionButtonSelected method
+            |
+            */
 	        $this->button_selected = array();
 
 
@@ -204,8 +205,7 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = NULL;
-
+	        $this->script_js = null;
 
             /*
 	        | ----------------------------------------------------------------------
