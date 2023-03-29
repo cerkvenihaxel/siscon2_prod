@@ -87,8 +87,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
                 @foreach($pedidoDetail as $pD)
+                    <tr>
                     <td>{{$pD->articuloZafiro_id}}</td>
                     <td>{{$monodroga = DB::table('articulosZafiro')->where('id', $pD->articuloZafiro_id)->value('des_monodroga')}}</td>
                     <td>{{$pD->cantidad}}</td>
@@ -102,10 +102,6 @@
             </tbody>
         </table>
     </div>
-
-
-
-
 
     </body>
 
