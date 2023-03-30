@@ -46,11 +46,9 @@
             $this->clinicas_id = DB::table('convenio_oficina_os')->where('id', $this->url)->value('clinicas_id');
             $this->discapacidad = DB::table('convenio_oficina_os')->where('id', $this->url)->value('discapacidad');
             $this->fecha_receta = DB::table('convenio_oficina_os')->where('id', $this->url)->value('fecha_receta');
-            $this->fecha_receta = date("d/m/Y", strtotime($this->fecha_receta));
             $this->postdatada = DB::table('convenio_oficina_os')->where('id', $this->url)->value('postdatada');
             $this->postdatada = DB::table('postdatada')->where('id', $this->postdatada)->value('cantidad');
             $this->fecha_vencimiento = DB::table('convenio_oficina_os')->where('id', $this->url)->value('fecha_vencimiento');
-            $this->fecha_vencimiento = date("d/m/Y", strtotime($this->fecha_vencimiento));
             $this->zona_residencia = DB::table('convenio_oficina_os')->where('id', $this->url)->value('zona_residencia');
             $this->proveedorID = DB::table('convenio_oficina_os')->where('id', $this->url)->value('proveedor');
             $this->proveedor = DB::table('proveedores_convenio')->where('id', $this->proveedorID)->value('nombre');
@@ -101,8 +99,8 @@
 
             # START FORM DO NOT REMOVE THIS LINE
             $this->form = [];
-            $this->form[] = ['label' => 'Número ID', 'name' => 'numeroID', 'type' => 'text', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'disabled' => 'disabled', 'readonly' => true, 'value' => DB::table('convenio_oficina_os')->where('id', $this->url)->value('afiliados_id')];
-            $this->form[] = ['label' => 'Nombre y Apellido Afiliado', 'name' => 'nombreyapellido', 'type' => 'text', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'disabled' => 'disabled', 'readonly' => true, 'value' => $this->nombreyapellido];
+            $this->form[] = ['label' => 'Número ID', 'name' => 'numeroID', 'type' => 'text', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'readonly' => true, 'value' => DB::table('convenio_oficina_os')->where('id', $this->url)->value('afiliados_id')];
+            $this->form[] = ['label' => 'Nombre y Apellido Afiliado', 'name' => 'nombreyapellido', 'type' => 'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'required' => true, 'readonly' => true, 'value' => $this->nombreyapellido];
             $this->form[] = ['label' => 'NroAfiliado', 'name' => 'nroAfiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->nroAfiliado];
             $this->form[] = ['label' => 'Documento', 'name' => 'documento', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->documento];
             $this->form[] = ['label' => 'Edad', 'name' => 'edad', 'type' => 'number', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->edad];
