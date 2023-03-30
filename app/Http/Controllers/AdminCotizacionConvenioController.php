@@ -26,6 +26,7 @@
         private $proveedor;
 
         private $medicamentosRequiredId;
+        private $stamp_user;
 
 
 
@@ -57,6 +58,9 @@
             $this->medicamentosRequiredId = DB::table('pedido_medicamento')->where('nrosolicitud', $this->nroSolicitud)->value('id');
             $this->medicamentosRequired = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $this->medicamentosRequiredId)->get();
 
+            $this->stamp_user = CRUDBooster::myName();
+
+            $this->stamp_user = DB::table('cms_users')->where('name', $this->stamp_user)->value('email');
         }
 
 	    public function cbInit()
@@ -143,7 +147,7 @@
             $this->form[] = ['label'=>'Archivo 4', 'name'=>'archivo4','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
 
 
-            $this->form[] = ['label'=>'Stamp User','name'=>'stamp_user','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'disabled'=>'disabled', 'readonly'=>true];
+            $this->form[] = ['label'=>'Stamp User','name'=>'stamp_user','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'disabled'=>'disabled', 'readonly'=>true, 'value'=>DB::table('cms_users')->where('id',CRUDBooster::myId())->value('email')];
 
             # END FORM DO NOT REMOVE THIS LINE
 
