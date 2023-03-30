@@ -44,6 +44,8 @@
 			$custom_element = view('articulosEntrantesMed')->render();
 
 
+
+
             # START FORM DO NOT REMOVE THIS LINE
             $this->form = [];
             $this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,nroAfiliado,documento,sexo,localidad','datamodal_select_to'=>'nroAfiliado:nroAfiliado,obra_social:obra_social','datamodal_size'=>'large', 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('afiliados_id')];
@@ -120,7 +122,7 @@
 	        |
 	        */
 	        $this->sub_module = array();
-            $this->sub_module[] = ['label'=>'Generar pedido', 'path'=>'cotizacion_convenio/add/?id[]=[id]','foreign_key'=>'convenio_oficina_os_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+            $this->sub_module[] = ['label'=>'Generar pedido', 'path'=>'cotizacion_convenio/add/?id[]=[id]','foreign_key'=>'convenio_oficina_os_id','button_color'=>'success','button_icon'=>'fa fa-check'];
 
 
 	        /*
@@ -136,6 +138,7 @@
 	        */
 	        $this->addaction = array();
             $this->addaction[] = ['label'=>'Ver medicación requerida','url'=>'/medicacion_requerida/[id]','icon'=>'fa fa-eye','target'=>'_blank','color'=>'warning'];
+
 
             /*
             | ----------------------------------------------------------------------

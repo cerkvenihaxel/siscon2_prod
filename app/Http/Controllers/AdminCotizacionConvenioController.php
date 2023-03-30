@@ -7,69 +7,145 @@
 
 	class AdminCotizacionConvenioController extends \crocodicstudio\crudbooster\controllers\CBController {
 
-	    public function cbInit() {
+        private $url;
+        private $nroSolicitud;
+        private $nroAfiliado;
+        private $numeroID;
+        private $nombreyapellido;
+        private $documento;
+        private $edad;
+        private $tel_afiliado;
+        private $email;
+        private $medicos_id;
+        private $clinicas_id;
+        private $discapacidad;
+        private $fecha_receta;
+        private $postdatada;
+        private $fecha_vencimiento;
+        private $zona_residencia;
+        private $proveedor;
 
-			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "id";
-			$this->limit = "20";
-			$this->orderby = "id,desc";
-			$this->global_privilege = false;
-			$this->button_table_action = true;
-			$this->button_bulk_action = true;
-			$this->button_action_style = "button_icon";
-			$this->button_add = true;
-			$this->button_edit = true;
-			$this->button_delete = true;
-			$this->button_detail = true;
-			$this->button_show = true;
-			$this->button_filter = true;
-			$this->button_import = false;
-			$this->button_export = false;
-			$this->table = "cotizacion_convenio";
-			# END CONFIGURATION DO NOT REMOVE THIS LINE
+        private $medicamentosRequiredId;
 
-			# START COLUMNS DO NOT REMOVE THIS LINE
-			$this->col = [];
-			$this->col[] = ["label"=>"Archivo","name"=>"archivo"];
-			$this->col[] = ["label"=>"Archivo2","name"=>"archivo2"];
-			$this->col[] = ["label"=>"Archivo3","name"=>"archivo3"];
-			$this->col[] = ["label"=>"Archivo4","name"=>"archivo4"];
-			$this->col[] = ["label"=>"Clinicas Id","name"=>"clinicas_id","join"=>"clinicas,id"];
-			$this->col[] = ["label"=>"Discapacidad","name"=>"discapacidad"];
-			$this->col[] = ["label"=>"Documento","name"=>"documento"];
-			# END COLUMNS DO NOT REMOVE THIS LINE
 
-			# START FORM DO NOT REMOVE THIS LINE
-			$this->form = [];
-			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Archivo3','name'=>'archivo3','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Archivo4','name'=>'archivo4','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Clinicas Id','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,id'];
-			$this->form[] = ['label'=>'Discapacidad','name'=>'discapacidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Documento','name'=>'documento','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|unique:cotizacion_convenio','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
-			$this->form[] = ['label'=>'Estado Pedido Id','name'=>'estado_pedido_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_pedido,id'];
-			$this->form[] = ['label'=>'Estado Solicitud Id','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'estado_solicitud,id'];
-			$this->form[] = ['label'=>'Fecha Carga','name'=>'fecha_carga','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Fecha Entrega','name'=>'fecha_entrega','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Fecha Vencimiento','name'=>'fecha_vencimiento','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Medicos Id','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,id'];
-			$this->form[] = ['label'=>'Nombreyapellido','name'=>'nombreyapellido','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'NroAfiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Nrosolicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'NumeroID','name'=>'numeroID','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Postdatada','name'=>'postdatada','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Proveedor','name'=>'proveedor','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Punto Retiro Id','name'=>'punto_retiro_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'punto_retiro,id'];
-			$this->form[] = ['label'=>'Stamp User','name'=>'stamp_user','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Tel Medico','name'=>'tel_medico','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			# END FORM DO NOT REMOVE THIS LINE
+
+        public function __construct(Request $request) {
+            $this->url = $_GET['id'];
+            $this->numeroID = DB::table('convenio_oficina_os')->where('id', $this->url)->value('afiliados_id');
+            $this->nombreyapellido = DB::table('convenio_oficina_os')->where('id', $this->url)->value('afiliados_id');
+            $this->nombreyapellido = DB::table('afiliados')->where('id', $this->nombreyapellido)->value('apeynombres');
+
+            $this->nroSolicitud = DB::table('convenio_oficina_os')->where('id', $this->url)->value('nrosolicitud');
+            $this->nroAfiliado = DB::table('convenio_oficina_os')->where('id', $this->url)->value('nroAfiliado');
+            $this->documento = DB::table('afiliados')->where('id', $this->numeroID)->value('documento');
+            $this->edad = DB::table('convenio_oficina_os')->where('id', $this->url)->value('edad');
+            $this->tel_afiliado = DB::table('convenio_oficina_os')->where('id', $this->url)->value('tel_afiliado');
+            $this->email = DB::table('convenio_oficina_os')->where('id', $this->url)->value('email');
+            $this->medicos_id = DB::table('convenio_oficina_os')->where('id', $this->url)->value('medicos_id');
+            $this->clinicas_id = DB::table('convenio_oficina_os')->where('id', $this->url)->value('clinicas_id');
+            $this->discapacidad = DB::table('convenio_oficina_os')->where('id', $this->url)->value('discapacidad');
+            $this->fecha_receta = DB::table('convenio_oficina_os')->where('id', $this->url)->value('fecha_receta');
+            $this->fecha_receta = date("d/m/Y", strtotime($this->fecha_receta));
+            $this->postdatada = DB::table('convenio_oficina_os')->where('id', $this->url)->value('postdatada');
+            $this->postdatada = DB::table('postdatada')->where('id', $this->postdatada)->value('cantidad');
+            $this->fecha_vencimiento = DB::table('convenio_oficina_os')->where('id', $this->url)->value('fecha_vencimiento');
+            $this->fecha_vencimiento = date("d/m/Y", strtotime($this->fecha_vencimiento));
+            $this->zona_residencia = DB::table('convenio_oficina_os')->where('id', $this->url)->value('zona_residencia');
+            $this->proveedorID = DB::table('convenio_oficina_os')->where('id', $this->url)->value('proveedor');
+            $this->proveedor = DB::table('proveedores_convenio')->where('id', $this->proveedorID)->value('nombre');
+
+            $this->medicamentosRequiredId = DB::table('pedido_medicamento')->where('nrosolicitud', $this->nroSolicitud)->value('id');
+            $this->medicamentosRequired = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $this->medicamentosRequiredId)->get();
+
+        }
+
+	    public function cbInit()
+        {
+
+            # START CONFIGURATION DO NOT REMOVE THIS LINE
+            $this->title_field = "id";
+            $this->limit = "20";
+            $this->orderby = "id,desc";
+            $this->global_privilege = false;
+            $this->button_table_action = true;
+            $this->button_bulk_action = true;
+            $this->button_action_style = "button_icon";
+            $this->button_add = true;
+            $this->button_edit = true;
+            $this->button_delete = true;
+            $this->button_detail = true;
+            $this->button_show = true;
+            $this->button_filter = true;
+            $this->button_import = false;
+            $this->button_export = false;
+            $this->table = "cotizacion_convenio";
+            # END CONFIGURATION DO NOT REMOVE THIS LINE
+
+            # START COLUMNS DO NOT REMOVE THIS LINE
+            $this->col = [];
+            $this->col[] = ['label' => 'Fecha de carga', 'name' => 'created_at'];
+            $this->col[] = ["label" => "Nombre y Apellido Afiliado", "name" => "nombreyapellido"];
+            $this->col[] = ["label" => "Documento", "name" => "documento"];
+            $this->col[] = ["label" => "Medico", "name" => "medicos_id", "join" => "medicos,nombremedico"];
+            $this->col[] = ["label" => "Nro. Solicitud", "name" => "nrosolicitud"];
+            $this->col[] = ["label" => "Proveedor", "name" => "proveedor"];
+            $this->col[] = ["label" => "Estado Solicitud", "name" => "estado_solicitud_id", "join" => "estado_solicitud,estado"];
+            # END COLUMNS DO NOT REMOVE THIS LINE
+
+            $custom_element = view('articulosEntrantesCotMed')->render();
+
+
+            # START FORM DO NOT REMOVE THIS LINE
+            $this->form = [];
+            $this->form[] = ['label' => 'Número ID', 'name' => 'numeroID', 'type' => 'text', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'disabled' => 'disabled', 'readonly' => true, 'value' => DB::table('convenio_oficina_os')->where('id', $this->url)->value('afiliados_id')];
+            $this->form[] = ['label' => 'Nombre y Apellido Afiliado', 'name' => 'nombreyapellido', 'type' => 'text', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'disabled' => 'disabled', 'readonly' => true, 'value' => $this->nombreyapellido];
+            $this->form[] = ['label' => 'NroAfiliado', 'name' => 'nroAfiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->nroAfiliado];
+            $this->form[] = ['label' => 'Documento', 'name' => 'documento', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->documento];
+            $this->form[] = ['label' => 'Edad', 'name' => 'edad', 'type' => 'number', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->edad];
+            $this->form[] = ['label' => 'Telefono afiliado', 'name' => 'tel_afiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->tel_afiliado];
+            $this->form[] = ['label' => 'Email', 'name' => 'email', 'type' => 'email', 'validation' => 'required|min:1|max:255|email|unique:cotizacion_convenio', 'width' => 'col-sm-10', 'placeholder' => 'Introduce una dirección de correo electrónico válida', 'readonly' => true, 'value' => $this->email];
+            $this->form[] = ['label' => 'Medicos Id', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'readonly' => true, 'value' => $this->medicos_id];
+            $this->form[] = ['label' => 'Clinicas Id', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'readonly' => true, 'value' => $this->clinicas_id];
+            $this->form[] = ['label' => 'Discapacidad', 'name' => 'discapacidad', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->discapacidad];
+            $this->form[] = ['label' => 'Nrosolicitud', 'name' => 'nrosolicitud', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => 'readonly', 'value' => $this->nroSolicitud];
+            $this->form[] = ['label' => 'Fecha Receta', 'name' => 'fecha_receta', 'type' => 'date', 'validation' => 'required|date', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->fecha_receta];
+            $this->form[] = ['label' => 'Postdatada', 'name' => 'postdatada', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->postdatada];
+            $this->form[] = ['label' => 'Fecha Vencimiento', 'name' => 'fecha_vencimiento', 'type' => 'date', 'validation' => 'required|date', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->fecha_vencimiento];
+            $this->form[] = ['label' => 'Zona Residencia', 'name' => 'zona_residencia', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'value' => $this->zona_residencia, 'readonly' => true];
+
+            $this->form[] = ['label' => 'Fecha Entrega', 'name' => 'fecha_entrega', 'type' => 'date', 'validation' => 'required|date', 'width' => 'col-sm-10', 'placeholder' => 'Introduce una fecha de entrega'];
+
+            $this->form[] = ['label' => 'Estado Pedido Id', 'name' => 'estado_pedido_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'estado_pedido,estado', 'value' => 3];
+            $this->form[] = ['label' => 'Estado Solicitud Id', 'name' => 'estado_solicitud_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'estado_solicitud,estado', 'value' => 6];
+
+            $this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
+
+            $columns = [];
+            $columns[] = ['label'=> 'Medicamentos solicitados', 'name'=>'articuloZafiro_id', 'type'=>'datamodal', 'datamodal_table'=>'articulosZafiro', 'validation'=>'required','datamodal_columns_alias'=>'Monodroga, Descripción del artículo, Presentación, ID ARTÍCULO','datamodal_columns'=>'des_monodroga,des_articulo,presentacion,id_articulo','datamodal_size'=>'large', 'datamodal_where'=>'id_familia = "01"', 'AND', 'id_familia= "14"', 'datamodal_select_to'=>'presentacion:presentacion','required'=>true];
+            $columns [] = ['label'=> 'Presentación', 'name'=>'presentacion', 'type'=>'text', 'readonly'=>true];
+            $columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
+            $columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text', 'validation'=>'required|min:1|max:255', 'required'=>true];
+            $columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'text', 'validation'=>'required|integer|min:0', 'required'=>true];
+            $columns[] = ['label'=>'Descuento', 'name'=>'descuento', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
+
+            $this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizacion_convenio_detail', 'type'=>'child','table'=>'cotizacion_convenio_detail', 'foreign_key'=>'cotizacion_convenio_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
+
+
+            $this->form[] = ['label' => 'Proveedor', 'name' => 'proveedor', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'value' => $this->proveedor, 'readonly' => true];
+            $this->form[] = ['label' => 'Punto de Retiro', 'name' => 'punto_retiro_id', 'type' => 'datamodal', 'datamodal_table' => 'punto_retiro', 'datamodal_columns' => 'nombre,direccion,localidad,provincia,telefono', 'datamodal_columns_alias' => 'Nombre, Dirección, Zona, Localidad, Telefono', 'datamodal_size' => 'large', 'required' => true, 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'datamodal_where' => 'id = ' . $this->proveedorID, 'datamodal_select_to'=>'direccion:direccion_retiro,localidad:localidad_retiro,telefono:tel_retiro'];
+            $this->form[] = ['label'=>'Direccion de entrega','name'=>'direccion_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Localidad de retiro','name'=>'localidad_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Telefono de punto de retiro','name'=>'tel_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Archivo 1', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+            $this->form[] = ['label'=>'Archivo 2', 'name'=>'archivo2','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+            $this->form[] = ['label'=>'Archivo 3', 'name'=>'archivo3','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+            $this->form[] = ['label'=>'Archivo 4', 'name'=>'archivo4','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+
+
+            $this->form[] = ['label'=>'Stamp User','name'=>'stamp_user','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'disabled'=>'disabled', 'readonly'=>true];
+
+            # END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
@@ -103,89 +179,89 @@
 			//$this->form[] = ["label"=>"Zona Residencia","name"=>"zona_residencia","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			# OLD END FORM
 
-			/* 
-	        | ---------------------------------------------------------------------- 
+			/*
+	        | ----------------------------------------------------------------------
 	        | Sub Module
-	        | ----------------------------------------------------------------------     
-			| @label          = Label of action 
+	        | ----------------------------------------------------------------------
+			| @label          = Label of action
 			| @path           = Path of sub module
 			| @foreign_key 	  = foreign key of sub table/module
 			| @button_color   = Bootstrap Class (primary,success,warning,danger)
-			| @button_icon    = Font Awesome Class  
+			| @button_icon    = Font Awesome Class
 			| @parent_columns = Sparate with comma, e.g : name,created_at
-	        | 
+	        |
 	        */
 	        $this->sub_module = array();
 
 
-	        /* 
-	        | ---------------------------------------------------------------------- 
+	        /*
+	        | ----------------------------------------------------------------------
 	        | Add More Action Button / Menu
-	        | ----------------------------------------------------------------------     
-	        | @label       = Label of action 
+	        | ----------------------------------------------------------------------
+	        | @label       = Label of action
 	        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
 	        | @icon        = Font awesome class icon. e.g : fa fa-bars
-	        | @color 	   = Default is primary. (primary, warning, succecss, info)     
+	        | @color 	   = Default is primary. (primary, warning, succecss, info)
 	        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
-	        | 
+	        |
 	        */
 	        $this->addaction = array();
 
 
-	        /* 
-	        | ---------------------------------------------------------------------- 
+	        /*
+	        | ----------------------------------------------------------------------
 	        | Add More Button Selected
-	        | ----------------------------------------------------------------------     
-	        | @label       = Label of action 
+	        | ----------------------------------------------------------------------
+	        | @label       = Label of action
 	        | @icon 	   = Icon from fontawesome
-	        | @name 	   = Name of button 
-	        | Then about the action, you should code at actionButtonSelected method 
-	        | 
+	        | @name 	   = Name of button
+	        | Then about the action, you should code at actionButtonSelected method
+	        |
 	        */
 	        $this->button_selected = array();
 
-	                
-	        /* 
-	        | ---------------------------------------------------------------------- 
+
+	        /*
+	        | ----------------------------------------------------------------------
 	        | Add alert message to this module at overheader
-	        | ----------------------------------------------------------------------     
-	        | @message = Text of message 
-	        | @type    = warning,success,danger,info        
-	        | 
+	        | ----------------------------------------------------------------------
+	        | @message = Text of message
+	        | @type    = warning,success,danger,info
+	        |
 	        */
 	        $this->alert        = array();
-	                
 
-	        
-	        /* 
-	        | ---------------------------------------------------------------------- 
-	        | Add more button to header button 
-	        | ----------------------------------------------------------------------     
-	        | @label = Name of button 
+
+
+	        /*
+	        | ----------------------------------------------------------------------
+	        | Add more button to header button
+	        | ----------------------------------------------------------------------
+	        | @label = Name of button
 	        | @url   = URL Target
 	        | @icon  = Icon from Awesome.
-	        | 
+	        |
 	        */
 	        $this->index_button = array();
 
 
 
-	        /* 
-	        | ---------------------------------------------------------------------- 
-	        | Customize Table Row Color
-	        | ----------------------------------------------------------------------     
-	        | @condition = If condition. You may use field alias. E.g : [id] == 1
-	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.        
-	        | 
-	        */
-	        $this->table_row_color = array();     	          
-
-	        
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | You may use this bellow array to add statistic at dashboard 
-	        | ---------------------------------------------------------------------- 
-	        | @label, @count, @icon, @color 
+	        | ----------------------------------------------------------------------
+	        | Customize Table Row Color
+	        | ----------------------------------------------------------------------
+	        | @condition = If condition. You may use field alias. E.g : [id] == 1
+	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.
+	        |
+	        */
+	        $this->table_row_color = array();
+
+
+	        /*
+	        | ----------------------------------------------------------------------
+	        | You may use this bellow array to add statistic at dashboard
+	        | ----------------------------------------------------------------------
+	        | @label, @count, @icon, @color
 	        |
 	        */
 	        $this->index_statistic = array();
@@ -193,10 +269,10 @@
 
 
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Add javascript at body 
-	        | ---------------------------------------------------------------------- 
-	        | javascript code in the variable 
+	        | ----------------------------------------------------------------------
+	        | Add javascript at body
+	        | ----------------------------------------------------------------------
+	        | javascript code in the variable
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
@@ -204,170 +280,170 @@
 
 
             /*
-	        | ---------------------------------------------------------------------- 
-	        | Include HTML Code before index table 
-	        | ---------------------------------------------------------------------- 
+	        | ----------------------------------------------------------------------
+	        | Include HTML Code before index table
+	        | ----------------------------------------------------------------------
 	        | html code to display it before index table
 	        | $this->pre_index_html = "<p>test</p>";
 	        |
 	        */
 	        $this->pre_index_html = null;
-	        
-	        
-	        
+
+
+
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Include HTML Code after index table 
-	        | ---------------------------------------------------------------------- 
+	        | ----------------------------------------------------------------------
+	        | Include HTML Code after index table
+	        | ----------------------------------------------------------------------
 	        | html code to display it after index table
 	        | $this->post_index_html = "<p>test</p>";
 	        |
 	        */
 	        $this->post_index_html = null;
-	        
-	        
-	        
+
+
+
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Include Javascript File 
-	        | ---------------------------------------------------------------------- 
-	        | URL of your javascript each array 
+	        | ----------------------------------------------------------------------
+	        | Include Javascript File
+	        | ----------------------------------------------------------------------
+	        | URL of your javascript each array
 	        | $this->load_js[] = asset("myfile.js");
 	        |
 	        */
 	        $this->load_js = array();
-	        
-	        
-	        
+
+
+
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Add css style at body 
-	        | ---------------------------------------------------------------------- 
-	        | css code in the variable 
+	        | ----------------------------------------------------------------------
+	        | Add css style at body
+	        | ----------------------------------------------------------------------
+	        | css code in the variable
 	        | $this->style_css = ".style{....}";
 	        |
 	        */
 	        $this->style_css = NULL;
-	        
-	        
-	        
+
+
+
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Include css File 
-	        | ---------------------------------------------------------------------- 
-	        | URL of your css each array 
+	        | ----------------------------------------------------------------------
+	        | Include css File
+	        | ----------------------------------------------------------------------
+	        | URL of your css each array
 	        | $this->load_css[] = asset("myfile.css");
 	        |
 	        */
 	        $this->load_css = array();
-	        
-	        
+
+
 	    }
 
 
 	    /*
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
 	    | Hook for button selected
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
 	    | @id_selected = the id selected
 	    | @button_name = the name of button
 	    |
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
-	            
+
 	    }
 
 
 	    /*
-	    | ---------------------------------------------------------------------- 
-	    | Hook for manipulate query of index result 
-	    | ---------------------------------------------------------------------- 
-	    | @query = current sql query 
+	    | ----------------------------------------------------------------------
+	    | Hook for manipulate query of index result
+	    | ----------------------------------------------------------------------
+	    | @query = current sql query
 	    |
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-	            
+
 	    }
 
 	    /*
-	    | ---------------------------------------------------------------------- 
-	    | Hook for manipulate row of index table html 
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
+	    | Hook for manipulate row of index table html
+	    | ----------------------------------------------------------------------
 	    |
-	    */    
-	    public function hook_row_index($column_index,&$column_value) {	        
+	    */
+	    public function hook_row_index($column_index,&$column_value) {
 	    	//Your code here
 	    }
 
 	    /*
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
 	    | Hook for manipulate data input before add data is execute
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
 	    | @arr
 	    |
 	    */
-	    public function hook_before_add(&$postdata) {        
+	    public function hook_before_add(&$postdata) {
 	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
-	    | Hook for execute command after add public static function called 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
+	    | Hook for execute command after add public static function called
+	    | ----------------------------------------------------------------------
 	    | @id = last insert id
-	    | 
+	    |
 	    */
-	    public function hook_after_add($id) {        
+	    public function hook_after_add($id) {
 	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
 	    | Hook for manipulate data input before update data is execute
-	    | ---------------------------------------------------------------------- 
-	    | @postdata = input post data 
-	    | @id       = current id 
-	    | 
+	    | ----------------------------------------------------------------------
+	    | @postdata = input post data
+	    | @id       = current id
+	    |
 	    */
-	    public function hook_before_edit(&$postdata,$id) {        
+	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
 	    | Hook for execute command after edit public static function called
-	    | ----------------------------------------------------------------------     
-	    | @id       = current id 
-	    | 
+	    | ----------------------------------------------------------------------
+	    | @id       = current id
+	    |
 	    */
 	    public function hook_after_edit($id) {
-	        //Your code here 
+	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
 	    | Hook for execute command before delete public static function called
-	    | ----------------------------------------------------------------------     
-	    | @id       = current id 
-	    | 
+	    | ----------------------------------------------------------------------
+	    | @id       = current id
+	    |
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
 	    | Hook for execute command after delete public static function called
-	    | ----------------------------------------------------------------------     
-	    | @id       = current id 
-	    | 
+	    | ----------------------------------------------------------------------
+	    | @id       = current id
+	    |
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
@@ -376,7 +452,8 @@
 
 
 
-	    //By the way, you can still create your own method in here... :) 
+
+	    //By the way, you can still create your own method in here... :)
 
 
 	}

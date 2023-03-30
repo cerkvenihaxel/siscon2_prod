@@ -2,7 +2,7 @@
 
 <head>
         <meta charset="utf-8" lang="es">
-        <title id="titulo">Siscon Medicacion</title>
+        <title id="titulo">SISCON Convenios</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="icon" href="/SISCON.png" type="image/x-icon">
