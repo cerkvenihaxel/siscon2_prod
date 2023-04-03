@@ -130,6 +130,8 @@
 			| @parent_columns = Sparate with comma, e.g : name,created_at
 	        |
 	        */
+
+		$PRIVILEGIO = CRUDBooster::myPrivilegeId();
 	        $this->sub_module = array();
 
             $this->sub_module[] = ['label'=>'Autorizar solicitud', 'path'=>'convenio_oficina_os/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-check','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO == 41"];
@@ -148,10 +150,10 @@
             |
             */
 	        $this->addaction = array();
-		$PRIVILEGIO=CRUDBooster::myPrivilegeId();
+		
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 40", 'confirmation'=>true];
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 40", 'confirmation'=>true];
-		$this->addaction[] = ['label'=>'Anular solicitud','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO == 41", 'confirmation'=>true];
+		$this->addaction[] = ['label'=>'Anular solicitud','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO== 41", 'confirmation'=>true];
    
 		/*
 
