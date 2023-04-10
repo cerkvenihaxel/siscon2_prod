@@ -76,8 +76,8 @@
 
 
 			$columns = [];
-			$columns[] = ['label'=> 'Medicamentos solicitados', 'name'=>'articuloZafiro_id', 'type'=>'datamodal', 'datamodal_table'=>'articulosZafiro', 'validation'=>'required','datamodal_columns_alias'=>'Monodroga, Descripción del artículo, Presentación, ID ARTÍCULO','datamodal_columns'=>'des_monodroga,des_articulo,presentacion,id_articulo','datamodal_size'=>'large', 'datamodal_where'=>'id_familia = "01"', 'AND', 'id_familia= "14"', 'datamodal_select_to'=>'presentacion:presentacion','required'=>true];
-			$columns [] = ['label'=> 'Presentación', 'name'=>'presentacion', 'type'=>'text', 'readonly'=>true];
+			$columns[] = ['label'=> 'Medicamentos solicitados', 'name'=>'articuloZafiro_id', 'type'=>'datamodal', 'datamodal_table'=>'articulosZafiro', 'validation'=>'required','datamodal_columns_alias'=>'Monodroga, Descripción del artículo, Presentación, ID ARTÍCULO','datamodal_columns'=>'des_monodroga,des_articulo,presentacion,id_articulo','datamodal_size'=>'large', 'datamodal_where'=>'id_familia = "01"', 'AND', 'id_familia= "14"','required'=>true, 'datamodal_select_to'=>'presentacion_completa:presentacion' ];
+            $columns [] = ['label'=> 'Presentación', 'name'=>'presentacion', 'type'=>'text', 'readonly'=>true ];
 			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'pedido_medicamento_detail', 'type'=>'child','table'=>'pedido_medicamento_detail', 'foreign_key'=>'pedido_medicamento_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
@@ -130,8 +130,6 @@
 			| @parent_columns = Sparate with comma, e.g : name,created_at
 	        |
 	        */
-
-		$PRIVILEGIO = CRUDBooster::myPrivilegeId();
 	        $this->sub_module = array();
 
             $this->sub_module[] = ['label'=>'Autorizar solicitud', 'path'=>'convenio_oficina_os/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-check','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO == 41"];
@@ -150,11 +148,11 @@
             |
             */
 	        $this->addaction = array();
-		
+		$PRIVILEGIO=CRUDBooster::myPrivilegeId();
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 40", 'confirmation'=>true];
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 40", 'confirmation'=>true];
-		$this->addaction[] = ['label'=>'Anular solicitud','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO== 41", 'confirmation'=>true];
-   
+		$this->addaction[] = ['label'=>'Anular solicitud','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO == 41", 'confirmation'=>true];
+
 		/*
 
 	        /*
@@ -225,7 +223,7 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = NULL;
+	        $this->script_js = null;
 
 
             /*
@@ -314,11 +312,18 @@
 	    public function hook_query_index(&$query) {
 	        //Your code here
 
+            $convenio_oficina = DB::table('convenio_oficina_os')->value('nrosolicitud');
+
 	if(CRUDBooster::myPrivilegeId() == 6) {
 		$medicoName = CRUDBooster::myName();
 		$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
 		$query->where('medicos_id', $medicoId);
 	}
+
+    if (CRUDBooster::myPrivilegeId() != 1) {
+
+        $query->where('nrosolicitud', '!=', $convenio_oficina);
+    }
 	    }
 
 	    /*
