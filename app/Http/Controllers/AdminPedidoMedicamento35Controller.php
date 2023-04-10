@@ -63,7 +63,7 @@
 			$this->form[] = ['label'=>'Institución','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre','required'=>true];
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true, 'value'=>$IDMEDICO];
 			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Este;Oeste;Centro;Interior'];
-			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
 			$this->form[] = ['label'=>'Provincia', 'name'=>'provincia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'provincias,nombre', 'required'=>true];
 			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>date('Y-m-d')];
@@ -313,12 +313,17 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-
+	$convenio_oficina = DB::table('convenio_oficina_os')->value('nrosolicitud');
 	if(CRUDBooster::myPrivilegeId() == 6) {
 		$medicoName = CRUDBooster::myName();
 		$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
 		$query->where('medicos_id', $medicoId);
 	}
+
+	if(CRUDBooster::myPrivilegeId() != 1) {
+
+	$query->where('nrosolicitud', '!=', $convenio_oficina);
+		}
 	    }
 
 	    /*
