@@ -6,6 +6,7 @@ use App\Http\Controllers\ProveedoresReportController;
 use App\Http\Controllers\MedicosReportController;
 use App\Http\Controllers\MedicacionBusquedaController;
 use App\Http\Controllers\FullCalendarController;
+use App\Http\Controllers\BuscadorAfiliadoConvenioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,5 +106,10 @@ Route::get('fullcalendar', [FullCalendarController::class, 'index']);
 Route::post('fullcalendar/create', [FullCalendarController::class, 'create']);
 Route::post('fullcalendar/update', [FullCalendarController::class, 'update']);
 Route::post('fullcalendar/delete', [FullCalendarController::class, 'destroy']);
-
 Route::get('/medicacion_requerida/{id}', [MedicacionBusquedaController::class, 'showMeds']);
+
+Route::get('/buscador_medicacion', function(){
+    return view('buscadorAfiliadoConvenio');
+});
+
+Route::post('/buscador_convenio', [BuscadorAfiliadoConvenioController::class, 'buscarAfiliadoMed'])->name('buscador_convenio');
