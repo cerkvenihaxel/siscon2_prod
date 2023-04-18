@@ -96,8 +96,6 @@ Route::post('exportExcelAll', [ArticulosReportController::class, 'exportExcelAll
 
 Route::get('/exportExcelProv', [ProveedoresReportController::class, 'exportExcelProv'])->name('exportExcelProv');
 Route::post('/exportExcelProvAll', [ProveedoresReportController::class, 'exportExcelProvAll'])->name('exportExcelProvAll');
-Route::post('/exportExcelProvGeneralAll', [ProveedoresReportController::class, 'exportExcelProvGeneralAll'])->name('exportExcelProvGeneralAll');
-Route::get('/exportExcelProvGeneral', [ProveedoresReportController::class, 'exportExcelProvGeneral'])->name('exportExcelProvGeneral');
 
 Route::get('/exportExcelMed', [MedicosReportController::class, 'exportExcelMed'])->name('exportExcelMed');
 Route::post('/exportExcelMedAll', [MedicosReportController::class, 'exportExcelMedAll'])->name('exportExcelMedAll');
