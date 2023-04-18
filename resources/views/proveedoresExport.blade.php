@@ -1,4 +1,3 @@
-
 <table>
     <tr>
         <th>Nombre del Proveedor</th>
@@ -17,7 +16,7 @@
     </tr>
 </table>
 
-<table class='table table-hover table-striped table-bordered'>
+<table>
 <thead>
     <tr>
         <th>Fecha de cotización</th>
@@ -32,7 +31,7 @@
 <tbody>
     @foreach ($data as $item)
 
-   
+
     <tr>
         <td>{{ $item->created_at }}</td>
         <td>{{ $item->nrosolicitud }}</td>
@@ -41,8 +40,8 @@
         <td>{{ $nombreMedico = DB::table('medicos')->where('id', $item->medicos_id)->value('nombremedico') }}</td>
         <td>{{ $clinicasNombre= DB::table('clinicas')->where('id', $item->clinicas_id)->value('nombre')}}</td>
         <td> {{ $item->fecha_cirugia }}</td>
-        <td>{{ $item->total }}</td>    
-        
+        <td>{{ $item->total }}</td>
+
 
     @endforeach
 
