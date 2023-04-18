@@ -6,11 +6,7 @@ use App\Http\Controllers\ProveedoresReportController;
 use App\Http\Controllers\MedicosReportController;
 use App\Http\Controllers\MedicacionBusquedaController;
 use App\Http\Controllers\FullCalendarController;
-
-use App\Http\Controllers\AccidentesReportController;
-
 use App\Http\Controllers\BuscadorAfiliadoConvenioController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -68,11 +64,6 @@ Route::get('/informesMedico', function () {
     return view('informeReportesMed');
 });
 
-Route::get('/informesAccidentes', function (){
-    return view('informeReportesAccidente');
-});
-
-
 
 Route::get('/tyc', function () {
     return view('tyc');
@@ -85,7 +76,6 @@ Route::get('/escritorioAdmin', function(){
 Route::post('/dateRange', [ArticulosReportController::class, 'dateRange'])->name('dateRange');
 Route::post('/dateRangeProv', [ProveedoresReportController::class, 'dateRangeProv'])->name('dateRangeProv');
 Route::post('/dateRangeMed', [MedicosReportController::class, 'dateRangeMed'])->name('dateRangeMed');
-Route::match(['get', 'post'],'/dateRangeAcc', [\App\Http\Controllers\AccidentesReportController::class, 'dateRangeAcc'])->name('dateRangeAcc');
 
 
 Route::get('/your-view', function () {
@@ -106,14 +96,9 @@ Route::post('exportExcelAll', [ArticulosReportController::class, 'exportExcelAll
 
 Route::get('/exportExcelProv', [ProveedoresReportController::class, 'exportExcelProv'])->name('exportExcelProv');
 Route::post('/exportExcelProvAll', [ProveedoresReportController::class, 'exportExcelProvAll'])->name('exportExcelProvAll');
-Route::post('/exportExcelProvGeneralAll', [ProveedoresReportController::class, 'exportExcelProvGeneralAll'])->name('exportExcelProvGeneralAll');
-Route::get('/exportExcelProvGeneral', [ProveedoresReportController::class, 'exportExcelProvGeneral'])->name('exportExcelProvGeneral');
 
 Route::get('/exportExcelMed', [MedicosReportController::class, 'exportExcelMed'])->name('exportExcelMed');
 Route::post('/exportExcelMedAll', [MedicosReportController::class, 'exportExcelMedAll'])->name('exportExcelMedAll');
-
-Route::get('/exportExcelAcc', [\App\Http\Controllers\AccidentesReportController::class, 'exportExcelAcc'])->name('exportExcelAcc');
-Route::post('/exportExcelAccAll', [\App\Http\Controllers\AccidentesReportController::class, 'exportExcelAccAll'])->name('exportExcelAccAll');
 
 Route::get('/searchFilter', [ArticulosReportController::class, 'searchFilter'])->name('searchFilter');
 
