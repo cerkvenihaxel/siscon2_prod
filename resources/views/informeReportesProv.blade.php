@@ -18,17 +18,18 @@
 </head>
 
 <body>
-    <div class="container container-sm overflow-hidden">
-        <h1 class="logo"> SISCON REPORTES </h1>
+    <div class="container-fluid">
+        <h1 class="text-center"> SISCON REPORTES </h1>
 
-        <div class="card mb-24">
-            <h5 class="card-header">Módulo de reportes para proveedores</h5>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Módulo de reportes para proveedores</h3>
+            </div>
             <div class="card-body">
-                <h5 class="card-title"></h5>
                 <p class="card-text">Seleccione un proveedor de la lista.</p>
 
                 <div class="formulario">
-                    <form method="POST">
+                    <form method="POST" class="form-group" >
                         @csrf
                         <div class="col-6">
                             <select class="js-example-basic-single js-states form-control" id="id_label_single"
@@ -113,13 +114,32 @@
 
                         </script>
 
-                        <button type="submit" formaction="{{route('dateRangeProv')}}" class="btn btn-primary">Realizar
-                            consulta</button>
-                        <label for="inputForm">Exportar Archivo Excel</label>
-                        <input type="submit" formaction="{{route('exportExcelProvAll')}}" class="btn btn-success"
-                            id="inputForm">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" formaction="{{route('dateRangeProv')}}" class="btn btn-primary mr-2">Realizar consulta
+                                     <i class="fa fa-search"></i>
+                                    </button>
+                                    <button type="submit" formaction="{{route('exportExcelProvAll')}}" class="btn btn-success">
+                                        Exportar consulta a Excel   <i class="far fa-file-excel"></i>
+                                    </button>
+
+                                    <button type="submit" formaction="{{route('exportExcelProvGeneralAll')}}" class="btn btn-warning">
+                                        Exportar reporte general   <i class="fa fa-send"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                            </div>
+                        </div>
+
 
                     </form>
+
+
+
 
 
 
@@ -137,13 +157,7 @@
                 display: block;
             }
 
-            .container {
-                width: 100%;
-                max-width: 100%;
-                padding: 15px;
-                margin: auto;
 
-            }
 
             #logo {
                 display: block;
@@ -166,6 +180,8 @@
 
         </style>
         <br><br><br>
+
+
     </div>
 
 </body>
