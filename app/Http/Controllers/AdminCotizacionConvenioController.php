@@ -92,7 +92,8 @@
             $this->col[] = ["label" => "Nro. Solicitud", "name" => "nrosolicitud"];
             $this->col[] = ["label" => "Proveedor", "name" => "proveedor"];
             $this->col[] = ["label" => "Estado Solicitud", "name" => "estado_solicitud_id", "join" => "estado_solicitud,estado"];
-            # END COLUMNS DO NOT REMOVE THIS LINE
+	    $this->col[] = ["label"=> "Patología", "name"=>"patologia", "join" => "patologias,nombre"]; 
+# END COLUMNS DO NOT REMOVE THIS LINE
 
             $custom_element = view('articulosEntrantesCotMed')->render();
 
@@ -105,7 +106,7 @@
             $this->form[] = ['label' => 'Documento', 'name' => 'documento', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->documento];
             $this->form[] = ['label' => 'Edad', 'name' => 'edad', 'type' => 'number', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->edad];
             $this->form[] = ['label' => 'Telefono afiliado', 'name' => 'tel_afiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->tel_afiliado];
-            $this->form[] = ['label' => 'Email', 'name' => 'email', 'type' => 'text', 'validation' => 'min:1|max:255|email|unique:cotizacion_convenio', 'width' => 'col-sm-10', 'placeholder' => 'Introduce una dirección de correo electrónico válida','value' => $this->email];
+            $this->form[] = ['label' => 'Email', 'name' => 'email', 'type' => 'text', 'validation' => 'min:1|max:255|', 'width' => 'col-sm-10', 'placeholder' => 'Introduce una dirección de correo electrónico válida','value' => $this->email];
             $this->form[] = ['label' => 'Medicos Id', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'readonly' => true, 'value' => $this->medicos_id];
             $this->form[] = ['label' => 'Clinicas Id', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'readonly' => true, 'value' => $this->clinicas_id];
             $this->form[] = ['label' => 'Discapacidad', 'name' => 'discapacidad', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->discapacidad];
