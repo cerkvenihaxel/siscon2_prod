@@ -46,6 +46,7 @@
 			$this->col[] = ["label"=>"Número de solicitud","name"=>"nrosolicitud" ];
 			$this->col[] = ["label"=>"Médico Solicitante","name"=>"medicos_id","join"=>"medicos,nombremedico" ];
 			$this->col[] = ["label"=>"Estado solicitud","name"=>"estado_solicitud_id","join"=>"estado_solicitud,estado" ];
+			$this->col[] = ["label"=>"Patología", "name"=>"patologia", "join"=>"patologias,nombre"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			adminPrivilegeId() == true ? $IDMEDICO = DB::table('medicos')->where('nombremedico',CRUDBooster::myName())->value('id') : $IDMEDICO = "";
@@ -64,13 +65,13 @@
 			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true, 'value'=>$IDMEDICO];
 			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Este;Oeste;Centro;Interior'];
 			$this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true];
-			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
+			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'text','validation'=>'min:1|max:255|email|','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
 			$this->form[] = ['label'=>'Provincia', 'name'=>'provincia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'provincias,nombre', 'required'=>true];
 			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>date('Y-m-d')];
 			$this->form[] = ['label'=>'Receta Post-datada','name'=>'postdatada','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'postdatada,cantidad'];
 			$this->form[] = ['label'=>'Fecha primer vencimiento','name'=>'fecha_vencimiento','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value'=>date('Y-m-d', strtotime('+1 month'))];
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1, 'disabled'=>adminPrivilegeId()];
-			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
+			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'text','validation'=>'required','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Patologías','name'=>'patologia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'datatable'=>'patologias,nombre','required'=>true];
 			$this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'dataenum'=>'Si;No'];
 
@@ -82,7 +83,7 @@
 
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'pedido_medicamento_detail', 'type'=>'child','table'=>'pedido_medicamento_detail', 'foreign_key'=>'pedido_medicamento_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
 
-			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 
 			$this->form[] = ['label'=>'Archivo 1', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
 			$this->form[] = ['label'=>'Archivo 2', 'name'=>'archivo2','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];

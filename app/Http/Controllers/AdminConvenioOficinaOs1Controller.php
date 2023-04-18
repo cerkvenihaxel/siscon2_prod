@@ -57,7 +57,7 @@
             $this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true, 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('medicos_id')];
             $this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Este;Oeste;Centro;Interior', 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('zona_residencia')];
             $this->form[] = ['label'=>'Telefono afiliado', 'name'=>'tel_afiliado','type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true, 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('tel_afiliado')];
-            $this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida', 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('email')];
+            $this->form[] = ['label'=>'Email','name'=>'email','type'=>'text','validation'=>'required|min:1|max:255|email|','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida', 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('email')];
             $this->form[] = ['label'=>'Provincia', 'name'=>'provincia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'provincias,nombre', 'required'=>true, 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('provincia')];
             $this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','value'=>DB::table('pedido_medicamento')->where('id',$url)->value('fecha_receta')];
             $this->form[] = ['label'=>'Receta Post-datada','name'=>'postdatada','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'postdatada,cantidad', 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('postdatada')];
@@ -67,7 +67,7 @@
             $this->form[] = ['label'=>'Patologías','name'=>'patologia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'datatable'=>'patologias,nombre','required'=>true, 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('patologia')];
             $this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'dataenum'=>'Si;No', 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('discapacidad')];
 
-			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
+	    $this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 
             $this->form[] = ['label'=>'Proveedor seleccionado','name'=>'proveedor','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'proveedores_convenio,nombre','required'=>true];
             $this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
