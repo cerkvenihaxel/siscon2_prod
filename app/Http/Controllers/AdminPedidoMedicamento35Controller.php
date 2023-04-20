@@ -18,6 +18,16 @@
 					return true;
 				}}
 
+            function convenioPrivilegeId(){
+
+                $privilege = CRUDBooster::myPrivilegeId();
+                if($privilege != 38 && $privilege != 40 && $privilege != 41){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
 			$this->limit = "20";
@@ -132,10 +142,10 @@
 	        |
 	        */
 
-		$PRIVILEGIO = CRUDBooster::myPrivilegeId();
+		$PRIVILEGIO[] = CRUDBooster::myPrivilegeId();
 	        $this->sub_module = array();
 
-            $this->sub_module[] = ['label'=>'Autorizar solicitud', 'path'=>'convenio_oficina_os/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-check','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO == [38, 40, 41]"];
+            $this->sub_module[] = ['label'=>'Autorizar solicitud', 'path'=>'convenio_oficina_os/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-check','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones','showIf'=>"[estado_solicitud_id] == 8 && ".convenioPrivilegeId() == true ];
 
 
 
@@ -152,9 +162,9 @@
             */
 	        $this->addaction = array();
 
-		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == [38, 40, 41]", 'confirmation'=>true];
-		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == [38, 40, 41]", 'confirmation'=>true];
-		$this->addaction[] = ['label'=>'Anular solicitud','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO== [38, 40, 41]", 'confirmation'=>true];
+		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 &&".convenioPrivilegeId() == true, 'confirmation'=>true];
+		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 &&".convenioPrivilegeId() == true, 'confirmation'=>true];
+		$this->addaction[] = ['label'=>'Anular solicitud','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8 &&".convenioPrivilegeId() == true, 'confirmation'=>true];
 
 		/*
 
