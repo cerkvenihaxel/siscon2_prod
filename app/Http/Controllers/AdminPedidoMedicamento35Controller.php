@@ -151,11 +151,11 @@
             |
             */
 	        $this->addaction = array();
-		
+
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD APROBADA','url'=>CRUDBooster::mainpath('set-status/8/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 40", 'confirmation'=>true];
 		$this->addaction[] = ['label'=>'AUDITAR : SOLICITUD RECHAZADA','url'=>CRUDBooster::mainpath('set-status/9/[id]'),'icon'=>'fa fa-times','color'=>'danger','showIf'=>"[estado_solicitud_id] == 1 && $PRIVILEGIO == 40", 'confirmation'=>true];
 		$this->addaction[] = ['label'=>'Anular solicitud','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8 && $PRIVILEGIO== 41", 'confirmation'=>true];
-   
+
 		/*
 
 	        /*
@@ -314,16 +314,18 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-	$convenio_oficina = DB::table('convenio_oficina_os')->value('nrosolicitud');
+	$convenio_oficina = DB::table('convenio_oficina_os')->get();
 	if(CRUDBooster::myPrivilegeId() == 6) {
 		$medicoName = CRUDBooster::myName();
 		$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
 		$query->where('medicos_id', $medicoId);
 	}
 
-	if(CRUDBooster::myPrivilegeId() != 1) {
+	if(CRUDBooster::isSuperadmin() == false) {
+foreach ($convenio_oficina as $co) {
+    $query->where('nrosolicitud', '!=', $co->nrosolicitud);
+}
 
-	$query->where('nrosolicitud', '!=', $convenio_oficina);
 		}
 	    }
 
