@@ -30,6 +30,7 @@
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
+			$this->col[] = ["label"=>"Nombre", "name"=>"nombre"];
 			$this->col[] = ["label"=>"Direccion","name"=>"direccion"];
 			$this->col[] = ["label"=>"Estado","name"=>"estado"];
 			$this->col[] = ["label"=>"Horario","name"=>"horario"];

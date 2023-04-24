@@ -105,7 +105,7 @@
             $this->form[] = ['label' => 'Documento', 'name' => 'documento', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->documento];
             $this->form[] = ['label' => 'Edad', 'name' => 'edad', 'type' => 'number', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->edad];
             $this->form[] = ['label' => 'Telefono afiliado', 'name' => 'tel_afiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->tel_afiliado];
-            $this->form[] = ['label' => 'Email', 'name' => 'email', 'type' => 'text', 'validation' => 'min:1|max:255|email|unique:cotizacion_convenio', 'width' => 'col-sm-10', 'placeholder' => 'Introduce una dirección de correo electrónico válida','value' => $this->email];
+            $this->form[] = ['label' => 'Email', 'name' => 'email', 'type' => 'text', 'validation' => 'min:1|max:255|', 'width' => 'col-sm-10', 'placeholder' => 'Introduce una dirección de correo electrónico válida','value' => $this->email];
             $this->form[] = ['label' => 'Medicos Id', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'readonly' => true, 'value' => $this->medicos_id];
             $this->form[] = ['label' => 'Clinicas Id', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'readonly' => true, 'value' => $this->clinicas_id];
             $this->form[] = ['label' => 'Discapacidad', 'name' => 'discapacidad', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->discapacidad];
@@ -138,7 +138,7 @@
             $this->form[] = ['label'=>'Direccion de entrega','name'=>'direccion_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Localidad de retiro','name'=>'localidad_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Telefono de punto de retiro','name'=>'tel_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-            $this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Archivo 1', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
             $this->form[] = ['label'=>'Archivo 2', 'name'=>'archivo2','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
             $this->form[] = ['label'=>'Archivo 3', 'name'=>'archivo3','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
