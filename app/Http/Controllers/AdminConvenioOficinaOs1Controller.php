@@ -297,6 +297,13 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
+            $cotizacion = DB::table('cotizacion_convenio')->get();
+
+            if(CRUDBooster::isSuperadmin() == false) {
+                foreach ($cotizacion as $co) {
+                    $query->where('nrosolicitud', '!=', $co->nrosolicitud);
+                }
+            }
 
 	    }
 
