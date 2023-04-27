@@ -2,7 +2,7 @@
 $resultados = [];
 $mostrarTabla = false;
 @endphp
-    
+
     <head>
         <meta charset="utf-8" lang="es_ES" >
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -17,7 +17,7 @@ $mostrarTabla = false;
   <body class="hold-transition sidebar-mini layout-fixed">
 
     <nav class="navbar navbar-expand-lg navbar-primary bg-primary">
-        <a class="navbar-brand" href="http://www.siscon.info"> 
+        <a class="navbar-brand" href="http://www.siscon.info">
             SISCON
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@ $mostrarTabla = false;
           </ul>
         </div>
       </nav>
-      
+
     <div class="wrapper">
       <!-- Barra de navegación -->
       <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -47,7 +47,7 @@ $mostrarTabla = false;
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
           </li>
         </ul>
-  
+
         <!-- Formulario de búsqueda -->
         <div class="container d-flex justify-content-center align-items-center mt-4 mb-4">
             <div class="card card-outline-primary">
@@ -63,8 +63,8 @@ $mostrarTabla = false;
               </div>
             </div>
           </div>
-          
-  
+
+
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
           <!-- Opciones de usuario -->
@@ -81,16 +81,16 @@ $mostrarTabla = false;
 
 
       @php
-        
+
       if(isset($_GET['busqueda'])){
 
         $id = $_GET['busqueda'];
 
-        if($id == ""){ 
+        if($id == ""){
                echo "<h3> No se ha ingresado ningún número de afiliado </h3>";}
               else{
         $nroAfiliado = $id;
-        $data = DB::table('afiliados_articulos')->where('nro_afiliado', $nroAfiliado)->get();    
+        $data = DB::table('afiliados_articulos')->where('nro_afiliado', $nroAfiliado)->get();
         $nombreAfiliado = DB::table('afiliados')->where('nroAfiliado', $nroAfiliado)->value('apeynombres');
 
      echo '<div class="content-wrapper mt-4">
@@ -110,8 +110,8 @@ $mostrarTabla = false;
     </thead>
     <tbody>';
 
-      
-      
+
+
       foreach ($data as $result) {
         echo '<tr>';
           echo'<td>'.$result->id_articulo.'</td>';
@@ -119,35 +119,38 @@ $mostrarTabla = false;
         echo'<td>'.$result->cantidad.'</td>';
         echo'</tr>';
       }
-    
-    
+
+
    echo'
    </tbody>
          </table>
 
             </div>
 
-            
+
             </div>
 
 
-        
 
-            
+
+
             </div>
-            
+
             <div class="container-fluid">
   <div class="row d-flex justify-content-center my-3">
     <div class="col-sm-12">
       <div class="btn-group btn-group-lg" role="group" aria-label="...">
-        <button type="button" class="btn btn-primary mr-3">Crear nueva solicitud</button>
-        <button type="button" class="btn btn-secondary mr-3">Imprimir pedido</button>
+
+      <!-- Agregar botones de acciones de editar ficha -->
+        <a href="/admin/pedido_medicamento35/add?id='.$id.'" class="btn btn-success mr-3">Editar ficha log</a>
+        <button type="button" class="btn btn-primary mr-3">Editar ficha</button>
+        <button type="button" class="btn btn-warning mr-3">Imprimir pedido</button>
         <button type="button" class="btn btn-info">Ver pedidos del afiliado</button>
       </div>
     </div>
   </div>
 </div>
-            
+
             <style>
         .nav-link {
             color: #f8f9fa;

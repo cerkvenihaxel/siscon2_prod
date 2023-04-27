@@ -7,9 +7,22 @@
 
 	class AdminPedidoMedicamento35Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
+        private $url;
+        private $afiliado_id;
+
+        public function __construct(Request $request)
+        {
+            $this->url = $_GET['id'];
+            $this->afiliado_id = DB::table('afiliados')->where('nroAfiliado',$this->url)->value('id');
+
+
+
+        }
 	    public function cbInit() {
 
-			function adminPrivilegeId(){
+
+
+                function adminPrivilegeId(){
 
 				$privilege = CRUDBooster::myPrivilegeId();
 				if($privilege == 1 || $privilege == 17 || $privilege == 5){
@@ -61,13 +74,12 @@
 
 			adminPrivilegeId() == true ? $IDMEDICO = DB::table('medicos')->where('nombremedico',CRUDBooster::myName())->value('id') : $IDMEDICO = "";
 
-
 			//Prueba
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,nroAfiliado,documento,sexo,localidad','datamodal_select_to'=>'nroAfiliado:nroAfiliado,obra_social:obra_social','datamodal_size'=>'large'];
-			$this->form[] = ['label'=>'Nro de Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'readonly'=>true];
+			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,nroAfiliado,documento,sexo,localidad','datamodal_select_to'=>'nroAfiliado:nroAfiliado,obra_social:obra_social','datamodal_size'=>'large', 'value'=>$this->afiliado_id];
+			$this->form[] = ['label'=>'Nro de Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'readonly'=>true, 'value'=>$this->url];
 			$this->form[] = ['label'=>'Obra social', 'name'=>'obra_social', 'type'=>'text', 'validation'=>'min:1|max:255', 'width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true,'readonly'=>'true','value'=>'APOS-MED-'.date('dmHis')];
