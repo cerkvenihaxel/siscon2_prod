@@ -106,6 +106,7 @@ $mostrarTabla = false;
         <th>ID ARTÍCULO</th>
         <th>MEDICACIÓN ARTÍCULOS</th>
         <th>CANTIDAD</th>
+        <th>OPCIONES</th>
       </tr>
     </thead>
     <tbody>';
@@ -117,6 +118,10 @@ $mostrarTabla = false;
           echo'<td>'.$result->id_articulo.'</td>';
          echo'<td>'.$result->articulo.'</td>';
         echo'<td>'.$result->cantidad.'</td>';
+        echo '<td>
+      <button class="btn btn-sm btn-primary">Editar</button>
+      <button class="btn btn-sm btn-danger">Eliminar</button>
+      </td>';
         echo'</tr>';
       }
 
@@ -142,10 +147,10 @@ $mostrarTabla = false;
       <div class="btn-group btn-group-lg" role="group" aria-label="...">
 
       <!-- Agregar botones de acciones de editar ficha -->
-        <a href="/admin/pedido_medicamento35/add?id='.$id.'" class="btn btn-success mr-3">Editar ficha log</a>
-        <button type="button" class="btn btn-primary mr-3">Editar ficha</button>
-        <button type="button" class="btn btn-warning mr-3">Imprimir pedido</button>
-        <button type="button" class="btn btn-info">Ver pedidos del afiliado</button>
+        <a href="/admin/pedido_medicamento35/add?id='.$id.'" class="btn btn-success mr-3">Crear ficha</a>
+        <button type="button" class="btn btn-primary text-light mr-3">Ver ficha</button>
+        <button type="button" class="btn btn-warning text-light mr-3">Guardar</button>
+        <button type="button" class="btn btn-danger">Salir</button>
       </div>
     </div>
   </div>

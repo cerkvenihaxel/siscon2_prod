@@ -128,3 +128,7 @@ Route::get('/buscador_medicacion', function(){
 Route::post('/buscador_convenio', [BuscadorAfiliadoConvenioController::class, 'buscarAfiliadoMed'])->name('buscador_convenio');
 
 
+//Convenio Pedido Medicamentos
+Route::get('/admin/pedido_medicamento35/agregarDatos/{id}', [\App\Http\Controllers\AdminPedidoMedicamento35Controller::class, 'searchArticlesFillment'])->name('pedido_medicamento.agregarDatos');
+
+
