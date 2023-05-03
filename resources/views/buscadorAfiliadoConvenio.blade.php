@@ -74,7 +74,7 @@ $mostrarTabla = false;
       <div class="card w-100 mx-auto">
         <div class="card-body">
           <p class="card-text h5 text-center">
-            La información sobre los pacientes y su medicación es confidencial y está protegida por la ley. Esta información es utilizada únicamente con fines de gestión y atención médica por la gerenciadora y obra social correspondiente.
+            La información sobre los pacientes y su medicación es confidencial y está protegida por la ley 26.529, de Derechos del Paciente en su Relación con los Profesionales e Instituciones de la Salud. Esta información es utilizada únicamente con fines de gestión y atención médica por la gerenciadora y obra social correspondiente.
           </p>
         </div>
       </div>
