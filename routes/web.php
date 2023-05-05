@@ -1,11 +1,17 @@
 <?php
 
+use App\Http\Controllers\AdminPedidoMedicamento35Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticulosReportController;
 use App\Http\Controllers\ProveedoresReportController;
 use App\Http\Controllers\MedicosReportController;
 use App\Http\Controllers\MedicacionBusquedaController;
 use App\Http\Controllers\FullCalendarController;
+use App\Http\Controllers\AdjudicacionesController;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\Request;
+
+
 
 use App\Http\Controllers\AccidentesReportController;
 
@@ -128,7 +134,15 @@ Route::get('/buscador_medicacion', function(){
 Route::post('/buscador_convenio', [BuscadorAfiliadoConvenioController::class, 'buscarAfiliadoMed'])->name('buscador_convenio');
 
 
-//Convenio Pedido Medicamentos
-Route::get('/admin/pedido_medicamento35/agregarDatos/{id}', [\App\Http\Controllers\AdminPedidoMedicamento35Controller::class, 'searchArticlesFillment'])->name('pedido_medicamento.agregarDatos');
 
 
+//Metodo para tener el link de la cotizacion adjudicada
+
+Route::get('admin/cotizadas_adjudicadas/{id}', function (Request $request){
+    $id = $request->id;
+   $nroSolicitud = DB::table('adjudicaciones')->where('id', $id)->value('nrosolicitud');
+   $cotizadaAdjudicada = DB::table('cotizaciones')->where('nrosolicitud', $nroSolicitud)->whereIn('estado_solicitud_id', [3, 6])->value('id');
+
+   Redirect::to('admin/cotizaciones19/detail/'.$cotizadaAdjudicada)->send();
+
+});
