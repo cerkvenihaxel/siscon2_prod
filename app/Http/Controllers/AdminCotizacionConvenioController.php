@@ -14,6 +14,7 @@
         private $nombreyapellido;
         private $documento;
         private $edad;
+        private $articulos;
         private $tel_afiliado;
         private $email;
         private $medicos_id;
@@ -24,6 +25,7 @@
         private $fecha_vencimiento;
         private $zona_residencia;
         private $proveedor;
+        private $medicacion;
 
         private $medicamentosRequiredId;
         private $stamp_user;
@@ -57,8 +59,14 @@
             $this->medicamentosRequired = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $this->medicamentosRequiredId)->get();
 
             $this->stamp_user = CRUDBooster::myName();
-
             $this->stamp_user = DB::table('cms_users')->where('name', $this->stamp_user)->value('email');
+
+            $articulos_ids = [];
+            foreach ($this->medicamentosRequired as $value) {
+                $articulos_ids[] = $value->articuloZafiro_id;
+            }
+
+            $this->medicacion = DB::table('articulosZafiro')->whereIn('id_articulo', $articulos_ids)->get();
         }
 
 	    public function cbInit()
@@ -133,8 +141,8 @@
             $this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizacion_convenio_detail', 'type'=>'child','table'=>'cotizacion_convenio_detail', 'foreign_key'=>'cotizacion_convenio_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
 
 
-            $this->form[] = ['label' => 'Proveedor', 'name' => 'proveedor', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'value' => $this->proveedor, 'readonly' => true];
-            $this->form[] = ['label' => 'Punto de Retiro', 'name' => 'punto_retiro_id', 'type' => 'datamodal', 'datamodal_table' => 'punto_retiro', 'datamodal_columns' => 'nombre,direccion,localidad,provincia,telefono', 'datamodal_columns_alias' => 'Nombre, Dirección, Zona, Localidad, Telefono', 'datamodal_size' => 'large', 'required' => true, 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'datamodal_where' => 'proveedor_convenio_id='.$this->proveedorID, 'datamodal_select_to'=>'direccion:direccion_retiro,localidad:localidad_retiro,telefono:tel_retiro'];
+            $this->form[] = ['label' => 'Proveedor', 'name' => 'proveedor', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'value'=> $this->proveedor, 'readonly' => true];
+            $this->form[] = ['label' => 'Punto de Retiro', 'name' => 'punto_retiro_id', 'type'=>'datamodal', 'datamodal_table'=>'punto_retiro', 'datamodal_columns'=> 'nombre', 'datamodal_columns_alias'=>'Nombre', 'datamodal_size'=>'large', 'width'=>'col-sm-10', 'datamodal_where' => 'proveedor_convenio_id='.$this->proveedorID, 'datamodal_select_to'=>'direccion:direccion_retiro,localidad:localidad_retiro,telefono:tel_retiro'];
             $this->form[] = ['label'=>'Direccion de entrega','name'=>'direccion_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Localidad de retiro','name'=>'localidad_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Telefono de punto de retiro','name'=>'tel_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
@@ -278,7 +286,119 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-	        $this->script_js = NULL;
+	        $this->script_js = "
+
+            function addRow() {
+    var medicamentos = ".$this->medicacion.";
+    console.log(medicamentos);
+    // Get a reference to the table and insert a new row at the end
+    let table = document.getElementById('table-detallesdelasolicitud');
+
+
+//For function for medicamentos variable loop
+
+for (var i = 0; i < medicamentos.length; i++) {
+
+    console.log(medicamentos[i]);
+
+    let row = table.insertRow();
+
+    // Add the td elements for each column in the row
+    var td1 = document.createElement('td');
+    td1.className = 'articuloZafiro_id';
+    var label = document.createElement('span');
+    label.className = 'td-label';
+    label.textContent = medicamentos[i].des_monodroga;
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'detallesdelasolicitud-articuloZafiro_id[]';
+    input.value = medicamentos[i].id;
+
+
+
+
+    var td2 = document.createElement('td');
+    td2.className = 'presentacion';
+    td2.textContent = medicamentos[i].presentacion_completa;
+    var input2 = document.createElement('input');
+    input2.type = 'hidden';
+    input2.name = 'detallesdelasolicitud-presentacion[]';
+    input2.value = medicamentos[i].presentacion_completa;
+
+    var td3 = document.createElement('td');
+    td3.className = 'cantidad';
+    td3.textContent = '1';
+    var input3 = document.createElement('input');
+    input3.type = 'hidden';
+    input3.name = 'detallesdelasolicitud-cantidad[]';
+    input3.value = '1';
+
+    var td5 = document.createElement('td');
+    td5.className = 'laboratorio';
+    td5.textContent = ' ';
+    var input5 = document.createElement('input');
+    input5.type = 'hidden';
+    input5.name = 'detallesdelasolicitud-laboratorio[]';
+    input5.value = ' ';
+
+    var td6 = document.createElement('td');
+    td6.className = 'precio';
+    td6.textContent = ' ';
+    var input6 = document.createElement('input');
+    input6.type = 'hidden';
+    input6.name = 'detallesdelasolicitud-precio[]';
+    input6.value = ' ';
+
+    var td7 = document.createElement('td');
+    td7.className = 'descuento';
+    td7.textContent = ' ';
+    var input7 = document.createElement('input');
+    input7.type = 'hidden';
+    input7.name = 'detallesdelasolicitud-descuento[]';
+    input7.value = ' ';
+
+
+
+    var td4 = document.createElement('td');
+    var editLink = document.createElement('a');
+    editLink.href = '#panel-form-detallesdelasolicitud';
+    editLink.onclick = function () { editRowdetallesdelasolicitud(this); };
+    editLink.className = 'btn btn-warning btn-xs';
+    var editIcon = document.createElement('i');
+    editIcon.className = 'fa fa-pencil';
+    editLink.appendChild(editIcon);
+
+    var deleteLink = document.createElement('a');
+    deleteLink.href = 'javascript:void(0)';
+    deleteLink.onclick = function () { deleteRowdetallesdelasolicitud(this); };
+    deleteLink.className = 'btn btn-danger btn-xs';
+    var deleteIcon = document.createElement('i');
+    deleteIcon.className = 'fa fa-trash';
+    deleteLink.appendChild(deleteIcon);
+
+    td1.appendChild(label);
+    td1.appendChild(input);
+    td2.appendChild(input2);
+    td3.appendChild(input3);
+    td5.appendChild(input5);
+    td6.appendChild(input6);
+    td7.appendChild(input7);
+    td4.appendChild(editLink);
+    td4.appendChild(document.createTextNode(' '));
+    td4.appendChild(deleteLink);
+     // Append the td elements to the new row
+    row.appendChild(td1);
+    row.appendChild(td2);
+    row.appendChild(td3);
+    row.appendChild(td5);
+    row.appendChild(td6);
+    row.appendChild(td7);
+    row.appendChild(td4);
+
+}
+}
+
+            ";
 
 
             /*

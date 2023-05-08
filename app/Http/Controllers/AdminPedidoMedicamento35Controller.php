@@ -173,7 +173,7 @@
             $PRIVILEGIO = CRUDBooster::myPrivilegeId();
             $this->sub_module = array();
 
-            $this->sub_module[] = ['label' => 'Autorizar solicitud', 'path' => 'convenio_oficina_os/add/?id[]=[id]', 'foreign_key' => 'pedido_medicamento_id', 'button_color' => 'success', 'button_icon' => 'fa fa-check', 'parent_columns' => 'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf' => "[estado_solicitud_id] == 1 && ($PRIVILEGIO == 40 || $PRIVILEGIO == 38 ||  $PRIVILEGIO == 41)"];
+            $this->sub_module[] = ['label' => 'Autorizar solicitud', 'path' => 'convenio_oficina_os/add/?id[]=[id]', 'foreign_key' => 'pedido_medicamento_id', 'button_color' => 'success', 'button_icon' => 'fa fa-check', 'parent_columns' => 'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf' => "[estado_solicitud_id] == 1 && ($PRIVILEGIO == 40 || $PRIVILEGIO == 38 ||  $PRIVILEGIO == 41 || $PRIVILEGIO == 1)"];
 
 
             /*
