@@ -66,7 +66,7 @@
                 $articulos_ids[] = $value->articuloZafiro_id;
             }
 
-            $this->medicacion = DB::table('articulosZafiro')->whereIn('id_articulo', $articulos_ids)->get();
+            $this->medicacion = DB::table('articulosZafiro')->whereIn('id', $articulos_ids)->get();
         }
 
 	    public function cbInit()
@@ -103,8 +103,6 @@
             # END COLUMNS DO NOT REMOVE THIS LINE
 
             $custom_element = view('articulosEntrantesCotMed')->render();
-
-
             # START FORM DO NOT REMOVE THIS LINE
             $this->form = [];
             $this->form[] = ['label' => 'Número ID', 'name' => 'numeroID', 'type' => 'text', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'readonly' => true, 'value' => DB::table('convenio_oficina_os')->where('id', $this->url)->value('afiliados_id')];
