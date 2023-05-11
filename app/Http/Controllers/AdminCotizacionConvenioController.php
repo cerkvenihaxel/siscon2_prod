@@ -134,8 +134,8 @@
             $columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
             $columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text', 'validation'=>'required|min:1|max:255', 'required'=>true];
             $columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'text', 'validation'=>'required|integer|min:0', 'required'=>true];
-            $columns[] = ['label'=>'Descuento', 'name'=>'descuento', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
-
+            $columns[] = ['label'=>'Descuento (%)', 'name'=>'descuento', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
+            $columns[] = ['label'=>'Total', 'name'=>'total', 'type'=>'text', 'validation'=>'required|integer|min:0', 'required'=>true];
             $this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizacion_convenio_detail', 'type'=>'child','table'=>'cotizacion_convenio_detail', 'foreign_key'=>'cotizacion_convenio_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
 
 
@@ -286,7 +286,26 @@
 	        */
 	        $this->script_js = "
 
-            function addRowIna() {
+
+
+	     function calcularTotal() {
+  // Obtener los valores de precio y descuento
+  const precio = parseFloat(document.getElementById('detallesdelasolicitudprecio').value);
+  const descuento = parseFloat(document.getElementById('detallesdelasolicituddescuento').value);
+
+  // Calcular el total
+  const total = precio * (1 - descuento / 100);
+
+  // Actualizar el valor del campo total
+  document.getElementById('detallesdelasolicitudtotal').value = total.toFixed(2);
+}
+
+setInterval(calcularTotal, 500);
+
+
+
+            function addRow() {
+
     var medicamentos = ".$this->medicacion.";
     console.log(medicamentos);
     // Get a reference to the table and insert a new row at the end
@@ -355,6 +374,14 @@ for (var i = 0; i < medicamentos.length; i++) {
     input7.name = 'detallesdelasolicitud-descuento[]';
     input7.value = ' ';
 
+    var td8 = document.createElement('td');
+    td8.className = 'total';
+    td8.textContent = ' ';
+    var input8 = document.createElement('input');
+    input8.type = 'hidden';
+    input8.name = 'detallesdelasolicitud-total[]';
+    input8.value = ' ';
+
 
 
     var td4 = document.createElement('td');
@@ -381,6 +408,7 @@ for (var i = 0; i < medicamentos.length; i++) {
     td5.appendChild(input5);
     td6.appendChild(input6);
     td7.appendChild(input7);
+    td8.appendChild(input8);
     td4.appendChild(editLink);
     td4.appendChild(document.createTextNode(' '));
     td4.appendChild(deleteLink);
@@ -391,6 +419,7 @@ for (var i = 0; i < medicamentos.length; i++) {
     row.appendChild(td5);
     row.appendChild(td6);
     row.appendChild(td7);
+    row.appendChild(td8);
     row.appendChild(td4);
 
 }
