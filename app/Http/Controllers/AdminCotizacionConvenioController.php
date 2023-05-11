@@ -286,7 +286,7 @@
 	        */
 	        $this->script_js = "
 
-            function addRow() {
+            function addRowIna() {
     var medicamentos = ".$this->medicacion.";
     console.log(medicamentos);
     // Get a reference to the table and insert a new row at the end
