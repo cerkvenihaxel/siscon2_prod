@@ -4,6 +4,7 @@
 	use Request;
 	use DB;
 	use CRUDBooster;
+    use App\Models\Entrante;
 
 	class AdminEntrantesController extends \crocodicstudio\crudbooster\controllers\CBController {
 
