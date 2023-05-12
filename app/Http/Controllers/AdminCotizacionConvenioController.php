@@ -307,7 +307,9 @@ setInterval(calcularTotal, 500);
             function addRow() {
 
     var medicamentos = ".$this->medicacion.";
+    var cantidades = ".$this->medicamentosRequired.";
     console.log(medicamentos);
+    console.log(cantidades);
     // Get a reference to the table and insert a new row at the end
     let table = document.getElementById('table-detallesdelasolicitud');
 
@@ -342,13 +344,15 @@ for (var i = 0; i < medicamentos.length; i++) {
     input2.name = 'detallesdelasolicitud-presentacion[]';
     input2.value = medicamentos[i].presentacion_completa;
 
+    if(medicamentos[i].id == cantidades[i].articuloZafiro_id){
     var td3 = document.createElement('td');
     td3.className = 'cantidad';
-    td3.textContent = '1';
+    td3.textContent = cantidades[i].cantidad;
     var input3 = document.createElement('input');
     input3.type = 'hidden';
     input3.name = 'detallesdelasolicitud-cantidad[]';
-    input3.value = '1';
+    input3.value = cantidades[i].cantidad;
+    }
 
     var td5 = document.createElement('td');
     td5.className = 'laboratorio';
