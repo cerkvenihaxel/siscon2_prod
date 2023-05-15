@@ -326,7 +326,6 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-
 	    }
 
 	    /*
@@ -338,6 +337,9 @@
 	    */
 	    public function hook_after_add($id) {
 	        //Your code here
+            $nroSolicitud = DB::table('convenio_oficina_os')->where('id', $id)->value('nrosolicitud');
+            DB::table('pedido_medicamento')->where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 3]);
+
 
 	    }
 
