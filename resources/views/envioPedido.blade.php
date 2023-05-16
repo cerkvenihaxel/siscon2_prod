@@ -60,6 +60,25 @@
             </div>
         </div>
 
+        <style>
+            #progressCircle {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                border: 3px solid #ccc;
+                border-top-color: #3498db;
+                animation: spin 3s linear infinite;
+            }
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
         <script>
             document.getElementById('progressButton').addEventListener('click', function() {
                 var progressCircle = document.getElementById('progressCircle');
@@ -68,7 +87,7 @@
                 setTimeout(function() {
                     progressCircle.style.display = 'none';
                     alert('Acción realizada con éxito');
-                }, 500);
+                }, 1000);
             });
 
             var button = document.querySelector(".btn.btn-warning");
