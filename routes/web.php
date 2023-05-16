@@ -10,7 +10,8 @@ use App\Http\Controllers\FullCalendarController;
 use App\Http\Controllers\AdjudicacionesController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\LinPedidoController;
+use App\Http\Controllers\EnviarPedidoController;
 
 
 use App\Http\Controllers\AccidentesReportController;
@@ -91,6 +92,7 @@ Route::get('/escritorioAdmin', function(){
 Route::post('/dateRange', [ArticulosReportController::class, 'dateRange'])->name('dateRange');
 Route::post('/dateRangeProv', [ProveedoresReportController::class, 'dateRangeProv'])->name('dateRangeProv');
 Route::post('/dateRangeMed', [MedicosReportController::class, 'dateRangeMed'])->name('dateRangeMed');
+Route::post('/dateRangeDeposito', [EnviarPedidoController::class, 'dateRangeDeposito'])->name('dateRangeDeposito');
 Route::match(['get', 'post'],'/dateRangeAcc', [\App\Http\Controllers\AccidentesReportController::class, 'dateRangeAcc'])->name('dateRangeAcc');
 
 
@@ -144,5 +146,12 @@ Route::get('admin/cotizadas_adjudicadas/{id}', function (Request $request){
    $cotizadaAdjudicada = DB::table('cotizaciones')->where('nrosolicitud', $nroSolicitud)->whereIn('estado_solicitud_id', [3, 6])->value('id');
 
    Redirect::to('admin/cotizaciones19/detail/'.$cotizadaAdjudicada)->send();
+
+});
+
+
+//Rutas para envío de deposito
+Route::get('admin/linpedido', function (){
+    return view('envioPedidoDeposito');
 
 });
