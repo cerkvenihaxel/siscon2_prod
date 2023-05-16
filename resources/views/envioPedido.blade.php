@@ -45,7 +45,7 @@
             @foreach($entDetail as $e)
             <td>  {{ $loop->iteration }} </td>
             <td>  PC-0000033 </td>
-            <td>  {{ DB::table('articuloszafiro')->where('id', $e->articuloZafiro_id)->value('presentacion_completa') }} </td>
+            <td>  {{ DB::table('articulosZafiro')->where('id', $e->articuloZafiro_id)->value('presentacion_completa') }} </td>
             <td>  {{ $e->total_cantidad }} </td>
             <td> $ {{ $e->total_total }}</td>
     </tr>
