@@ -158,7 +158,7 @@
 
 			//$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'select', 'validation'=>'required|integer|min:0', 'width'=>'col-sm-10', 'datatable'=>'cms_users,name', 'value'=>CRUDBooster::myId(), 'readonly'=>true, 'disabled'=>'disabled'];
 //			$this->form[] = ['label'=> 'Usuario Carga', 'name'=>'userId', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','value'=>CRUDBooster::myName(), 'readonly'=>true];
-			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true, 'reaonly'=>medicoPrivilegeId()];
+			$this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'text','validation'=>'required|min:1','width'=>'col-sm-10','required'=>true, 'reaonly'=>medicoPrivilegeId()];
 			$this->form[] = ['label'=>'Diagnostico','name'=>'diagnostico','type'=>'textarea','width'=>'col-sm-10'];
 
 //			$this->form[] = ['label'=>'Archivo/Foto de receta', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
