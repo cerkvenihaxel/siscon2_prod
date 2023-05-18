@@ -502,7 +502,7 @@
 
 			$chngmail['content'] = "URGENTE ℹ️ Cambie su correo electrónico en el perfil de usuario para recibir notificaciones de su correo personal o laboral.";
 			$chngmail['to'] = CRUDBooster::adminPath('users/profile');
-			$chngmail['id_cms_users'] =  $allUsers;
+			//$chngmail['id_cms_users'] =  $allUsers;
 
 			CRUDBooster::sendNotification($config);
 			CRUDBooster::sendNotification($chngmail);

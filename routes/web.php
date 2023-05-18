@@ -144,7 +144,6 @@ Route::get('admin/cotizadas_adjudicadas/{id}', function (Request $request){
     $id = $request->id;
    $nroSolicitud = DB::table('adjudicaciones')->where('id', $id)->value('nrosolicitud');
    $cotizadaAdjudicada = DB::table('cotizaciones')->where('nrosolicitud', $nroSolicitud)->whereIn('estado_solicitud_id', [3, 6])->value('id');
-
    Redirect::to('admin/cotizaciones19/detail/'.$cotizadaAdjudicada)->send();
 
 });
@@ -153,5 +152,6 @@ Route::get('admin/cotizadas_adjudicadas/{id}', function (Request $request){
 //Rutas para envío de deposito
 Route::get('admin/linpedido', function (){
     return view('envioPedidoDeposito');
-
 });
+
+Route::get('admin/linpedido_objeto/{id}', [\App\Http\Controllers\AdminCotizacionConvenioController::class, 'enviarPedidoSingular'])->name('enviarPedidoSingular');

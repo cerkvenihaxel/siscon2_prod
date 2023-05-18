@@ -31,4 +31,9 @@ class EnviarPedidoController extends Controller
 
         return view('envioPedido', compact('data', 'fecha', 'id', 'entDetail', 'start_date', 'end_date'));
     }
+
+
+
+
+
 }

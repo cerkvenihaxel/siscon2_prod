@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/solicitudes_protesis', [\App\Http\Controllers\ApiDepositoController::class, 'solicitudesProtesis']);
 
+Route::get('/obtenerpedidos', [\App\Http\Controllers\ApiPedidoController::class, 'obtenerPedidos'])->name('obtenerPedidos');
