@@ -115,7 +115,17 @@
 
 
 			$columns = [];
-			$columns[] = ['label'=> 'Medicamentos solicitados', 'name'=>'articuloZafiro_id', 'type'=>'datamodal', 'datamodal_table'=>'articulosZafiro', 'validation'=>'required','datamodal_columns_alias'=>'Monodroga, Descripción del artículo, Presentación, ID ARTÍCULO','datamodal_columns'=>'des_monodroga,des_articulo,presentacion,id_articulo','datamodal_size'=>'large', 'datamodal_where'=>'id_familia = "01"', 'AND', 'id_familia= "14"', 'datamodal_select_to'=>'presentacion_completa:presentacion','required'=>true];
+			$columns[] = ['label'=> 'Medicamentos solicitados',
+                'name'=>'articuloZafiro_id',
+                'type'=>'datamodal',
+                'datamodal_table'=>'articulosZafiro',
+                'validation'=>'required','datamodal_columns_alias'=>'Monodroga, Descripción del artículo, Presentación, ID ARTÍCULO',
+                'datamodal_columns'=>'des_monodroga,des_articulo,presentacion,id_articulo',
+                'datamodal_size'=>'large',
+                'datamodal_where' => 'id_familia IN (01, 02, 03, 04, 08, 09, 11, 13, 14, 99)',
+                'datamodal_select_to'=>'presentacion_completa:presentacion',
+                'required'=>true];
+
 			$columns [] = ['label'=> 'Presentación', 'name'=>'presentacion', 'type'=>'text', 'readonly'=>true];
 			$columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
 
