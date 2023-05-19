@@ -632,16 +632,18 @@ for (var i = 0; i < medicamentos.length; i++) {
             $lin_pedidos = [];
 
             foreach ($linpedidos as $key => $linpedido) {
+                $articuloID = DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('id_articulo');
+                $numeroArticulo =  $newNumber = str_pad($articuloID, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
+
                 $lin_pedidos[] = [
                     'created_at' => $fecha_pedido,
                     'updated_at' => $fecha_pedido,
                     'id_pedido' => $id_pedido,
-                    'item' => $key +1,
-                    'id_articulo' => '0000055902',
+                    'item' => $key+1,
+                    'id_articulo' => $numeroArticulo,
                     'cantidad' => $linpedido->cantidad,
                     'des_articulo' => DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('des_articulo'),
                     'presentacion' => DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('presentacion'),
-                    'id_sucursal' => $id_sucursal,
                     'pcio_vta_unisiva' => $linpedido->precio,
                     'pcio_iva_comsiva' => $linpedido->total,
                 ];
@@ -669,10 +671,7 @@ for (var i = 0; i < medicamentos.length; i++) {
             $pedido->id_empresa = $id_empresa;
             $pedido->id_pedido = $id_pedido;
             $pedido->fecha_pedido = $fecha_pedido;
-            $pedido->estado_pedido = $estado_pedido;
-            $pedido->id_sucursal = $id_sucursal;
             $pedido->_origen_id_sucursal = $origen_id_sucursal;
-            $pedido->drogueria = $drogueria;
             $pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
             $pedido->observaciones = $observaciones;
             $pedido->nrosolicitud = $nroSolicitud;
