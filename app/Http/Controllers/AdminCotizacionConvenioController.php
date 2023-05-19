@@ -707,7 +707,7 @@ for (var i = 0; i < medicamentos.length; i++) {
                 $lastNumber = substr($lastPedido->id_pedido, 7); // Suponiendo que el número de pedido siempre comienza con "PC-"
                 $newNumber = str_pad($lastNumber + 1, 8, '0', STR_PAD_LEFT); // Incrementa el número y rellena con ceros a la izquierda
             } else {
-                $newNumber = '000001'; // Si no hay pedidos anteriores, comienza desde el número 1
+                $newNumber = '00000001'; // Si no hay pedidos anteriores, comienza desde el número 1
             }
 
             return 'PED001-' . $newNumber;
