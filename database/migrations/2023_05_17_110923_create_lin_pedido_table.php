@@ -22,8 +22,8 @@ class CreateLinPedidoTable extends Migration
             $table->integer('cantidad');
             $table->string('des_articulo');
             $table->string('presentacion');
-            $table->float('pcio_vta_unisiva');
-            $table->float('pcio_iva_comsiva');
+            $table->float('pcio_vta_uni_siva');
+            $table->float('pcio_com_uni_siva');
         });
     }
 
