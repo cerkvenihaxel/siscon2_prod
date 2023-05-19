@@ -154,4 +154,4 @@ Route::get('admin/linpedido', function (){
     return view('envioPedidoDeposito');
 });
 
-Route::get('admin/linpedido_objeto/{id}', [\App\Http\Controllers\AdminCotizacionConvenioController::class, 'enviarPedidoSingular'])->name('enviarPedidoSingular');
+Route::get('/linpedido_objeto/{id}', [\App\Http\Controllers\AdminCotizacionConvenioController::class, 'enviarPedidoSingular'])->name('enviarPedidoSingular');

@@ -2,6 +2,7 @@
 
 	use App\Models\LinPedido;
     use App\Models\PedidoC;
+    use Illuminate\Support\Facades\Redirect;
     use Session;
 	use Request;
 	use DB;
@@ -154,7 +155,6 @@
             $this->form[] = ['label'=>'Archivo 3', 'name'=>'archivo3','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
             $this->form[] = ['label'=>'Archivo 4', 'name'=>'archivo4','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
 
-            $this->enviarPedidoSingular(50);
 
             $this->form[] = ['label'=>'Stamp User','name'=>'stamp_user','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'disabled'=>'disabled', 'readonly'=>true, 'value'=>DB::table('cms_users')->where('id',CRUDBooster::myId())->value('email')];
 
@@ -219,7 +219,7 @@
 	        |
 	        */
 	        $this->addaction = array();
-            $this->addaction[] = ['label'=>'Ver linpedido', 'url'=>('/linpedido_objeto/[id]'),'icon'=>'fa fa-search','color'=>'primary', 'confirmation'=>true];
+            $this->addaction[] = ['label'=>'Enviar pedido a depósito', 'url'=>('/linpedido_objeto/[id]'),'icon'=>'fa fa-send','color'=>'success', 'confirmation'=>true, 'showIf'=>"[estado_pedido_id] == 3"];
 
 
 
@@ -613,17 +613,16 @@ for (var i = 0; i < medicamentos.length; i++) {
 
         public function enviarPedidoSingular($id){
 
-
+            DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
             $id_solicitud = $id;
             $created_at = date('Y-m-d H:i:s');
             $updated_at = date('Y-m-d H:i:s');
             $id_empresa = 2;
             $id_pedido = $this->generatePedidoNumber();
             $fecha_pedido = date('Y-m-d H:i:s');
-            $estado_pedido = 'EM';
-            $id_sucursal = 1;
-            $origen_id_sucursal = 1;
-            $drogueria = 2;
+            $origen_id_sucursal = 100;
+            $id_punto = DB::table('cotizacion_convenio')->where('id', $id_solicitud)->value('punto_retiro_id');
+            $id_cliente = DB::table('punto_retiro')->where('id', $id_punto)->value('id_cliente');
 
             $linpedidos = DB::table('cotizacion_convenio_detail')->where('cotizacion_convenio_id', $id_solicitud)->get();
 
@@ -653,11 +652,8 @@ for (var i = 0; i < medicamentos.length; i++) {
                     "id_empresa" => $id_empresa,
                     "id_pedido" => $id_pedido,
                     "fecha_pedido" => $fecha_pedido,
-                    "estado_pedido" => $estado_pedido,
-                    "id_sucursal" => $id_sucursal,
-                    "origen_id_sucursal" => $origen_id_sucursal,
-                    "drogueria" => $drogueria,
-                    "id_cliente" => 2,
+                    "_origen_id_sucursal" => $origen_id_sucursal,
+                    "id_cliente" => $id_cliente,
                     "lin_pedido" => $lin_pedidos
                 ]
             ];
@@ -671,9 +667,9 @@ for (var i = 0; i < medicamentos.length; i++) {
             $pedido->fecha_pedido = $fecha_pedido;
             $pedido->estado_pedido = $estado_pedido;
             $pedido->id_sucursal = $id_sucursal;
-            $pedido->origen_id_sucursal = $origen_id_sucursal;
+            $pedido->_origen_id_sucursal = $origen_id_sucursal;
             $pedido->drogueria = $drogueria;
-            $pedido->id_cliente = 2; // Valor fijo, modificar si es necesario
+            $pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
             $pedido->save();
 
 // Insertar en la tabla lin_pedido
@@ -693,7 +689,9 @@ for (var i = 0; i < medicamentos.length; i++) {
             }
 
 
+            CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"El pedido fue cargado con éxito!","success");
 
+            return Redirect::back();
         }
 
         private function generatePedidoNumber()
@@ -701,13 +699,13 @@ for (var i = 0; i < medicamentos.length; i++) {
             $lastPedido = PedidoC::latest()->first();
 
             if ($lastPedido) {
-                $lastNumber = substr($lastPedido->id_pedido, 3); // Suponiendo que el número de pedido siempre comienza con "PC-"
-                $newNumber = str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT); // Incrementa el número y rellena con ceros a la izquierda
+                $lastNumber = substr($lastPedido->id_pedido, 7); // Suponiendo que el número de pedido siempre comienza con "PC-"
+                $newNumber = str_pad($lastNumber + 1, 8, '0', STR_PAD_LEFT); // Incrementa el número y rellena con ceros a la izquierda
             } else {
                 $newNumber = '000001'; // Si no hay pedidos anteriores, comienza desde el número 1
             }
 
-            return 'PC-' . $newNumber;
+            return 'PED001-' . $newNumber;
         }
 
 

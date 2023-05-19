@@ -19,10 +19,10 @@ class CreatePedidosTable extends Migration
             $table->unsignedBigInteger('id_empresa');
             $table->unsignedBigInteger('id_pedido');
             $table->date('fecha_pedido');
-            $table->string('estado_pedido');
-            $table->unsignedBigInteger('id_sucursal');
-            $table->unsignedBigInteger('origen_id_sucursal');
-            $table->string('drogueria');
+            $table->string('estado_pedido')->nullable();
+            $table->unsignedBigInteger('id_sucursal')->nullable();
+            $table->unsignedBigInteger('_origen_id_sucursal');
+            $table->string('drogueria')->nullable();
             $table->unsignedBigInteger('id_cliente');
         });
     }
