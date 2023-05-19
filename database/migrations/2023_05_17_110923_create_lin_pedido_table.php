@@ -17,7 +17,7 @@ class CreateLinPedidoTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('id_pedido');
-            $table->string('item');
+            $table->integer('item');
             $table->string('id_articulo');
             $table->integer('cantidad');
             $table->string('des_articulo');
