@@ -24,6 +24,8 @@ class CreatePedidosTable extends Migration
             $table->unsignedBigInteger('_origen_id_sucursal');
             $table->string('drogueria')->nullable();
             $table->unsignedBigInteger('id_cliente');
+            $table->string('observaciones')->nullable();
+            $table->string('nrosolicitud')->nullable();
         });
     }
 

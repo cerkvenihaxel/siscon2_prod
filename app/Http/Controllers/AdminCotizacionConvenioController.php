@@ -614,6 +614,8 @@ for (var i = 0; i < medicamentos.length; i++) {
         public function enviarPedidoSingular($id){
 
             DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
+            $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
+            $observaciones = DB::table('convenio_oficina_os')->where('nrosolicitud', $nroSolicitud)->value('observaciones');
             $id_solicitud = $id;
             $created_at = date('Y-m-d H:i:s');
             $updated_at = date('Y-m-d H:i:s');
@@ -655,6 +657,7 @@ for (var i = 0; i < medicamentos.length; i++) {
                     "_origen_id_sucursal" => $origen_id_sucursal,
                     "id_cliente" => $id_cliente,
                     "lin_pedido" => $lin_pedidos
+
                 ]
             ];
 
@@ -670,6 +673,8 @@ for (var i = 0; i < medicamentos.length; i++) {
             $pedido->_origen_id_sucursal = $origen_id_sucursal;
             $pedido->drogueria = $drogueria;
             $pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
+            $pedido->observaciones = $observaciones;
+            $pedido->nrosolicitud = $nroSolicitud;
             $pedido->save();
 
 // Insertar en la tabla lin_pedido
