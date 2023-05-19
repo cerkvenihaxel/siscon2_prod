@@ -689,7 +689,7 @@ for (var i = 0; i < medicamentos.length; i++) {
                 $linPedido->des_articulo = $linpedido['des_articulo'];
                 $linPedido->presentacion = $linpedido['presentacion'];
                 $linPedido->pcio_vta_unisiva = $linpedido['pcio_vta_unisiva'];
-                $linPedido->pcio_iva_comsiva = $linpedido['pcio_iva_comsiva'];
+                $linPedido->pcio_com_uni_siva = $linpedido['pcio_iva_comsiva'];
                 $linPedido->save();
             }
 
