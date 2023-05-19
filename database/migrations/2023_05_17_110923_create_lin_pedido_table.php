@@ -16,9 +16,9 @@ class CreateLinPedidoTable extends Migration
         Schema::create('lin_pedido', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedBigInteger('id_pedido');
+            $table->string('id_pedido');
             $table->string('item');
-            $table->unsignedBigInteger('id_articulo');
+            $table->string('id_articulo');
             $table->integer('cantidad');
             $table->string('des_articulo');
             $table->string('presentacion');

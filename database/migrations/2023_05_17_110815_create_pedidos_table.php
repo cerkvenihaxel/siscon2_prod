@@ -17,7 +17,7 @@ class CreatePedidosTable extends Migration
             $table->id();
             $table->timestamps();
             $table->unsignedBigInteger('id_empresa');
-            $table->unsignedBigInteger('id_pedido');
+            $table->string('id_pedido');
             $table->date('fecha_pedido');
             $table->string('estado_pedido')->nullable();
             $table->unsignedBigInteger('id_sucursal')->nullable();
