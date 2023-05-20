@@ -298,11 +298,13 @@
 
 	     function calcularTotal() {
   // Obtener los valores de precio y descuento
+
+  const cantidad = parseFloat(document.getElementById('detallesdelasolicitudcantidad').value);
   const precio = parseFloat(document.getElementById('detallesdelasolicitudprecio').value);
   const descuento = parseFloat(document.getElementById('detallesdelasolicituddescuento').value);
 
   // Calcular el total
-  const total = precio * (1 - descuento / 100);
+  const total = cantida * precio * (1 - descuento / 100);
 
   // Actualizar el valor del campo total
   document.getElementById('detallesdelasolicitudtotal').value = total.toFixed(2);
@@ -322,13 +324,23 @@ setInterval(calcularTotal, 500);
     let table = document.getElementById('table-detallesdelasolicitud');
 
 
-//For function for medicamentos variable loop
+    //For function for medicamentos variable loop
 
-for (var i = 0; i < medicamentos.length; i++) {
+    for (var i = 0; i < medicamentos.length; i++) {
 
     console.log(medicamentos[i]);
 
     let row = table.insertRow();
+    var medicamentoId = medicamentos[i].id;
+    var cantidadEncontrada = null;
+
+    // Buscar la cantidad correspondiente al medicamento actual
+
+    for(var j = 0; j < cantidades.length; j++){
+    if (cantidades[j].articuloZafiro_id === medicamentoId){
+    cantidadEncontrada = cantidades[j];
+    break;
+    }
 
     // Add the td elements for each column in the row
     var td1 = document.createElement('td');
@@ -352,14 +364,22 @@ for (var i = 0; i < medicamentos.length; i++) {
     input2.name = 'detallesdelasolicitud-presentacion[]';
     input2.value = medicamentos[i].presentacion_completa;
 
-    if(medicamentos[i].id == cantidades[i].articuloZafiro_id){
+    if (cantidadEncontrada !== null){
     var td3 = document.createElement('td');
     td3.className = 'cantidad';
-    td3.textContent = cantidades[i].cantidad;
+    td3.textContent = cantidadEncontrada.cantidad;
     var input3 = document.createElement('input');
     input3.type = 'hidden';
     input3.name = 'detallesdelasolicitud-cantidad[]';
-    input3.value = cantidades[i].cantidad;
+    input3.value = cantidadEncontrada.cantidad;
+    td3.appendChild(input3);
+    row.appendChild(td3);
+    } else {
+    // Si no se encuentra la cantidad, agregar una celda vacía
+    var td3 = document.createElement('td');
+    td3.className = 'cantidad';
+    td3.textContent = '';
+    row.appendChild(td3);
     }
 
     var td5 = document.createElement('td');
