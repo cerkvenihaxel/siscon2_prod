@@ -12,8 +12,8 @@ class ValidadorFarmaciaController extends Controller
 
 public function index()
     {
-
-        return view('validadorFarmacia');
+        $afiliado = [];
+        return view('validadorFarmacia', compact('afiliado'));
     }
 
     public function validarAfiliado(Request $request)

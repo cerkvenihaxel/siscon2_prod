@@ -24,10 +24,11 @@
     <form method="POST" action="{{ route('validarAfiliado') }}">
         @csrf
         <div class="form-group">
-            <label for="numeroAfiliado">Número de Afiliado:</label>
+            <label for="numeroAfiliado">Número de afiliado:</label>
             <input type="text" class="form-control" id="numeroAfiliado" name="numeroAfiliado" placeholder="Ingrese el número de afiliado" required>
         </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
+
     </form>
 
     <div class="card mt-4" @if (!empty($afiliado)) style="display: block;" @else style="display: none;" @endif>
@@ -35,6 +36,9 @@
             Resultados de la búsqueda
         </div>
         <div class="card-body">
+            <h1 class="box-title">
+                Medicación entregada
+            </h1>
             <table class="table">
                 <thead>
                 <tr>
@@ -42,26 +46,30 @@
                     <th>Fecha de creación del Pedido Médico</th>
                     <th>Fecha de aprobación</th>
                     <th>Medicación Requerida</th>
-                    <th>Cantidad</th>
-                    <th>Acciones</th>
+                    <th>Cantidad autorizada</th>
+                    <th>Cantidad entregada</th>
+                    <th>Estado</th>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- Aquí puedes generar las filas dinámicamente con tu backend -->
                 @foreach($afiliado as $cotizacion)
-                    <tr>
+                    @foreach($medicacion as $md)
+
+                        <tr>
                     <td>{{ $cotizacion->nombreyapellido }}</td>
                     <td>{{ DB::table('pedido_medicamento')->where('nrosolicitud', $cotizacion->nrosolicitud)->value('created_at') }}</td>
                     <td>{{ $cotizacion->created_at }}</td>
                     <td>
                         <ul>
-                            @foreach($medicacion as $md)
-                            <li> {{ dd($md) }}</li>
-                            @endforeach
+                            <li> {{ DB::table('articulosZafiro')->where('id', $md->articuloZafiro_id)->value('presentacion_completa') }}</li>
                         </ul>
                     </td>
+                            <td>
+                                {{$md->cantidad}}
+                            </td>
                     <td>
-                        <input type="number" class="form-control" id="cantidadMedicacion" value="1">
+                        <input type="number" class="form-control" id="cantidadMedicacion" value="{{ $md->cantidad }}">
                     </td>
                     <td>
                         <select class="form-control" name="estadoPedido[]">
@@ -73,6 +81,8 @@
                     </td>
 
                     </tr>
+                    @endforeach
+
                 @endforeach
 
                 </tbody>
