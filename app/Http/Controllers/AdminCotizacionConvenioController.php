@@ -738,7 +738,7 @@ setInterval(calcularTotal, 500);
                 $newNumber = '00000001'; // Si no hay pedidos anteriores, comienza desde el número 1
             }
 
-            return 'PED001-' . $newNumber;
+            return 'PE0090-' . $newNumber;
         }
 
 
