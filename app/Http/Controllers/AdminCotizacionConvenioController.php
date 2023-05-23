@@ -312,7 +312,7 @@
   const descuento = parseFloat(document.getElementById('detallesdelasolicituddescuento').value);
 
   // Calcular el total
-  const total = cantida * precio * (1 - descuento / 100);
+  const total = cantidad * precio * (1 - descuento / 100);
 
   // Actualizar el valor del campo total
   document.getElementById('detallesdelasolicitudtotal').value = total.toFixed(2);
