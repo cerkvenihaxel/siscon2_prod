@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use http\Url;
 use Illuminate\Http\Request;
 use App\Models\CotizacionConvenio;
 use App\Models\CotizacionConvenioDetail;
@@ -63,7 +62,8 @@ public function index()
             DB::table('cotizacion_convenio_detail')
                 ->where('id', $id)
                 ->update([
-                    'cantidad_entregada' => $cantidad
+                    'cantidad_entregada' => $cantidad,
+                    'updated_at' => now()
                 ]);
 
             // Obtener el ID de la cotización
