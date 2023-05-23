@@ -101,7 +101,7 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
                         <input type="number" class="form-control" name="cantidadMedicacion[]" value="{{ $md->cantidad_entregada }}">
                     </td>
                     <td>{{ $cotizacion->updated_at}} </td>
-                    <td>
+                    <td class="estado-pedido">
                         <select class="form-control-static" name="estadoPedido[]">
                             <option value="{{ $cotizacion->estado_pedido_id }}" selected style="color: #0A246A">
                                 {{ DB::table('estado_pedido')->where('id', $cotizacion->estado_pedido_id)->value('estado') }}
@@ -139,6 +139,35 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
 <!-- Agrega los scripts de Bootstrap -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
 
+</script>
+
+<script>
+    // Espera a que el documento esté completamente cargado
+    document.addEventListener("DOMContentLoaded", function() {
+        // Obtén todos los elementos <select> de estado del pedido
+        var elementosEstadoPedido = document.querySelectorAll('select[name="estadoPedido[]"]');
+
+        // Itera sobre cada elemento <select>
+        elementosEstadoPedido.forEach(function(elemento) {
+            // Obtén el valor seleccionado del estado del pedido
+            var estadoPedido = elemento.value;
+            // Obtén el elemento <tr> padre del elemento <select>
+            var fila = elemento.closest("tr");
+            // Asigna la clase CSS adecuada según el estado del pedido
+            switch (estadoPedido) {
+                case "1":
+                    fila.classList.add("bg-success");
+                    break;
+                case "2":
+                    fila.classList.add("bg-danger");
+                    break;
+                case "3":
+                    fila.classList.add("bg-warning");
+                    break;
+                // Agrega más casos según los estados que tengas
+            }
+        });
+    });
 </script>
 
 
