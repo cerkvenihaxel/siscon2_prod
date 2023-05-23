@@ -62,7 +62,7 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
             <form method="POST" action="{{ route('actualizarDatos') }}">
                 @csrf
 
-                <table class="table">
+                <table class="table table-responsive table-bordered">
                 <thead>
                 <tr>
                     <th>Nombre de Afiliado</th>
@@ -71,6 +71,7 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
                     <th>Medicación Requerida</th>
                     <th>Cantidad autorizada</th>
                     <th>Cantidad entregada</th>
+                    <th>Ultima fecha de actualizacion</th>
                     <th>Estado</th>
                 </tr>
                 </thead>
@@ -78,7 +79,6 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
                 <!-- Aquí puedes generar las filas dinámicamente con tu backend -->
                 @foreach($afiliado as $cotizacion)
                     @foreach($medicacion as $md)
-
                         @php
                             $estadoSeleccionado = DB::table('estado_pedido')->where('id', $cotizacion->estado_pedido_id)->value('estado');
                             $opcionesEstado = DB::table('estado_pedido')->get();
@@ -100,6 +100,7 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
                     <td>
                         <input type="number" class="form-control" name="cantidadMedicacion[]" value="{{ $md->cantidad_entregada }}">
                     </td>
+                    <td>{{ $cotizacion->updated_at}} </td>
                     <td>
                         <select class="form-control-static" name="estadoPedido[]">
                             <option value="{{ $cotizacion->estado_pedido_id }}" selected style="color: #0A246A">

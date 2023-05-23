@@ -63,7 +63,7 @@ public function index()
                 ->where('id', $id)
                 ->update([
                     'cantidad_entregada' => $cantidad,
-                    'updated_at' => now()
+
                 ]);
 
             // Obtener el ID de la cotización
@@ -75,7 +75,8 @@ public function index()
             DB::table('cotizacion_convenio')
                 ->where('id', $cotizacionId)
                 ->update([
-                    'estado_pedido_id' => $estadoPedido[$index]
+                    'estado_pedido_id' => $estadoPedido[$index],
+                    'updated_at' => now()
                 ]);
         }
         // Retornar una respuesta exitosa
