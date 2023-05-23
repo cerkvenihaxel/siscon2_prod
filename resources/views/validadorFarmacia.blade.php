@@ -3,6 +3,10 @@
 
 @section('content')
 
+@php
+$puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get();
+@endphp
+
     <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -18,14 +22,30 @@
 </head>
 
 <body>
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 <div class="container-fluid">
     <h1>Validador de Farmacias</h1>
-    <h2>Punto de retiro: FARMANOR VI </h2>
+
     <form method="POST" action="{{ route('validarAfiliado') }}">
         @csrf
         <div class="form-group">
             <label for="numeroAfiliado">Número de afiliado:</label>
             <input type="text" class="form-control" id="numeroAfiliado" name="numeroAfiliado" placeholder="Ingrese el número de afiliado" required>
+        </div>
+
+        <div class="form-group">
+            <label for="puntoRetiro">Punto de Retiro:</label>
+            <select class="form-control" id="puntoRetiro" name="puntoRetiro">
+                @foreach($puntoRetiro as $opcion)
+                        <option value="{{ $opcion->id }}">{{ $opcion->nombre }}</option>
+                @endforeach
+                <!-- Agrega más opciones de punto de retiro si es necesario -->
+            </select>
         </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
 
@@ -39,7 +59,10 @@
             <h1 class="box-title">
                 Medicación entregada
             </h1>
-            <table class="table">
+            <form method="POST" action="{{ route('actualizarDatos') }}">
+                @csrf
+
+                <table class="table">
                 <thead>
                 <tr>
                     <th>Nombre de Afiliado</th>
@@ -56,9 +79,15 @@
                 @foreach($afiliado as $cotizacion)
                     @foreach($medicacion as $md)
 
+                        @php
+                            $estadoSeleccionado = DB::table('estado_pedido')->where('id', $cotizacion->estado_pedido_id)->value('estado');
+                            $opcionesEstado = DB::table('estado_pedido')->get();
+                        @endphp
                         <tr>
                     <td>{{ $cotizacion->nombreyapellido }}</td>
-                    <td>{{ DB::table('pedido_medicamento')->where('nrosolicitud', $cotizacion->nrosolicitud)->value('created_at') }}</td>
+                            <input type="hidden" id="nombreAfiliado" value="{{ $cotizacion->nombreyapellido }}">
+
+                            <td>{{ DB::table('pedido_medicamento')->where('nrosolicitud', $cotizacion->nrosolicitud)->value('created_at') }}</td>
                     <td>{{ $cotizacion->created_at }}</td>
                     <td>
                         <ul>
@@ -69,32 +98,40 @@
                                 {{$md->cantidad}}
                             </td>
                     <td>
-                        <input type="number" class="form-control" id="cantidadMedicacion" value="{{ $md->cantidad }}">
+                        <input type="number" class="form-control" name="cantidadMedicacion[]" value="{{ $md->cantidad_entregada }}">
                     </td>
                     <td>
-                        <select class="form-control" name="estadoPedido[]">
-                            <option value="1">Entregado</option>
-                            <option value="2">En revisión</option>
-                            <option value="3">Rechazado</option>
-                            <option value="4">En depósito</option>
+                        <select class="form-control-static" name="estadoPedido[]">
+                            <option value="{{ $cotizacion->estado_pedido_id }}" selected style="color: #0A246A">
+                                {{ DB::table('estado_pedido')->where('id', $cotizacion->estado_pedido_id)->value('estado') }}
+                            </option>
+                            @foreach($opcionesEstado as $opcion)
+                                @if($opcion->id !== $cotizacion->estado_pedido_id)
+                                    <option value="{{ $opcion->id }}">{{ $opcion->estado }}</option>
+                                @endif
+                            @endforeach
                         </select>
                     </td>
-
-                    </tr>
+                            <input type="hidden" name="cotizacionConvenioDetailId[]" value="{{ $md->id }}">
+                        </tr>
                     @endforeach
 
                 @endforeach
 
                 </tbody>
 
-            </table>
+                </table>
+
+
+                <button type="submit" class="btn btn-success" id="actualizarDatosBtn">Actualizar Datos</button>
+
+            </form>
 
         </div>
-        <button type="submit" class="btn btn-success" onclick="mostrarAlerta()">Actualizar Datos</button>
-        <button type="submit" class="btn btn-warning">Imprimir pedido entregado</button>
 
 
     </div>
+
 
 </div>
 
@@ -103,11 +140,6 @@
 
 </script>
 
-<script>
-    function mostrarAlerta() {
-        alert("Actualizado correctamente");
 
-    }
-</script>
 
 @endsection

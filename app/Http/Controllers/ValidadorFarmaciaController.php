@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use http\Url;
 use Illuminate\Http\Request;
 use App\Models\CotizacionConvenio;
 use App\Models\CotizacionConvenioDetail;
+use Illuminate\Support\Facades\DB;
 
 class ValidadorFarmaciaController extends Controller
 {
@@ -19,6 +21,7 @@ public function index()
     public function validarAfiliado(Request $request)
     {
         $numeroAfiliado = $request->input('numeroAfiliado');
+        $idPuntoRetiro = $request->input('puntoRetiro');
         // Verificar si el número de afiliado está presente
         if (!empty($numeroAfiliado)) {
             // Realizar la lógica para obtener los datos de la base de datos
@@ -42,6 +45,43 @@ public function index()
         return view('validadorFarmacia')->with('error', 'No se encontraron datos para el número de afiliado proporcionado.');
     }
 
+    public function actualizarDatos(Request $request)
+    {
+        // Obtener los datos enviados desde el formulario
+        $cantidadMedicacion = $request->input('cantidadMedicacion');
+        $estadoPedido = $request->input('estadoPedido');
+        // Obtener el ID del registro de cotizacion_convenio_detail correspondiente
+        $cotizacionConvenioDetailId = $request->input('cotizacionConvenioDetailId');
+        $nombreAfiliado = $request->input('nombreAfiliado');
+
+
+        // Realizar la actualización de los datos en la tabla cotizacion_convenio_detail
+        foreach ($cotizacionConvenioDetailId as $index => $id) {
+            $cantidad = $cantidadMedicacion[$index];
+
+            // Actualizar la cantidad en la tabla cotizacion_convenio_detail
+            DB::table('cotizacion_convenio_detail')
+                ->where('id', $id)
+                ->update([
+                    'cantidad_entregada' => $cantidad
+                ]);
+
+            // Obtener el ID de la cotización
+            $cotizacionId = DB::table('cotizacion_convenio_detail')
+                ->where('id', $id)
+                ->value('cotizacion_convenio_id');
+
+            // Actualizar el estado en la tabla cotizacion_convenio
+            DB::table('cotizacion_convenio')
+                ->where('id', $cotizacionId)
+                ->update([
+                    'estado_pedido_id' => $estadoPedido[$index]
+                ]);
+        }
+        // Retornar una respuesta exitosa
+        return redirect()->to('admin/validador_farmacia')->with('success', 'Datos del afiliado actualizados correctamente.');
+    }
 
 
 }
+
