@@ -12,12 +12,12 @@ class PDFController extends Controller
 
         // Crear una instancia de TCPDF
 
-
         $pedido = CotizacionConvenio::where('id', $id)->first();
         $detalles = CotizacionConvenioDetail::where('cotizacion_convenio_id', $id)->get();
-        $pdf = PDF::loadView('pdf.tabla', compact('pedido', 'detalles'));
 
-        return $pdf->download('cotizacion.pdf');
+        //$pdf = PDF::loadView('pdf.tabla', compact('pedido', 'detalles'));
+        //return $pdf->download('cotizacion.pdf');
 
+        return view('pdf.tabla', compact('pedido', 'detalles'));
     }
 }
