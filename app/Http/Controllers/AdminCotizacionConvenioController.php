@@ -672,7 +672,7 @@ for (var i = 0; i < medicamentos.length; i++) {
                     "updated_at" => $created_at,
                     "id_empresa" => $id_empresa,
                     "id_pedido" => $id_pedido,
-                    "estado_pedido" => 'EM',
+                    "estado_pedido" => "EM",
                     "fecha_pedido" => $fecha_pedido,
                     "_origen_id_sucursal" => $origen_id_sucursal,
                     "id_cliente" => $id_cliente,
@@ -688,6 +688,7 @@ for (var i = 0; i < medicamentos.length; i++) {
             $pedido->id_empresa = $id_empresa;
             $pedido->id_pedido = $id_pedido;
             $pedido->fecha_pedido = $fecha_pedido;
+            $pedido->estado_pedido = "EM"; // Estado "EM" = "Enviado a Mostrador
             $pedido->_origen_id_sucursal = $origen_id_sucursal;
             $pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
             $pedido->observaciones = $observaciones;
