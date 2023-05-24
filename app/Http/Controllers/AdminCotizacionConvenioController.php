@@ -325,7 +325,6 @@ setInterval(calcularTotal, 500);
 //For function for medicamentos variable loop
 
 for (var i = 0; i < medicamentos.length; i++) {
-    console.log(medicamentos[i]);
 
     let row = table.insertRow();
 
