@@ -3,13 +3,15 @@
 	use App\Models\LinPedido;
     use App\Models\PedidoC;
     use App\Models\CotizacionConvenio;
+    use Barryvdh\DomPDF\PDF;
     use Illuminate\Support\Facades\Redirect;
     use Session;
 	use Request;
 	use DB;
 	use CRUDBooster;
 
-	class AdminCotizacionConvenioController extends \crocodicstudio\crudbooster\controllers\CBController {
+
+    class AdminCotizacionConvenioController extends \crocodicstudio\crudbooster\controllers\CBController {
 
         private $url;
         private $nroSolicitud;
@@ -221,6 +223,7 @@
 	        */
 	        $this->addaction = array();
             $this->addaction[] = ['label'=>'Enviar pedido a depósito', 'url'=>('/linpedido_objeto/[id]'),'icon'=>'fa fa-send','color'=>'success', 'confirmation'=>true, 'showIf'=>"[estado_pedido_id] == 3"];
+            $this->addaction[] = ['label'=>'Imprimir pedido', 'url'=>('/generarPDF_convenio/[id]'),'icon'=>'fa fa-print','color'=>'warning', 'confirmation'=>true, 'showIf'=>"[estado_pedido_id] == 5"];
 
 
 
@@ -624,7 +627,6 @@ for (var i = 0; i < medicamentos.length; i++) {
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
-
 	    }
 
         public function enviarPedidoSingular($id){
@@ -688,7 +690,7 @@ for (var i = 0; i < medicamentos.length; i++) {
             $pedido->id_empresa = $id_empresa;
             $pedido->id_pedido = $id_pedido;
             $pedido->fecha_pedido = $fecha_pedido;
-            $pedido->estado_pedido = "EM"; // Estado "EM" = "Enviado a Mostrador
+            $pedido->estado_pedido = 'EM'; // Estado "EM" = "Enviado a Mostrador
             $pedido->_origen_id_sucursal = $origen_id_sucursal;
             $pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
             $pedido->observaciones = $observaciones;
@@ -730,6 +732,8 @@ for (var i = 0; i < medicamentos.length; i++) {
 
             return 'PE0090-' . $newNumber;
         }
+
+
 
 
 
