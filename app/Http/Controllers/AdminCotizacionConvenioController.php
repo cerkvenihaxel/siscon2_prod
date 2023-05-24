@@ -135,14 +135,7 @@
             $this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 
             $columns = [];
-            $columns[] = ['label'=> 'Medicamentos solicitados', 'name'=>'articuloZafiro_id', 'type'=>'datamodal',
-                'datamodal_table'=>'articulosZafiro',
-                'validation'=>'required',
-                'datamodal_columns_alias'=>'Monodroga, Descripción del artículo, Presentación, ID ARTÍCULO',
-                'datamodal_columns'=>'des_monodroga,des_articulo,presentacion,id_articulo',
-                'datamodal_size'=>'large',
-                'datamodal_where'=>'id_familia = "01"', 'AND', 'id_familia= "14"',
-                'datamodal_select_to'=>'presentacion:presentacion','required'=>true];
+            $columns[] = ['label'=> 'Medicamentos solicitados', 'name'=>'articuloZafiro_id', 'type'=>'datamodal', 'datamodal_table'=>'articulosZafiro', 'validation'=>'required', 'datamodal_columns_alias'=>'Monodroga, Descripción del artículo, Presentación, ID ARTÍCULO', 'datamodal_columns'=>'des_monodroga,des_articulo,presentacion,id_articulo', 'datamodal_size'=>'large', 'datamodal_where'=>'id_familia = "01"', 'AND', 'id_familia= "14"', 'datamodal_select_to'=>'presentacion:presentacion','required'=>true];
             $columns [] = ['label'=> 'Presentación', 'name'=>'presentacion', 'type'=>'text', 'readonly'=>true];
             $columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|integer|min:0', 'required'=>true];
             $columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text', 'validation'=>'required|min:1|max:255', 'required'=>true];
@@ -312,7 +305,7 @@
   const descuento = parseFloat(document.getElementById('detallesdelasolicituddescuento').value);
 
   // Calcular el total
-  const total = cantida * precio * (1 - descuento / 100);
+  const total = cantidad * precio * (1 - descuento / 100);
 
   // Actualizar el valor del campo total
   document.getElementById('detallesdelasolicitudtotal').value = total.toFixed(2);
@@ -321,33 +314,30 @@
 setInterval(calcularTotal, 500);
 
 
-
-            function addRow() {
+ function addRow() {
 
     var medicamentos = ".$this->medicacion.";
     var cantidades = ".$this->medicamentosRequired.";
-    console.log(medicamentos);
-    console.log(cantidades);
     // Get a reference to the table and insert a new row at the end
     let table = document.getElementById('table-detallesdelasolicitud');
 
 
-    //For function for medicamentos variable loop
+//For function for medicamentos variable loop
 
-    for (var i = 0; i < medicamentos.length; i++) {
-
+for (var i = 0; i < medicamentos.length; i++) {
     console.log(medicamentos[i]);
 
     let row = table.insertRow();
+
     var medicamentoId = medicamentos[i].id;
     var cantidadEncontrada = null;
 
     // Buscar la cantidad correspondiente al medicamento actual
-
-    for(var j = 0; j < cantidades.length; j++){
-    if (cantidades[j].articuloZafiro_id === medicamentoId){
-    cantidadEncontrada = cantidades[j];
-    break;
+    for (var j = 0; j < cantidades.length; j++) {
+        if (cantidades[j].articuloZafiro_id === medicamentoId) {
+            cantidadEncontrada = cantidades[j];
+            break;
+        }
     }
 
     // Add the td elements for each column in the row
@@ -372,22 +362,22 @@ setInterval(calcularTotal, 500);
     input2.name = 'detallesdelasolicitud-presentacion[]';
     input2.value = medicamentos[i].presentacion_completa;
 
-    if (cantidadEncontrada !== null){
-    var td3 = document.createElement('td');
-    td3.className = 'cantidad';
-    td3.textContent = cantidadEncontrada.cantidad;
-    var input3 = document.createElement('input');
-    input3.type = 'hidden';
-    input3.name = 'detallesdelasolicitud-cantidad[]';
-    input3.value = cantidadEncontrada.cantidad;
-    td3.appendChild(input3);
-    row.appendChild(td3);
+    if (cantidadEncontrada !== null) {
+        var td3 = document.createElement('td');
+        td3.className = 'cantidad';
+        td3.textContent = cantidadEncontrada.cantidad;
+        var input3 = document.createElement('input');
+        input3.type = 'hidden';
+        input3.name = 'detallesdelasolicitud-cantidad[]';
+        input3.value = cantidadEncontrada.cantidad;
+        td3.appendChild(input3);
+        row.appendChild(td3);
     } else {
-    // Si no se encuentra la cantidad, agregar una celda vacía
-    var td3 = document.createElement('td');
-    td3.className = 'cantidad';
-    td3.textContent = '';
-    row.appendChild(td3);
+        // Si no se encuentra la cantidad, agregar una celda vacía
+        var td3 = document.createElement('td');
+        td3.className = 'cantidad';
+        td3.textContent = '';
+        row.appendChild(td3);
     }
 
     var td5 = document.createElement('td');
@@ -464,7 +454,6 @@ setInterval(calcularTotal, 500);
 
 }
 }
-
             ";
 
 
@@ -684,6 +673,7 @@ setInterval(calcularTotal, 500);
                     "updated_at" => $created_at,
                     "id_empresa" => $id_empresa,
                     "id_pedido" => $id_pedido,
+                    "estado_pedido" => 'EM',
                     "fecha_pedido" => $fecha_pedido,
                     "_origen_id_sucursal" => $origen_id_sucursal,
                     "id_cliente" => $id_cliente,
