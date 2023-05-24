@@ -88,16 +88,7 @@
     </table>
     <hr class="border mt-5">
 
-    <div class="mt-5">
-        <p class="mb-5">Firma:            ______________________________</p>
-        <br class="mt-5">
-        <p class="mb-5">Aclaración:            ______________________________</p>
-        <br class="mt-5">
-        <p class="mb-5">DNI:            ______________________________</p>
-        <br class="mt-5">
-        <p class="mb-5">Parentesco:            ______________________________</p>
 
-    </div>
 </div>
 
 </body>
