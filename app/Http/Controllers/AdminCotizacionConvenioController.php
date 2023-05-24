@@ -108,6 +108,7 @@
             $this->col[] = ["label" => "Proveedor", "name" => "proveedor"];
             $this->col[] = ["label" => "Estado Solicitud", "name" => "estado_solicitud_id", "join" => "estado_solicitud,estado"];
             $this->col[] = ["label"=> "Estado del pedido", "name"=> "estado_pedido_id", "join"=> "estado_pedido,estado"];
+            $this->col[] = ["label"=>"ID Pedido", "name"=>"id_pedido"];
             # END COLUMNS DO NOT REMOVE THIS LINE
 
             $custom_element = view('articulosEntrantesCotMed')->render();
@@ -631,6 +632,8 @@ for (var i = 0; i < medicamentos.length; i++) {
 
         public function enviarPedidoSingular($id){
             $numero = $this->generatePedidoNumber();
+
+            DB::table('cotizacion_convenio')->where('id', $id)->update(['id_pedido' => $numero]);
 
             DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
             $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
