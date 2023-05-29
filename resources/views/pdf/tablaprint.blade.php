@@ -16,9 +16,9 @@
 
 <div class="container mt-5">
     <img src="https://i.ibb.co/G91yZ8Z/SISCON.png" alt="SISCON" border="0" class="img-fluid left" width="65px" height="40px">
-    <h6 class="text-right">Fecha {{ now() }}</h6>
+    <p class="text-right">Fecha {{ now() }}</p>
     <hr class="border">
-    <h5>Datos del Pedido</h5>
+    <a>Datos del Pedido</a>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -63,7 +63,7 @@
         </tbody>
     </table>
 
-    <h6>Detalles del Pedido</h6>
+    <a>Detalles del Pedido</a>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -88,7 +88,6 @@
     </table>
     <hr class="border mt-5">
 
-    <a class="btn btn-success" href="{{ route('printPDF', ['id' => $pedido->id]) }}">Imprimir PDF</a>
 
 </div>
 
