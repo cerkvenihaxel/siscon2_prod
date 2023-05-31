@@ -99,11 +99,6 @@
 			}
 
 
-
-
-
-
-
 				$id = DB::table('entrantes')->where('id', Request::get('id'))->value('id');
 			function contadordeDias(){
 				$fecha_de_carga = DB::table('entrantes')->where('id', Request::get('id'))->value('created_at');
@@ -139,8 +134,19 @@
 			$this->form[] = ['label'=>'Estado Solicitud','name'=>'estado_solicitud_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','required'=>true,'datatable'=>'estado_solicitud,estado','value'=>1, 'disabled'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fecha_cirugia','type'=>'date','validation'=>'required|date','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label' => 'Fecha de Expiración (sólo para proveedores)', 'name' => 'fecha_expiracion', 'type' => 'text','validation' => 'required|date', 'width' => 'col-sm-10', 'readonly'=>adminPrivilegeId(), 'value'=>date('Y-m-d H:i:s', strtotime("+2 days"))];
-			$this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true, 'value'=>$IDMEDICO, 'disabled'=>adminPrivilegeId()];
-			$this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
+            CRUDBooster::myId() != 83 ?
+			    $this->form[] = ['label'=>'Médico Solicitante','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico','required'=>true, 'value'=>$IDMEDICO, 'disabled'=>adminPrivilegeId()] :
+                $this->form[] = [
+                    'label' => 'Médico Solicitante',
+                    'name' => 'medicos_id',
+                    'type' => 'select2',
+                    'validation' => 'required|integer|min:0',
+                    'width' => 'col-sm-10',
+                    'datatable' => 'medicos,nombremedico',
+                    'datatable_where' => 'id = 1049 OR id = 803',
+                    'required' => true,
+                ];
+            $this->form[] = ['label'=>'Teléfono médico', 'name'=>'tel_medico', 'type'=>'number','validation'=>'required|numeric','width'=>'col-sm-10','required'=>true];
 			$this->form[] = ['label'=>'Número de Solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','required'=>true,'readonly'=>'true','value'=>'APOS'.date('dmHis')];
 			$this->form[] = ['label'=>'Necesidad', 'name'=>'necesidad', 'type'=>'select2', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'datatable'=>'necesidad,necesidad'];
 			$this->form[] = ['label'=>'Sufrió un accidente?', 'name'=>'accidente', 'type'=>'select', 'width'=>'col-sm-10','dataenum'=>'Si;No'];
