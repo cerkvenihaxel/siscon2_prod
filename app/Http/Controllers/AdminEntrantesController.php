@@ -436,11 +436,14 @@
 	$cotizacionesAdmin = DB::table('cotizaciones')->where('stamp_user', CRUDBooster::myName())->get();
 
 
-	if(CRUDBooster::myPrivilegeId() == 6) {
+	if(CRUDBooster::myPrivilegeId() == 6 && CRUDBooster::myId() != 83) {
 			$medicoName = CRUDBooster::myName();
 			$medicoId = DB::table('medicos')->where('nombremedico', $medicoName)->value('id');
 			$query->where('medicos_id', $medicoId);
 	    }
+    if(CRUDBooster::myPrivilegeId() == 6 && CRUDBooster::myId() == 83) {
+                $query->whereIn('medicos_id', [803, 1049]);
+            }
 	if(proveedorAdminPrivilegeId()){
 		$query->where('fecha_expiracion','>=',date('Y-m-d'));
 		foreach ($cotizaciones as $cotizacion) {
