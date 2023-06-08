@@ -163,5 +163,14 @@ Route::post('admin/validar-afiliado', [\App\Http\Controllers\ValidadorFarmaciaCo
 Route::post('/actualizar-datos', [\App\Http\Controllers\ValidadorFarmaciaController::class, 'actualizarDatos'])->name('actualizarDatos');
 
 Route::get('/generarPDF_convenio/{id}', [\App\Http\Controllers\PDFController::class, 'generarPDF'])->name('generarPDF');
+Route::get('/imprimirPDF_convenio/{id}', [\App\Http\Controllers\PDFController::class, 'imprimirPDF'])->name('imprimirPDF');
 
 Route::get('/printPDF_convenio/{id}', [\App\Http\Controllers\PDFController::class, 'printPDF'])->name('printPDF');
+
+
+//NUEVO CREAR SOLICITUD
+Route::get('/crearsolicitud_medico', function (){
+    return view('medicoCrearPedidoMedicamentoview');
+});
+
+

@@ -28,9 +28,9 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
         {{ session('success') }}
     </div>
 @endif
+<div class="tarjeta">
 <div class="container-fluid">
-    <h1>Validador de Farmacias</h1>
-
+    <h2 class="card-title">Validador Farmacias</h2>
     <form method="POST" action="{{ route('validarAfiliado') }}">
         @csrf
         <div class="form-group">
@@ -98,7 +98,7 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
                                 {{$md->cantidad}}
                             </td>
                     <td>
-                        <input type="number" class="form-control" name="cantidadMedicacion[]" value="{{ $md->cantidad_entregada }}">
+                        <input type="number" class="form-control" name="cantidadMedicacion[]" value="{{ $md->cantidad }}">
                     </td>
                     <td>{{ $cotizacion->updated_at}} </td>
                     <td class="estado-pedido">
@@ -136,6 +136,20 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
 
 </div>
 
+    <style>
+        .tarjeta{
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: #0a0a0a 15px;
+            padding-bottom: 15px;
+        }
+
+        .card-title{
+            color: #4285F4;
+        }
+    </style>
+</div>
+
 <!-- Agrega los scripts de Bootstrap -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
 
@@ -169,6 +183,8 @@ $puntoRetiro = DB::table('punto_retiro')->where('proveedor_convenio_id', 2)->get
         });
     });
 </script>
+
+
 
 
 
