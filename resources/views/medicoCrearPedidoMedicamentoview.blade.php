@@ -131,6 +131,7 @@
                         <th>Fechas de creación</th>
                         <th>Afiliado</th>
                         <th>Número de solicitud</th>
+                        <th>Medicación requerida</th>
                         <th>Estado Solicitud</th>
                     </tr>
                     </thead>
@@ -139,12 +140,15 @@
                         <td>Fecha 1</td>
                         <td>Afiliado 1</td>
                         <td>Número 1</td>
+                        <td>Metformina, Insulina, etc</td>
                         <td>Estado 1</td>
                     </tr>
                     <tr>
                         <td>Fecha 2</td>
                         <td>Afiliado 2</td>
                         <td>Número 2</td>
+                        <td>Metformina, Insulina, etc</td>
+
                         <td>Estado 2</td>
                     </tr>
                     <!-- Agrega más filas según sea necesario -->
