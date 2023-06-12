@@ -168,9 +168,47 @@ Route::get('/imprimirPDF_convenio/{id}', [\App\Http\Controllers\PDFController::c
 Route::get('/printPDF_convenio/{id}', [\App\Http\Controllers\PDFController::class, 'printPDF'])->name('printPDF');
 
 
+//ESCRITORIO CONVENIO
+
+/*Route::get('admin/escritorioCM', function (){
+    return view('escritorioConvenioMedicamentosView');
+});
+*/
+//ESCRITORIO CONVENIO CONTROLLER
+
+Route::get('admin/escritorioConvenioMedicamentos', [\App\Http\Controllers\EscritorioConvenioMedicamentosController::class, 'deskView'])->name('escritorio_cm');
+
+
+
 //NUEVO CREAR SOLICITUD
 Route::get('/crearsolicitud_medico', function (){
     return view('medicoCrearPedidoMedicamentoview');
 });
+
+//NUEVO PEDIDO MEDICO (VADA STYLE)
+
+Route::get('/autorizarsolicitud_oficina', function (){
+    return view('oficinaAutorizarPedidoMedicamentoView');
+});
+
+//NUEVO OFICINA PROVEEDOR (VADA STYLE)
+
+Route::get('/generarpedido_oficina', function (){
+    return view('oficinaProveedorPedidoMedicamentoView');
+});
+
+//Entregar pedido (validador farmacia)
+Route::get('/entregarpedido_farmacia', function (){
+    return view('farmaciaPedidoMedicamentoView');
+});
+
+// SECCIÓN DE CONTROLLERS-------
+
+// Seccion 1 - MedicoCrearPedidoMedicamento
+
+//Busqueda
+
+Route::post('/crearsolicitud_medico/buscar', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'buscarAfiliado'])->name('buscarAfiliadoPedido');
+
 
 
