@@ -22,7 +22,7 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>Número de solicitud</th>
+            <th>Número de solicitud</th><
             <th>Afiliado</th>
             <th>Número de Afiliado</th>
             <th>Patología</th>

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use App\Http\Controllers\LinPedidoController;
 use App\Http\Controllers\EnviarPedidoController;
+use App\Http\Controllers\AfiliadoArticuloController;
 
 
 use App\Http\Controllers\AccidentesReportController;
@@ -212,3 +213,14 @@ Route::post('/crearsolicitud_medico/buscar', [\App\Http\Controllers\MedicoCrearP
 
 
 
+// Ruta para mostrar la tabla de afiliados_articulos
+Route::get('/afiliados_articulos', [\App\Http\Controllers\AfiliadoArticuloController::class, 'index'])->name('afiliados_articulos.index');
+
+// Ruta para almacenar un nuevo registro en afiliados_articulos
+Route::post('/afiliados_articulos', [\App\Http\Controllers\AfiliadoArticuloController::class, 'store'])->name('afiliados_articulos.store');
+
+// Ruta para mostrar el formulario de edición de un registro en afiliados_articulos
+Route::get('/afiliados_articulos/{id}/edit', [\App\Http\Controllers\AfiliadoArticuloController::class, 'edit'])->name('afiliados_articulos.edit');
+
+// Ruta para actualizar un registro en afiliados_articulos
+Route::put('/afiliados_articulos/{id}', [\App\Http\Controllers\AfiliadoArticuloController::class, 'update'])->name('afiliados_articulos.update');

@@ -143,7 +143,6 @@
                             </thead>
                             <tbody>
                             @foreach($patologiasName as $pato)
-
                                 <tr>
                                     <td>{{ $pato->nombre  }}</td>
                                     <td> {{ $consulta = DB::table('afiliados_articulos')
@@ -153,10 +152,16 @@
                                             ->count() }}</td>
                                     <td><a href="#">Ver más</a></td>
                                 </tr>
+                                @php
+                                $suma += $consulta
+                                 @endphp
+
                             @endforeach
 
                             </tbody>
                         </table>
+
+                        <h4>Total afiliados por patologías : {{ $suma }}</h4>
                     </div>
                 </div>
             </div>

@@ -15,6 +15,8 @@ class EscritorioConvenioMedicamentosController extends Controller
         $nroProcesados = DB::table('cotizacion_convenio')->where('proveedor', 'LIKE', 'Global Médica')->count();
         $nroEntregados = DB::table('cotizacion_convenio')->where('proveedor', 'LIKE', 'Global Médica')->where('estado_pedido_id', 1)->count();
 
+
+
         $patologiasName = DB::table('patologias')->get();
 
 
