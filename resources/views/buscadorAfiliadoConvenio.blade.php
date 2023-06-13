@@ -116,7 +116,7 @@ $mostrarTabla = false;
       foreach ($data as $result) {
         echo '<tr>';
           echo'<td>'.$result->id_articulo.'</td>';
-         echo'<td>'.$result->articulo.'</td>';
+         echo'<td>'.$result->des_articulo.' | '.$result->presentacion.'</td>';
         echo'<td>'.$result->cantidad.'</td>';
         echo '<td>
       <button class="btn btn-sm btn-primary">Editar</button>
