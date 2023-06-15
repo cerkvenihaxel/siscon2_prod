@@ -247,6 +247,24 @@ Route::get('/afiliados_articulos/buscar', [\App\Http\Controllers\AfiliadoArticul
 
 Route::get('/afiliados/search', [AfiliadoArticuloController::class, 'getAfiliados'])->name('afiliados.search');
 
+//Buscador para el select2 del afiliado
+
+Route::get('/articulos/search', [AfiliadoArticuloController::class, 'getArticulos'])->name('articulos.search');
+
 //Guardar Filas
 
 Route::post('/guardar-filas', [AfiliadoArticuloController::class, 'guardarFilas'])->name('guardarfilas');
+
+
+
+//BUSQUEDA DE PRUEBA
+
+Route::get('/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search.index');
+
+Route::get('/searchprueba', function (){
+    return view('search');
+});
+
+Route::get('/addNewPrecarga', function(){
+    return view('addModalPrecarga');
+})->name('addNewPrecarga');

@@ -1,23 +1,19 @@
 @extends('crudbooster::admin_template')
-
 @section('content')
     <!DOCTYPE html>
 <html>
 
 <head>
-    <!-- Agregar enlaces a Bootstrap 3.3.7 -->
+    <title>Precarga Afiliados</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <!-- Select2 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-    <!-- Agregar enlace a jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <div class="tabla-view">
 
 <div class="container container-fluid">
@@ -36,9 +32,9 @@
                         </div>
 
                     </form>
-                    <button class="btn btn-success" data-toggle="modal" data-target="#addModal">
-                        <i class="fas fa-plus"></i> Añadir nuevo
-                    </button>
+                    <button type="button" class="btn btn-sm btn-warning" id="btn-actualizar-datos">Actualizar datos</button>
+                    <button class="btn btn-success btn-sm botoncarga" type="button" onclick="openCenteredWindow('/addNewPrecarga', 750, 550)">Agregar datos</button>
+
                 </div>
 
                 <h4>Total de resultados: {{ $count }}</h4>
@@ -81,70 +77,6 @@
                     </div>
                 </div>
             </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para añadir nuevos datos -->
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addModalLabel">Añadir nuevo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Select para afiliado -->
-                <div class="form-group">
-                    <label for="afiliado">Afiliado:</label>
-                    <input type="text" id="afiliado" class="form-control" >
-                </div>
-
-                <!-- Select2 para artículos -->
-                <div class="form-group">
-                    <label for="articulo">Artículo:</label>
-                    <input type="text" id="articulo" class="form-control" >
-                </div>
-
-                <!-- Select2 para patologías -->
-                <div class="form-group">
-                    <label for="patologia">Patología:</label>
-                    <input type="text" id="patologia" class="form-control" >
-                </div>
-
-                <!-- Cantidad -->
-                <div class="form-group">
-                    <label for="cantidad">Cantidad:</label>
-                    <input type="number" id="cantidad" class="form-control">
-                </div>
-
-                <!-- Botón para agregar fila -->
-                <button type="button" class="btn btn-primary" id="btn-agregar-fila">Agregar Fila</button>
-
-                <!-- Tabla para mostrar las filas agregadas -->
-                <table class="table table-bordered" id="tabla-filas">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Afiliado</th>
-                        <th>Artículo</th>
-                        <th>Patología</th>
-                        <th>Cantidad</th>
-                        <th>Acción</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Filas agregadas dinámicamente -->
-                    </tbody>
-                </table>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" id="btnAgregar">Agregar</button>
             </div>
         </div>
     </div>
@@ -260,6 +192,10 @@
     $(document).ready(function() {
         var afiliadoNumber = null; // Variable para almacenar el número de afiliado
 
+        $('#btn-actualizar-datos').click(function() {
+            location.reload();
+        });
+
         $('.btn-delete').on('click', function() {
             afiliadoNumber = $(this).data('id');
         });
@@ -308,154 +244,13 @@
     });
 
 
-    $(document).ready(function() {
-        // Arreglo para almacenar las filas agregadas
-        var filasAgregadas = [];
 
-        // Función para agregar una nueva fila
-        function agregarFila() {
-            // Obtener los valores seleccionados
-            var afiliado = $('#afiliado').val();
-            var articulo = $('#articulo').val();
-            var patologia = $('#patologia').val();
-            var cantidad = $('#cantidad').val();
-
-            // Validar que se hayan seleccionado todos los campos
-            if (afiliado === '' || articulo === '' || patologia === '' || cantidad === '') {
-                alert('Por favor, complete todos los campos.');
-                return;
-            }
-
-            // Crear objeto de fila
-            var fila = {
-                nro_afiliado: afiliado,
-                id_articulo: articulo,
-                patologias: patologia,
-                cantidad: cantidad
-            };
-
-            // Agregar la fila al arreglo de filas
-            filasAgregadas.push(fila);
-
-            // Limpiar los campos de entrada
-            limpiarCampos();
-
-            // Actualizar la tabla
-            actualizarTabla();
-        }
-
-        // Función para limpiar los campos de entrada
-        function limpiarCampos() {
-            $('#afiliado').val('');
-            $('#articulo').val('');
-            $('#patologia').val('');
-            $('#cantidad').val('');
-        }
-
-        // Función para actualizar la tabla con las filas agregadas
-        function actualizarTabla() {
-            var tabla = $('#tabla-filas tbody');
-
-            // Limpiar la tabla
-            tabla.empty();
-
-
-            // Agregar las filas al cuerpo de la tabla
-            filasAgregadas.forEach(function(fila, index) {
-                 var idex = index+1;
-                var tr = '<tr>' +
-                    '<td>' + idex +'</td>' +
-                    '<td>' + fila.nro_afiliado + '</td>' +
-                    '<td>' + fila.id_articulo + '</td>' +
-                    '<td>' + fila.patologias + '</td>' +
-                    '<td>' + fila.cantidad + '</td>' +
-                    '<td><button class="btn btn-danger btn-eliminar-fila" data-index="' + index + '">Eliminar</button></td>' +
-                    '</tr>';
-                tabla.append(tr);
-            });
-
-            // Asignar evento de eliminación a los botones de eliminar fila
-            $('.btn-eliminar-fila').click(function() {
-                var afiliado = $(this).data('index');
-                filasAgregadas.splice(afiliado, 1);
-                actualizarTabla();
-            });
-        }
-
-
-        // Evento del botón "Agregar Fila"
-        $('#btn-agregar-fila').click(function() {
-            agregarFila();
-        });
-
-        // Evento del botón "Agregar"
-        $('#btnAgregar').click(function() {
-            // Enviar los datos al controlador (puedes cambiar la URL según tu configuración)
-            $.ajax({
-                url: '/guardar-filas',
-                type: 'POST',
-                dataType: 'json',
-                data: { filas: filasAgregadas },
-                success: function(response) {
-                    // Manejar la respuesta del controlador
-                    if (response.success) {
-                       console.log(filasAgregadas);
-                        // Limpiar el arreglo de filas agregadas
-                        filasAgregadas = [];
-                        // Limpiar la tabla
-                        actualizarTabla();
-                        location.reload();
-                        // Cerrar el modal
-                        $('#addModal').modal('hide');
-                    } else {
-                        alert('Error al agregar las filas. Inténtelo nuevamente.');
-                    }
-                },
-                error: function() {
-                    alert('Error de conexión. Inténtelo nuevamente.');
-                }
-            });
-        });
-    });
-
-
-    //Get Afiliado
-
-    $(document).ready(function() {
-        $('#afiliado_id').select2({
-            ajax: {
-                url: '/afiliados/search',
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        term: params.term
-                    };
-                },
-                processResults: function(data) {
-                    var options = [];
-
-                    // Generar las opciones del select
-                    data.forEach(function(item) {
-                        options.push({
-                            id: item.id,
-                            text: item.name
-                        });
-                    });
-
-                    // Retornar las opciones generadas
-                    return {
-                        results: options
-                    };
-                },
-                cache: true
-            },
-            minimumInputLength: 2 // Mostrar resultados después de escribir al menos 2 caracteres
-        });
-    });
-
-
-
+    function openCenteredWindow(url, width, height) {
+        var left = (window.screen.width - width) / 2;
+        var top = (window.screen.height - height) / 2;
+        var windowFeatures = 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',menubar=no,toolbar=no,location=no,status=no';
+        window.open(url, '_blank', windowFeatures);
+    }
 
 </script>
 
@@ -463,18 +258,22 @@
     .tabla-view{
         background-color: white;
         border-radius: 15px;
-        box-shadow: #0a0a0a 15px;
         padding-bottom: 15px;
         padding-top:20px;
     }
 
     .ml-3{
-        margin-left: 2 .5rem !important;
+        margin-left: 2.5rem !important;
         margin-bottom: 3.5rem;
+    }
+
+    .botoncarga a{
+        color: white;
     }
 
 </style>
 </body>
 
 </html>
+
 @endsection

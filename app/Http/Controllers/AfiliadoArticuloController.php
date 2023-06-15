@@ -70,7 +70,7 @@ class AfiliadoArticuloController extends Controller
     public function destroy($id)
     {
         // Obtener el afiliado y realizar las operaciones de eliminación necesarias
-        $afiliadoArticulo = AfiliadosArticulosModel::find($id);
+        $afiliadoArticulo = AfiliadosArticulosModel::findOrFail($id);
         // ...
 
         // Eliminar el afiliado
@@ -121,24 +121,36 @@ class AfiliadoArticuloController extends Controller
 
     public function getAfiliados(Request $request)
     {
-        $term = $request->input('term');
+        $searchTerm = $request->input('term');
+        $results = Afiliados::where('apeynombres', 'LIKE', '%' . $searchTerm . '%')->get(); // Reemplaza 'column_name' con el nombre de la columna en la tabla que deseas buscar
 
-        // Verificar si los resultados están en caché
-        $cacheKey = 'afiliados_' . $term;
-        if (Cache::has($cacheKey)) {
-            $results = Cache::get($cacheKey);
-        } else {
-            // Consulta optimizada para obtener los afiliados filtrados
-            $results = DB::table('afiliados')
-                ->where('apeynombres', 'LIKE', "%{$term}%")
-                ->take(10)
-                ->get();
+        $data = [];
 
-            // Almacenar los resultados en caché por 5 minutos
-            Cache::put($cacheKey, $results, 300);
+        foreach ($results as $result) {
+            $data[] = [
+                'id' => $result->nroAfiliado,
+                'text' => $result->apeynombres, // Reemplaza 'name' con el nombre de la columna que deseas mostrar en el campo de búsqueda
+            ];
         }
 
-        return response()->json($results);
+        return response()->json($data);
+    }
+
+    public function getArticulos(Request $request)
+    {
+        $searchTerm = $request->input('term');
+        $results = ArticulosZafiro::where('des_monodroga', 'LIKE', '%' . $searchTerm . '%')->orWhere('presentacion_completa', 'LIKE', '%' .$searchTerm . '%')->get(); // Reemplaza 'column_name' con el nombre de la columna en la tabla que deseas buscar
+
+        $data = [];
+
+        foreach ($results as $result) {
+            $data[] = [
+                'id' => $result->id_articulo,
+                'text' => $result->presentacion_completa, // Reemplaza 'name' con el nombre de la columna que deseas mostrar en el campo de búsqueda
+            ];
+        }
+
+        return response()->json($data);
     }
 
     public function guardarFilas(Request $request)
@@ -147,7 +159,19 @@ class AfiliadoArticuloController extends Controller
 
         // Recorrer las filas y guardarlas en la base de datos
         foreach ($filas as $fila) {
-            AfiliadosArticulosModel::create($fila);
+            // Crear una nueva instancia del modelo ArticulosAfiliadosModel
+            $articuloAfiliado = new AfiliadosArticulosModel();
+            // Asignar los valores de la fila al modelo
+            $articuloAfiliado->nro_afiliado = $fila['nro_afiliado'];
+            $articuloAfiliado->nombre = Afiliados::where('nroAfiliado', $fila['nro_afiliado'])->value('apeynombres');
+            $articuloAfiliado->id_articulo = $fila['id_articulo'];
+            $articuloAfiliado->des_articulo = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('des_articulo');
+            $articuloAfiliado->presentacion = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('presentacion');
+            $articuloAfiliado->patologias = $fila['patologias'];
+            $articuloAfiliado->cantidad = $fila['cantidad'];
+
+            // Guardar el modelo en la base de datos
+            $articuloAfiliado->save();
         }
         // Ejemplo de respuesta del controlador
         return response()->json(['success' => true]);
