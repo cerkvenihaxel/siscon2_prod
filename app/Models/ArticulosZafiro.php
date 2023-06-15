@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ArticulosZafiro extends Model
 {
     use HasFactory;
-    protected $table = 'articuloszafiro';
+    protected $table = 'articulosZafiro';
 
     public function nroArticulo(){
         return $this->hasMany(AfiliadosArticulos::class, 'id_articulo');
