@@ -404,6 +404,7 @@
                         filasAgregadas = [];
                         // Limpiar la tabla
                         actualizarTabla();
+                        location.reload();
                         // Cerrar el modal
                         $('#addModal').modal('hide');
                     } else {
