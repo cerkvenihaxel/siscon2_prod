@@ -224,3 +224,20 @@ Route::get('/afiliados_articulos/{id}/edit', [\App\Http\Controllers\AfiliadoArti
 
 // Ruta para actualizar un registro en afiliados_articulos
 Route::put('/afiliados_articulos/{id}', [\App\Http\Controllers\AfiliadoArticuloController::class, 'update'])->name('afiliados_articulos.update');
+
+//Ruta para view modal
+Route::get('/afiliadosarticulos/{id}', [\App\Http\Controllers\AfiliadoArticuloController::class, 'show'])->name('afiliadosarticulos.show');
+
+//Ruta para editar en modal
+Route::get('/afiliadosarticulos/{id}/edit', [\App\Http\Controllers\AfiliadoArticuloController::class, 'edit'])->name('afiliadosarticulos.edit');
+//ACTUALIZAR LOS DATOS
+
+Route::put('/afiliadosarticulos/{id}', [AfiliadoArticuloController::class, 'update'])->name('afiliadosarticulos.update');
+
+//Eliminar afiliados_articulos
+
+Route::get('/afiliados_articulos/{id}/delete', [\App\Http\Controllers\AfiliadoArticuloController::class, 'destroy'])->name('afiliados_articulos.destroy');
+
+//Buscador para afiliados_articulos
+
+Route::post('/afiliados_articulos/buscar', [\App\Http\Controllers\AfiliadoArticuloController::class, 'search'])->name('afiliados_articulos.search');
