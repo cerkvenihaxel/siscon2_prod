@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AfiliadosArticulosModel;
+use App\Models\ArticulosZafiro;
 use Illuminate\Http\Request;
 use App\Models\Afiliados;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 
 class AfiliadoArticuloController extends Controller
@@ -13,8 +15,16 @@ class AfiliadoArticuloController extends Controller
     public function index()
     {
         $afiliadosArticulos = AfiliadosArticulosModel::paginate(20);
-        $count = $afiliadosArticulos->count();
-        return view('afiliadosArticulosView', compact('afiliadosArticulos', 'count'));
+        $count = AfiliadosArticulosModel::count();
+
+        $data = [
+            'afiliados' => DB::table('afiliados')->get(),
+            'articulos' => ArticulosZafiro::where('id_familia', '=', '01'),
+            'patologias' => DB::table('patologias')->get(),
+        ];
+
+
+        return view('afiliadosArticulosView', compact('afiliadosArticulos', 'count', 'data'));
     }
 
     public function store(Request $request)
@@ -34,6 +44,7 @@ class AfiliadoArticuloController extends Controller
         // Obtener el afiliado y sus datos actuales
         $afiliadoArticulo = AfiliadosArticulosModel::findOrFail($id);
 
+
         // Actualizar la cantidad solamente, los demás valores permanecen iguales
         $afiliadoArticulo->cantidad = $request->cantidad;
         $afiliadoArticulo->save();
@@ -44,7 +55,8 @@ class AfiliadoArticuloController extends Controller
 
     public function show($id){
         $afiliado = AfiliadosArticulosModel::findOrFail($id);
-        return view('afiliadosarticulos.show', compact('afiliado'));
+        $monodroga = DB::table('articulosZafiro')->where('id_articulo', $afiliado->id_articulo)->value('des_monodroga');
+        return view('afiliadosarticulos.show', compact('afiliado', 'monodroga'));
     }
 
     public function edit($id)
@@ -65,7 +77,7 @@ class AfiliadoArticuloController extends Controller
         $afiliadoArticulo->delete();
 
         // Redireccionar a la vista de lista de afiliados o a donde sea necesario
-        return redirect()->route('afiliados_articulos.index')->with('success', 'Afiliado eliminado exitosamente');
+        return redirect()->route('afiliados_articulos.index')->with('success', 'Registro eliminado exitosamente');
     }
 
     public function search(Request $request)
@@ -73,7 +85,7 @@ class AfiliadoArticuloController extends Controller
         $search = $request->input('search');
 
         $afiliadosArticulos = DB::table('afiliados_articulos')
-            ->where('nroAfiliado', 'LIKE', '%' . $search . '%')
+            ->where('nro_afiliado', 'LIKE', '%' . $search . '%')
             ->orWhere('nombre', 'LIKE', '%' . $search . '%')
             ->orWhere('des_articulo', 'LIKE', '%' . $search . '%')
             ->orWhere('presentacion', 'LIKE', '%' . $search . '%')
@@ -85,8 +97,51 @@ class AfiliadoArticuloController extends Controller
                     ->where('nombre', 'LIKE', '%' . $search . '%');
             })
             ->paginate(20);
-        $count = $afiliadosArticulos->count();
+        $count = DB::table('afiliados_articulos')
+            ->where('nro_afiliado', 'LIKE', '%' . $search . '%')
+            ->orWhere('nombre', 'LIKE', '%' . $search . '%')
+            ->orWhere('des_articulo', 'LIKE', '%' . $search . '%')
+            ->orWhere('presentacion', 'LIKE', '%' . $search . '%')
+            ->orWhere('cantidad', 'LIKE', '%' . $search . '%')
+            ->orWhereExists(function ($query) use ($search) {
+                $query->select(DB::raw(1))
+                    ->from('patologias')
+                    ->whereRaw('patologias.id = afiliados_articulos.patologias')
+                    ->where('nombre', 'LIKE', '%' . $search . '%');
+            })->count();
 
         return view('afiliadosArticulosView', compact('afiliadosArticulos', 'count'));
+    }
+
+    public function getAfiliados(Request $request)
+    {
+        $term = $request->input('term');
+
+        // Verificar si los resultados están en caché
+        $cacheKey = 'afiliados_' . $term;
+        if (Cache::has($cacheKey)) {
+            $results = Cache::get($cacheKey);
+        } else {
+            // Consulta optimizada para obtener los afiliados filtrados
+            $results = DB::table('afiliados')
+                ->where('apeynombres', 'LIKE', "%{$term}%")
+                ->take(10)
+                ->get();
+
+            // Almacenar los resultados en caché por 5 minutos
+            Cache::put($cacheKey, $results, 300);
+        }
+
+        return response()->json($results);
+    }
+
+    public function guardarFilas(Request $request)
+    {
+        $filas = $request->input('filas');
+
+
+
+        // Ejemplo de respuesta del controlador
+        return response()->json(['success' => true]);
     }
 }

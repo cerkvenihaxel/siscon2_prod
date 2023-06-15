@@ -4,7 +4,7 @@
                         @method('PUT')
                         <div class="form-group">
                             <label for="afiliado">Afiliado</label>
-                            <input type="text" class="form-control form-s" id="afiliado" name="afiliado" value="{{ $afiliadoArticulo->nroAfiliado }}" readonly>
+                            <input type="text" class="form-control form-s" id="afiliado" name="afiliado" value="{{ $afiliadoArticulo->nro_afiliado }}" readonly>
                         </div>
 
                         <div class="form-group">

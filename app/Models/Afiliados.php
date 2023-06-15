@@ -14,5 +14,4 @@ class Afiliados extends Model
         return $this->hasMany(AfiliadosArticulos::class, 'nro_afiliado');
     }
 
-
 }
