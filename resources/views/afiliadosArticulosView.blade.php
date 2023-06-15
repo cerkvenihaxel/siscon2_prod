@@ -11,12 +11,7 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- Agregar enlaces a Toastr -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
     <!-- Select2 -->
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
@@ -34,7 +29,7 @@
                     <form action="{{ route('afiliados_articulos.search') }}" method="POST" class="d-flex justify-content-between align-items-center">
                         @csrf
                         <div class="form-group mb-4">
-                            <input type="text" class="form-control" name="search" placeholder="Buscar por nombre, patologia o dni...">
+                            <input type="text" class="form-control" name="search" value="{{ request('search') }}" placeholder="Buscar por nombre, patologia...">
                         </div>
                         <div class="ml-3">
                             <button type="submit" class="btn btn-primary">Buscar</button>
@@ -133,6 +128,7 @@
                 <table class="table table-bordered" id="tabla-filas">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Afiliado</th>
                         <th>Artículo</th>
                         <th>Patología</th>
@@ -332,9 +328,9 @@
 
             // Crear objeto de fila
             var fila = {
-                afiliado: afiliado,
-                articulo: articulo,
-                patologia: patologia,
+                nro_afiliado: afiliado,
+                id_articulo: articulo,
+                patologias: patologia,
                 cantidad: cantidad
             };
 
@@ -363,34 +359,29 @@
             // Limpiar la tabla
             tabla.empty();
 
+
             // Agregar las filas al cuerpo de la tabla
-            filasAgregadas.forEach(function(fila) {
+            filasAgregadas.forEach(function(fila, index) {
+                 var idex = index+1;
                 var tr = '<tr>' +
-                    '<td>' + fila.afiliado + '</td>' +
-                    '<td>' + fila.articulo + '</td>' +
-                    '<td>' + fila.patologia + '</td>' +
+                    '<td>' + idex +'</td>' +
+                    '<td>' + fila.nro_afiliado + '</td>' +
+                    '<td>' + fila.id_articulo + '</td>' +
+                    '<td>' + fila.patologias + '</td>' +
                     '<td>' + fila.cantidad + '</td>' +
-                    '<td><button class="btn btn-eliminar-fila" data-afiliado="' + fila.afiliado + '">Eliminar</button></td>' +
+                    '<td><button class="btn btn-danger btn-eliminar-fila" data-index="' + index + '">Eliminar</button></td>' +
                     '</tr>';
                 tabla.append(tr);
             });
 
             // Asignar evento de eliminación a los botones de eliminar fila
             $('.btn-eliminar-fila').click(function() {
-                var afiliado = $(this).data('afiliado');
-                eliminarFila(afiliado);
+                var afiliado = $(this).data('index');
+                filasAgregadas.splice(afiliado, 1);
+                actualizarTabla();
             });
         }
 
-        // Función para eliminar una fila del arreglo de filas
-        function eliminarFila(afiliado) {
-            filasAgregadas = filasAgregadas.filter(function(fila) {
-                return fila.afiliado !== afiliado;
-            });
-
-            // Actualizar la tabla
-            actualizarTabla();
-        }
 
         // Evento del botón "Agregar Fila"
         $('#btn-agregar-fila').click(function() {

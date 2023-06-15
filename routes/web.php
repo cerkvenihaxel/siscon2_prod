@@ -236,11 +236,12 @@ Route::put('/afiliadosarticulos/{id}', [AfiliadoArticuloController::class, 'upda
 
 //Eliminar afiliados_articulos
 
-Route::match(['GET', 'POST', 'DELETE'],'/afiliados_articulos/{id}/delete', [\App\Http\Controllers\AfiliadoArticuloController::class, 'destroy'])->name('afiliados_articulos.destroy');
+Route::get('/afiliados_articulos/{id}/delete', [\App\Http\Controllers\AfiliadoArticuloController::class, 'destroy'])->name('afiliados_articulos.destroy');
 
 //Buscador para afiliados_articulos
 
 Route::post('/afiliados_articulos/buscar', [\App\Http\Controllers\AfiliadoArticuloController::class, 'search'])->name('afiliados_articulos.search');
+Route::get('/afiliados_articulos/buscar', [\App\Http\Controllers\AfiliadoArticuloController::class, 'search'])->name('afiliados_articulos.search');
 
 //Buscador para el select2 del afiliado
 

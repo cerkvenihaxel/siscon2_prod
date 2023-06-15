@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 use App\Models\Afiliados;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AfiliadoArticuloController extends Controller
 {
     public function index()
     {
-        $afiliadosArticulos = AfiliadosArticulosModel::paginate(20);
+        $afiliadosArticulos = AfiliadosArticulosModel::orderBy('id', 'desc')->paginate(20);
         $count = AfiliadosArticulosModel::count();
 
         $data = [
@@ -96,7 +96,9 @@ class AfiliadoArticuloController extends Controller
                     ->whereRaw('patologias.id = afiliados_articulos.patologias')
                     ->where('nombre', 'LIKE', '%' . $search . '%');
             })
+            ->orderBy('id', 'desc')
             ->paginate(20);
+
         $count = DB::table('afiliados_articulos')
             ->where('nro_afiliado', 'LIKE', '%' . $search . '%')
             ->orWhere('nombre', 'LIKE', '%' . $search . '%')
@@ -110,7 +112,11 @@ class AfiliadoArticuloController extends Controller
                     ->where('nombre', 'LIKE', '%' . $search . '%');
             })->count();
 
-        return view('afiliadosArticulosView', compact('afiliadosArticulos', 'count'));
+        return view('afiliadosArticulosView', [
+            'afiliadosArticulos' => $afiliadosArticulos->appends(['search' => $search]),
+            'count' => $count,
+        ]);
+
     }
 
     public function getAfiliados(Request $request)
@@ -139,8 +145,10 @@ class AfiliadoArticuloController extends Controller
     {
         $filas = $request->input('filas');
 
-
-
+        // Recorrer las filas y guardarlas en la base de datos
+        foreach ($filas as $fila) {
+            AfiliadosArticulosModel::create($fila);
+        }
         // Ejemplo de respuesta del controlador
         return response()->json(['success' => true]);
     }

@@ -14,8 +14,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
         $search = $request->input('numeroAfiliado');
         $solicitud = AfiliadosArticulos::with('afiliadonumber')->get();
         $nombre = $solicitud;
-        dd($nombre);
 
-        //return view('medicoCrearpedidoMedicamentoview', compact('search', 'solicitud'));
+        return view('medicoCrearpedidoMedicamentoview', compact('search', 'solicitud'));
     }
 }

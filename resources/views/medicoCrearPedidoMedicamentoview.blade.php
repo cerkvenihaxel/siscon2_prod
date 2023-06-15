@@ -72,7 +72,7 @@
                     <div class="col-sm-3">
                         @foreach ($solicitud as $item)
                             <h4>Nombre</h4>
-                        <p>{{ dd ($item->afiliadonumber->apeynombres) }}</p>
+                        <p> </p>
                         @endforeach
 
                     </div>
