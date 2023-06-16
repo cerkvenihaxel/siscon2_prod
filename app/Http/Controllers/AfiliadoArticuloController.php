@@ -53,17 +53,19 @@ class AfiliadoArticuloController extends Controller
         return redirect()->route('afiliados_articulos.index')->with('success', 'Datos actualizados exitosamente');
     }
 
+    public function edit($id)
+    {
+        $afiliadoArticulo = AfiliadosArticulosModel::findOrFail($id);
+        return view('afiliadosarticulos.edit', compact('afiliadoArticulo'));
+    }
+
+
     public function show($id){
         $afiliado = AfiliadosArticulosModel::findOrFail($id);
         $monodroga = DB::table('articulosZafiro')->where('id_articulo', $afiliado->id_articulo)->value('des_monodroga');
         return view('afiliadosarticulos.show', compact('afiliado', 'monodroga'));
     }
 
-    public function edit($id)
-    {
-        $afiliadoArticulo = AfiliadosArticulosModel::findOrFail($id);
-        return view('afiliadosarticulos.edit', compact('afiliadoArticulo'));
-    }
 
 
 
@@ -122,7 +124,7 @@ class AfiliadoArticuloController extends Controller
     public function getAfiliados(Request $request)
     {
         $searchTerm = $request->input('term');
-        $results = Afiliados::where('apeynombres', 'LIKE', '%' . $searchTerm . '%')->get(); // Reemplaza 'column_name' con el nombre de la columna en la tabla que deseas buscar
+        $results = Afiliados::where('apeynombres', 'LIKE', '%' . $searchTerm . '%')->orWhere('documento', 'LIKE', '%' . $searchTerm . '%' )->get(); // Reemplaza 'column_name' con el nombre de la columna en la tabla que deseas buscar
 
         $data = [];
 

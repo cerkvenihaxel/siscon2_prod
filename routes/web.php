@@ -182,9 +182,26 @@ Route::get('admin/escritorioConvenioMedicamentos', [\App\Http\Controllers\Escrit
 
 
 //NUEVO CREAR SOLICITUD
-Route::get('/crearsolicitud_medico', function (){
-    return view('medicoCrearPedidoMedicamentoview');
-});
+Route::get('/crearsolicitud_medico', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'index'])->name('crearsolicitud_medico');
+
+//Busqueda de afiliado
+Route::post('/crearsolicitud_medico/buscar', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'buscarAfiliado'])->name('buscarAfiliadoPedido');
+
+Route::get('/crearsolicitud_medico/buscar', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'buscarAfiliado'])->name('buscarAfiliadoPedido');
+
+
+//Ruta para editar en modal
+Route::get('/pm/{id}/edit', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'edit'])->name('pm.edit');
+
+// Actualizar datos
+Route::put('/pedidomedicamentoupdate/{id}', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'update'])->name('pm.update');
+
+//Eliminar datos
+Route::delete('/pedidomedicamentodelete/{id}', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'destroy'])->name('pm.destroy');
+
+//Guardar los datos en pedido_medicamentos
+Route::post('/pedidomedicamentostore', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'guardarPedido'])->name('pm.store');
+
 
 //NUEVO PEDIDO MEDICO (VADA STYLE)
 
@@ -206,10 +223,6 @@ Route::get('/entregarpedido_farmacia', function (){
 // SECCIÓN DE CONTROLLERS-------
 
 // Seccion 1 - MedicoCrearPedidoMedicamento
-
-//Busqueda
-
-Route::post('/crearsolicitud_medico/buscar', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'buscarAfiliado'])->name('buscarAfiliadoPedido');
 
 
 

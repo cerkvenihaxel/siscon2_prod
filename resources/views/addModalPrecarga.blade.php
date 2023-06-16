@@ -174,12 +174,12 @@
             <!-- Select para afiliado -->
             <div class="form-group">
                 <label for="afiliado">Afiliado:</label>
-                <select id="afiliado" class="form-control select2 search-select" style="width: 300px;"></select>
+                <select id="afiliado" class="form-control select2 search-select" style="width: 400px;"></select>
             </div>
             <!-- Select2 para artículos -->
             <div class="form-group">
                 <label for="articulo">Artículo:</label>
-                <select id="articulo" class="form-control search-select2" style="width: 300px;"></select>
+                <select id="articulo" class="form-control search-select2" style="width: 500px;"></select>
             </div>
 
             <!-- Select2 para patologías -->
