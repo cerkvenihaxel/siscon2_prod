@@ -78,7 +78,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
             $pedidosMedicos = DB::table('pedido_medicamento')->get();
         }
 
-        return view('medicoCrearpedidoMedicamentoview', compact('search', 'solicitud', 'nombre', 'localidad', 'telefono', 'pedidosMedicos', 'nombreMedico', 'patologias', 'afiliado_id', 'nroSolicitud', 'clinicas', 'medicos', 'postdatada', 'stampuser', 'searchPatologia'));
+        return view('medicoCrearPedidoMedicamentoview', compact('search', 'solicitud', 'nombre', 'localidad', 'telefono', 'pedidosMedicos', 'nombreMedico', 'patologias', 'afiliado_id', 'nroSolicitud', 'clinicas', 'medicos', 'postdatada', 'stampuser', 'searchPatologia'));
     }
 
     public function edit($id)
