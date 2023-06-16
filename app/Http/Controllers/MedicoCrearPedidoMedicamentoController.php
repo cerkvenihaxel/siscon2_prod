@@ -33,7 +33,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
 
         $patologias = DB::table('patologias')->get();
 
-        return view('medicoCrearpedidoMedicamentoview', compact('pedidosMedicos', 'nombreMedico', 'patologias'));
+        return view('medicoCrearPedidoMedicamentoview', compact('pedidosMedicos', 'nombreMedico', 'patologias'));
     }
     public function buscarAfiliado(Request $request)
     {
