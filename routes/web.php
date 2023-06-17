@@ -203,11 +203,19 @@ Route::delete('/pedidomedicamentodelete/{id}', [\App\Http\Controllers\MedicoCrea
 Route::post('/pedidomedicamentostore', [\App\Http\Controllers\MedicoCrearPedidoMedicamentoController::class, 'guardarPedido'])->name('pm.store');
 
 
-//NUEVO PEDIDO MEDICO (VADA STYLE)
+//AUTORIZAR SOLICITUD (OFICINA DE APOS SECTION)
 
-Route::get('/autorizarsolicitud_oficina', function (){
-    return view('oficinaAutorizarPedidoMedicamentoView');
-});
+//-----------------------------------------------------------------
+
+//Index
+Route::get('/autorizarsolicitud_oficina', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'index'])->name('autorizarsolicitud_oficina');
+
+//Ver pedido
+Route::get('/pedido/{id}/detalle', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'verPedido'])->name('pedido.detalle');
+
+//-----------------------------------------------------------------
+
+
 
 //NUEVO OFICINA PROVEEDOR (VADA STYLE)
 
