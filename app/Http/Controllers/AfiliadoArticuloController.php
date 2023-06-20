@@ -124,7 +124,7 @@ class AfiliadoArticuloController extends Controller
     public function getAfiliados(Request $request)
     {
         $searchTerm = $request->input('term');
-        $results = Afiliados::where('apeynombres', 'LIKE', '%' . $searchTerm . '%')->orWhere('documento', 'LIKE', '%' . $searchTerm . '%' )->get(); // Reemplaza 'column_name' con el nombre de la columna en la tabla que deseas buscar
+        $results = Afiliados::where('apeynombres', 'LIKE', '%' . $searchTerm . '%')->orWhere('documento', 'LIKE', '%' . $searchTerm . '%' )->orWhere('nroAfiliado', 'LIKE',  '%' . $searchTerm . '%')->get(); // Reemplaza 'column_name' con el nombre de la columna en la tabla que deseas buscar
 
         $data = [];
 
@@ -157,7 +157,11 @@ class AfiliadoArticuloController extends Controller
 
     public function guardarFilas(Request $request)
     {
+
         $filas = $request->input('filas');
+
+
+
 
         // Recorrer las filas y guardarlas en la base de datos
         foreach ($filas as $fila) {

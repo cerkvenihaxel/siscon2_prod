@@ -27,7 +27,7 @@
     <div class="container-fluid">
         <div class="card bg-white rounded shadow">
             <div class="card-header">
-                <h3 class="card-title">Crear solicitud</h3>
+                <h3 class="card-title">Crear receta</h3>
             </div>
             <div class="card-body">
 
@@ -127,7 +127,7 @@
                 <div class="row">
 
                     <div class="col-md-6">
-                        <button class="btn btn-info btn-sm" type="button" onclick="openCenteredWindow('/addNewPrecarga', 750, 500)">Agregar medicación</button>
+                        <button class="btn btn-info btn-sm" type="button" onclick="openCenteredWindow('{{ route('addNewPrecarga', ['patologias' => $soli->patologias, 'search' => $search]) }}', 750, 500)">Agregar medicación</button>
                         <button class="btn btn-warning btn-sm" type="button" onclick="location.reload()">Actualizar datos</button>
                         <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#crearPedidoModal">Crear pedido</button>
                     </div>
@@ -429,8 +429,12 @@
     function openCenteredWindow(url, width, height) {
         var left = (window.screen.width - width) / 2;
         var top = (window.screen.height - height) / 2;
-        var windowFeatures = 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',menubar=no,toolbar=no,location=no,status=no';
-        window.open(url, '_blank', windowFeatures);
+        var windowFeatures = 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left;
+        var newWindow = window.open(url, '_blank', windowFeatures);
+
+        newWindow.onbeforeunload = function() {
+            location.reload();
+        };
     }
 
 

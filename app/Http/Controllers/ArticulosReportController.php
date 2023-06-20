@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\DB;
 
 class ArticulosReportController extends Controller
 {
-    //Put here your functions 
+    //Put here your functions
     public $data;
     use Exportable;
-   
+
     public function dateRange(Request $request){
 
         $dateRange = $request->input('daterange');
@@ -27,7 +27,7 @@ class ArticulosReportController extends Controller
         $date = Carbon::parse($date)->format('Y-m-d');
         // your other code here
         $nombreArticulo = DB::table('articulos')->where('id', $id)->value('des_articulo');
-        
+
         //Table del médico
         $entrantes_detail = DB::table('entrantes_detail')->where('articulos_id', $id)->pluck('entrantes_id')->all();
         $data = DB::table('entrantes')->whereIn('id', $entrantes_detail)->whereBetween('created_at', [$start_date, $end_date])->get();
@@ -51,22 +51,29 @@ class ArticulosReportController extends Controller
 
         $dateRange = $request->input('daterange');
         $id = $request->input('busqueda');
+
+
         list($start_date, $end_date) = explode(' - ', $dateRange);
         $start_date = Carbon::createFromFormat('Y-m-d', $start_date)->toDateString();
         $end_date = Carbon::createFromFormat('Y-m-d', $end_date)->toDateString();
         $date = Carbon::parse($date)->format('Y-m-d');
+
+
+
+
         // your other code here
         $entrantes_detail = DB::table('entrantes_detail')->where('articulos_id', $id)->pluck('entrantes_id')->all();
-        
+
         $data = DB::table('entrantes')->whereIn('id', $entrantes_detail)->whereBetween('created_at', [$start_date, $end_date])->get();
+
+
+
         $data2 = DB::table('entrantes_detail')->whereIn('entrantes_id', $entrantes_detail)->where('articulos_id', $id)->get();
-        
 
         //Table de las cotizaciones
         $cotizaciones_detail = DB::table('cotizaciones_detail')->where('articulos_id', $id)->pluck('entrantes_id')->all();
         $cot = DB::table('cotizaciones')->whereIn('id', $cotizaciones_detail)->whereBetween('created_at', [$start_date, $end_date])->get();
         $cot2 = DB::table('cotizaciones_detail')->whereIn('entrantes_id', $cotizaciones_detail)->where('articulos_id', $id)->get();
-
 
 
         $nombreArticulo = DB::table('articulos')->where('id', $id)->value('des_articulo');
@@ -79,13 +86,13 @@ class ArticulosReportController extends Controller
 
 
   public function exportExcel($data, $nombreArticulo, $fecha, $id, $cot) {
-
         $filename = 'reporteArticulos_'.$nombreArticulo.'_'.$fecha.'.xlsx';
+
         return Excel::download(new ArticulosReportExport($data, $id, $cot), $filename);
     }
 
-  
 
-   
+
+
 }
 

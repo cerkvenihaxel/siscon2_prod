@@ -213,6 +213,13 @@ Route::get('/autorizarsolicitud_oficina', [\App\Http\Controllers\OficinaAutoriza
 //Ver pedido
 Route::get('/pedido/{id}/detalle', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'verPedido'])->name('pedido.detalle');
 
+//Autorizar pedido
+Route::get('/pedido/{id}/autorizar', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'autorizarVerPedido'])->name('pedido.autorizar');
+
+Route::post('/pedido/autorizar/guardar', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'autorizarGuardarPedido'])->name('pedido.guardar');
+
+//Rechazar pedido
+Route::post('/pedido/rechazar', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'rechazarPedido'])->name('pedido.rechazar');
 //-----------------------------------------------------------------
 
 

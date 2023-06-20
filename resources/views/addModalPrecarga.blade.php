@@ -1,5 +1,7 @@
 @php
-    $patologias = DB::table('patologias')->get();
+    $patologiasTable = DB::table('patologias')->get();
+    $patologias = $_GET['patologias'];
+    $search = $_GET['search'];
  @endphp
 
 <!DOCTYPE html>
@@ -174,7 +176,14 @@
             <!-- Select para afiliado -->
             <div class="form-group">
                 <label for="afiliado">Afiliado:</label>
-                <select id="afiliado" class="form-control select2 search-select" style="width: 400px;"></select>
+                <select id="afiliado" class="form-control select2 search-select" style="width: 400px;">
+                    <option value="">Seleccionar Afiliado</option>
+                    <!-- Verificar y establecer el atributo selected si existe la variable $search -->
+                    @if(isset($search))
+                        <option value="{{ $search }}" selected>{{ $search }}</option>
+                    @endif
+                </select>
+                </select>
             </div>
             <!-- Select2 para artículos -->
             <div class="form-group">
@@ -186,8 +195,8 @@
             <div class="form-group">
                 <label for="patologia">Patología:</label>
                 <select id="patologia" class="form-control">
-                    @foreach($patologias as $patologia)
-                        <option value="{{$patologia->id}}">{{$patologia->nombre}}</option>
+                    @foreach($patologiasTable as $patologia)
+                        <option value="{{$patologia->id}}" {{ isset($patologias) && $patologias == $patologia->id ? 'selected' : '' }}>{{$patologia->nombre}}</option>
                     @endforeach
                 </select>
             </div>
