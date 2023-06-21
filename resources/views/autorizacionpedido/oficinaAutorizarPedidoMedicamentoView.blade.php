@@ -39,6 +39,7 @@
                     <thead>
                     <tr>
                         <th>Fechas de creación</th>
+                        <th>Nombre afiliado</th>
                         <th>Afiliado</th>
                         <th>Número de solicitud</th>
                         <th>Médico solicitante</th>
@@ -51,6 +52,7 @@
                     @foreach($solicitudes->where('estado_solicitud_id', 1) as $solicitud)
                     <tr>
                         <td>{{$solicitud->created_at}}</td>
+                        <td>{{$solicitud->nombre}}</td>
                         <td>{{ $solicitud->nroAfiliado }}</td>
                         <td>{{ $solicitud->nrosolicitud }}</td>
                         <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
@@ -93,6 +95,7 @@
                     <thead>
                     <tr>
                         <th>Fecha de actualización</th>
+                        <th>Nombre afiliado</th>
                         <th>Afiliado</th>
                         <th>Número de solicitud</th>
                         <th>Médico solicitante</th>
@@ -105,6 +108,7 @@
                     @foreach($solicitudes->where('estado_solicitud_id', 3) as $solicitud)
                         <tr>
                             <td>{{$solicitud->updated_at}}</td>
+                            <td>{{ $solicitud->nombre }}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
                             <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
@@ -139,6 +143,7 @@
                  <thead>
                  <tr>
                      <th>Fecha de actualizacion</th>
+                     <th>Nombre afiliado</th>
                      <th>Afiliado</th>
                      <th>Número de solicitud</th>
                      <th>Médico solicitante</th>
@@ -151,6 +156,7 @@
                  @foreach($solicitudes->whereIn('estado_solicitud_id', [5,9]) as $solicitud)
                      <tr>
                          <td>{{$solicitud->updated_at}}</td>
+                            <td>{{ $solicitud->nombre }}</td>
                          <td>{{ $solicitud->nroAfiliado }}</td>
                          <td>{{ $solicitud->nrosolicitud }}</td>
                          <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>

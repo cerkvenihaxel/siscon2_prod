@@ -17,6 +17,9 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
     public function index(){
 
         $solicitudes = PedidoMedicamento::all();
+        foreach ($solicitudes as $solicitud) {
+            $solicitud->nombre = DB::table('afiliados')->where('id', $solicitud->afiliados_id)->value('apeynombres');
+        }
         return view('autorizacionpedido.oficinaAutorizarPedidoMedicamentoView', compact('solicitudes'));
     }
 
