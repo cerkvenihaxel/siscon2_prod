@@ -225,10 +225,13 @@ Route::post('/pedido/rechazar', [\App\Http\Controllers\OficinaAutorizarPedidoMed
 
 
 //NUEVO OFICINA PROVEEDOR (VADA STYLE)
+// ----------------------------------------------------------------------------------------
+Route::get('/generarpedido_oficina ', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'index'])->name('generarpedido.index');
 
-Route::get('/generarpedido_oficina', function (){
-    return view('oficinaProveedorPedidoMedicamentoView');
-});
+
+//--------------------------------------------------------------------------------------------------------
+
+
 
 //Entregar pedido (validador farmacia)
 Route::get('/entregarpedido_farmacia', function (){
