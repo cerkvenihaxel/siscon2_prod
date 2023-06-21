@@ -116,7 +116,6 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         return redirect()->back()->with(['message' => 'Pedido rechazado correctamente']);
 
 
-
     }
 
 

@@ -228,6 +228,17 @@ Route::post('/pedido/rechazar', [\App\Http\Controllers\OficinaAutorizarPedidoMed
 // ----------------------------------------------------------------------------------------
 Route::get('/generarpedido_oficina ', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'index'])->name('generarpedido.index');
 
+Route::get('/generarpedido/{id}/detalle', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'verPedido'])->name('generarpedido.detalle');
+
+Route::get('/generarpedido/{id}/detalleprov', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'verPedidoProveedor'])->name('generarpedido.detalleprov');
+
+Route::post('/generarpedido/rechazar', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'rechazarPedido'])->name('generarpedido.rechazar');
+
+Route::get('/generarpedido/{id}/autorizar', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'autorizarVerPedido'])->name('generarpedido.autorizar');
+
+
+Route::post('/generarpedido/autorizar/guardar', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'autorizarGuardarPedido'])->name('generarpedido.guardar');
+
 
 //--------------------------------------------------------------------------------------------------------
 
