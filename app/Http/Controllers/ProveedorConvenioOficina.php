@@ -83,7 +83,7 @@ class ProveedorConvenioOficina extends Controller
 
         foreach ($medicamentos as $medicamento) {
             $articuloZafiroID = $medicamento->articuloZafiro_id;
-            $descripcionMonodroga = DB::table('articuloszafiro')->where('id', $articuloZafiroID)->value('des_monodroga');
+            $descripcionMonodroga = DB::table('articulosZafiro')->where('id', $articuloZafiroID)->value('des_monodroga');
             $medicamento->des_monodroga = $descripcionMonodroga;
         }
 
