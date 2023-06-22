@@ -52,7 +52,7 @@
                             <td>
                                 <div class="button-container">
                                     <button class="btn btn-success btn-xs m-5 btn-autorizar" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#modalGenerar">
-                                        <i class="fas fa-check"></i> Autorizar
+                                        <i class="fas fa-check"></i> Generar pedido
                                     </button>
                                     <button type="button" class="btn btn-danger btn-xs m-5 btn-rechazar" data-toggle="modal" data-pedido-id="{{ $solicitud->id }}" data-target="#confirmModal">
                                         <i class="fas fa-times"></i> Rechazar pedido
@@ -505,6 +505,7 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
+                    console.log('response', response);
                     $('#tablaAutorizarBody').empty();
 
                     var medicamentos = response.medicamentos;
@@ -579,6 +580,7 @@
                     $('#modalGenerar').modal('show');
                 },
                 error: function(error) {
+                    console.log('error', error);
                     console.error(error);
                 }
             });
