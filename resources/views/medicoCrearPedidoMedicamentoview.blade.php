@@ -129,7 +129,7 @@
                     <div class="col-md-6">
                         <button class="btn btn-info btn-sm" type="button" onclick="openCenteredWindow('{{ route('addNewPrecarga', ['patologias' => $soli->patologias, 'search' => $search]) }}', 750, 500)">Agregar medicación</button>
                         <button class="btn btn-warning btn-sm" type="button" onclick="location.reload()">Actualizar datos</button>
-                        <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#crearPedidoModal">Crear pedido</button>
+                        <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#crearPedidoModal">Crear receta</button>
                     </div>
                     @endif
 
@@ -263,7 +263,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="crearPedidoModalLabel">Crear pedido</h5>
+                <h5 class="modal-title" id="crearPedidoModalLabel">Crear receta</h5>
                 <p>Por favor, revise los datos antes de guardar</p>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -302,7 +302,7 @@
 
                     <div class="form-group">
                         <label for="edad">Edad del paciente</label>
-                        <input type="number" class="form-control" id="edad" name="edad">
+                        <input type="number" class="form-control" id="edad" name="edad" value="{{$edad}}">
                     </div>
 
                     <div class="form-group">

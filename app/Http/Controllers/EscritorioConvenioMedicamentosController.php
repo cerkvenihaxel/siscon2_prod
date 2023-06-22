@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class EscritorioConvenioMedicamentosController extends Controller
 {
@@ -22,4 +23,28 @@ class EscritorioConvenioMedicamentosController extends Controller
 
         return view('escritorioConvenioMedicamentosView', compact('nroEntrantes', 'nroAutorizados', 'nroRechazados', 'nroAsignados', 'nroProcesados', 'nroEntregados', 'patologiasName'));
     }
+
+
+    public function verMas(Request $request)
+    {
+        $id = $request->id;
+        $patologia = DB::table('patologias')->where('id', $id)->value('nombre');
+
+        $afiliados = DB::table('afiliados_articulos')
+            ->select('nro_afiliado', 'nombre')
+            ->where('patologias', $id)
+            ->distinct('nro_afiliado', 'nombre')
+            ->get();
+
+
+
+
+        return response()->json([
+            'afiliados' => $afiliados,
+            'patologia' => $patologia,
+
+        ]);
+    }
+
+
 }

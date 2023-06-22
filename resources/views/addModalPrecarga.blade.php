@@ -143,7 +143,7 @@
                     success: function(response) {
                         // Manejar la respuesta del controlador
                         if (response.success) {
-                            console.log(filasAgregadas);
+                            //console.log(filasAgregadas);
                             // Limpiar el arreglo de filas agregadas
                             filasAgregadas = [];
                             // Limpiar la tabla

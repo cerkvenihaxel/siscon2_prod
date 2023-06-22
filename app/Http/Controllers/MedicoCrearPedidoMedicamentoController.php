@@ -8,6 +8,7 @@ use App\Models\Clinica;
 use App\Models\Medico;
 use App\Models\PedidoMedicamentoDetail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\AfiliadosArticulos;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
@@ -56,6 +57,14 @@ class MedicoCrearPedidoMedicamentoController extends Controller
         $solicitud = $solicitud->get();
 
         $nombre = Afiliados::where('nroAfiliado', $search)->value('apeynombres');
+        $fechaNacimiento = Afiliados::where('nroAfiliado', $search)->value('fecha_nacimiento');
+        $edad = null;
+
+        if ($fechaNacimiento) {
+            $fechaNacimiento = Carbon::createFromFormat('Y-m-d', $fechaNacimiento);
+            $edad = $fechaNacimiento->diffInYears(Carbon::now());
+        }
+
         $localidad = Afiliados::where('nroAfiliado', $search)->value('localidad');
         $telefono = Afiliados::where('nroAfiliado', $search)->value('telefonos');
         $afiliado_id = Afiliados::where('nroAfiliado', $search)->value('id');
@@ -78,7 +87,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
             $pedidosMedicos = DB::table('pedido_medicamento')->get();
         }
 
-        return view('medicoCrearPedidoMedicamentoview', compact('search', 'solicitud', 'nombre', 'localidad', 'telefono', 'pedidosMedicos', 'nombreMedico', 'patologias', 'afiliado_id', 'nroSolicitud', 'clinicas', 'medicos', 'postdatada', 'stampuser', 'searchPatologia'));
+        return view('medicoCrearPedidoMedicamentoview', compact('search', 'solicitud', 'nombre', 'localidad', 'telefono', 'pedidosMedicos', 'nombreMedico', 'patologias', 'afiliado_id', 'nroSolicitud', 'clinicas', 'medicos', 'postdatada', 'stampuser', 'searchPatologia', 'edad'));
     }
 
     public function edit($id)

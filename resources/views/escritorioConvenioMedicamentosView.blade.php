@@ -150,7 +150,9 @@
                                              ->where('patologias', $pato->id)
                                             ->distinct('nro_afiliado')
                                             ->count() }}</td>
-                                    <td><a href="#">Ver más</a></td>
+                                    <td><button class="btn btn-info btn-xs m-5 btn-ver-mas" data-pato="{{ $pato->id }}" data-toggle="modal" data-target="#verMasModal">
+                                             Ver más
+                                        </button>  </td>
                                 </tr>
                                 @php
                                 $suma += $consulta
@@ -171,9 +173,43 @@
 </div>
 
 </div>
+
+<div class="modal fade" id="verMasModal" tabindex="-1" role="dialog" aria-labelledby="verMasModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verMasModalLabel">Detalles del afiliado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="afiliadosTable" class="table">
+                    <thead>
+                    <tr>
+                        <th>Afiliado</th>
+                        <th>Nombre</th>
+                        <!-- Agrega aquí las columnas adicionales que necesites -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Aquí se generarán dinámicamente las filas de la tabla -->
+                    </tbody>
+                </table>
+                <div id="paginationContainer" class="text-center"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <script>
+
     $(document).ready(function() {
         $('#patologiasTable').DataTable({
             "order": [[1, 'desc']],
@@ -182,6 +218,100 @@
             }
         });
     });
+
+    $(document).ready(function() {
+        var currentPage = 1;
+        var pageSize = 10;
+
+        $('.btn-ver-mas').on('click', function(e) {
+            e.preventDefault();
+            var afiliadoId = $(this).data('pato');
+
+            $.ajax({
+                url: '/escritorioConvenioMedicamentos/vermas/' + afiliadoId,
+                type: 'GET',
+                success: successHandler,
+                error: function(xhr) {
+                    // Maneja los errores en caso de que ocurran
+                }
+            });
+        });
+
+        function successHandler(response) {
+            $('#verMasModal').modal('show');
+
+            // Limpia el cuerpo de la tabla
+            $('#afiliadosTable tbody').empty();
+            $('#paginationContainer').empty();
+
+            // Obtiene la cantidad total de registros
+            var totalRecords = response.afiliados.length;
+
+            // Calcula la cantidad total de páginas
+            var totalPages = Math.ceil(totalRecords / pageSize);
+
+            // Muestra los registros de la página actual
+            var startIndex = (currentPage - 1) * pageSize;
+            var endIndex = startIndex + pageSize;
+            var currentPageRecords = response.afiliados.slice(startIndex, endIndex);
+
+            // Recorre los registros de la página actual y agrega las filas a la tabla
+            $.each(currentPageRecords, function(index, afiliado) {
+                var row = '<tr>';
+                row += '<td>' + afiliado.nro_afiliado + '</td>';
+                row += '<td>' + afiliado.nombre + '</td>';
+                // Agrega aquí las columnas adicionales que necesites
+                row += '</tr>';
+                $('#afiliadosTable tbody').append(row);
+            });
+
+            // Check if the total number of pages exceeds 15
+            var displayPaginator = totalPages > 15;
+
+            // Create the pagination buttons
+            if (displayPaginator) {
+                // Display only a limited number of pages
+                var maxPages = 15;
+                var startPage = 1;
+                var endPage = startPage + maxPages - 1;
+
+                if (currentPage > Math.floor(maxPages / 2)) {
+                    // Adjust the start and end pages based on the current page
+                    startPage = currentPage - Math.floor(maxPages / 2);
+                    endPage = startPage + maxPages - 1;
+
+                    if (endPage > totalPages) {
+                        // If the end page exceeds the total pages, adjust the start and end pages
+                        endPage = totalPages;
+                        startPage = endPage - maxPages + 1;
+                    }
+                }
+
+                for (var i = startPage; i <= endPage; i++) {
+                    var button = '<button class="btn btn-sm btn-pagination';
+                    if (i === currentPage) {
+                        button += ' active';
+                    }
+                    button += '">' + i + '</button>';
+                    $('#paginationContainer').append(button);
+                }
+
+                // Add ellipsis if there are more pages
+                if (endPage < totalPages) {
+                    $('#paginationContainer').append('<span class="ellipsis">...</span>');
+                }
+            }
+
+
+            // Asigna el controlador de eventos para los botones de paginación
+            $('.btn-pagination').on('click', function() {
+                currentPage = parseInt($(this).text());
+                // Vuelve a llamar a la función de éxito del Ajax para mostrar la página seleccionada
+                successHandler(response);
+            });
+        }
+    });
+
 </script>
 
 </body>

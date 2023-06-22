@@ -179,6 +179,11 @@ Route::get('/printPDF_convenio/{id}', [\App\Http\Controllers\PDFController::clas
 
 Route::get('admin/escritorioConvenioMedicamentos', [\App\Http\Controllers\EscritorioConvenioMedicamentosController::class, 'deskView'])->name('escritorio_cm');
 
+Route::get('/escritorioConvenioMedicamentos/vermas/{id}', [\App\Http\Controllers\EscritorioConvenioMedicamentosController::class, 'verMas'])->name('escritorio_cm.vermas');
+
+Route::get('/escritorioConvenioMedicamentos/search', [\App\Http\Controllers\EscritorioConvenioMedicamentosController::class, 'searchMedicacion'])->name('escritorio_cm.searchMedicacion');
+
+//--------------------------------------------------------------------------------
 
 
 //NUEVO CREAR SOLICITUD

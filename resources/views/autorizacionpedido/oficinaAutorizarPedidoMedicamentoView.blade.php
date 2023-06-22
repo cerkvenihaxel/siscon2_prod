@@ -166,7 +166,9 @@
                              <div class="button-container">
                                  <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#pedidoModal">
                                      <i class="fas fa-eye"></i> Ver pedido
-                                 </button>                                <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
+                                 </button>
+
+                                 <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
                              </div>
                          </td>
                      </tr>
