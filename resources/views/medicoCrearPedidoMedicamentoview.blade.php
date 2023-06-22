@@ -344,6 +344,11 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="diagnostico">Diagnóstico</label>
+                        <textarea class="form-control" id="diagnostico" name="diagnostico"></textarea>
+                    </div>
+
+                    <div class="form-group">
                         <label for="observaciones">Observaciones</label>
                         <textarea class="form-control" id="observaciones" name="observaciones"></textarea>
                     </div>

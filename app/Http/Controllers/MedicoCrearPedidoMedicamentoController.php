@@ -146,6 +146,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
         $pedido->patologia = $request->input('patologias');
         $pedido->provincia = 11;
         $pedido->discapacidad = $request->input('discapacidad');
+        $pedido->diagnostico = $request->input('diagnostico');
         $pedido->observaciones = $request->input('observaciones');
         $pedido->stamp_user = $request->input('stamp_user');
 
