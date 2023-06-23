@@ -11,6 +11,6 @@ class CotizacionConvenioDetail extends Model
     protected $table = 'cotizacion_convenio_detail';
 
     public function entranteConvenio(){
-        return $this->hasMany(CotizacionConvenio::class, 'id');
+        return $this->belongsTo(CotizacionConvenio::class, 'id');
     }
 }

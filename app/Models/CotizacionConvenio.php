@@ -15,7 +15,8 @@ class CotizacionConvenio extends Model
         return view('validadorFarmacia');
     }
 
-    public function convenio(){
-        return $this->belongsTo(CotizacionConvenioDetail::class, 'cotizacion_convenio_id');
+    public function oficinaAutorizarDetail()
+    {
+        return $this->hasMany(CotizacionConvenioDetail::class, 'cotizacion_convenio_id');
     }
 }

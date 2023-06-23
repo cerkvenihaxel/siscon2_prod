@@ -242,7 +242,7 @@ Route::post('/generarpedido/rechazar', [\App\Http\Controllers\ProveedorConvenioO
 Route::get('/generarpedido/{id}/autorizar', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'autorizarVerPedido'])->name('generarpedido.autorizar');
 
 
-Route::post('/generarpedido/autorizar/guardar', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'autorizarGuardarPedido'])->name('generarpedido.guardar');
+Route::post('/generarpedido/guardar', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'autorizarGuardarPedido'])->name('generarpedido.guardar');
 
 
 //--------------------------------------------------------------------------------------------------------

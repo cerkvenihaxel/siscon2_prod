@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 
+
 class OficinaAutorizarPedidoMedicamentoController extends Controller
 {
     //
