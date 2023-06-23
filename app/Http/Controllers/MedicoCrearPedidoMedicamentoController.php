@@ -175,7 +175,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
             $detalle->save();
         }
         // Redireccionar a una página de éxito o mostrar un mensaje de éxito
-        return redirect()->back();
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue creada con éxito!","success");
 
     }
 

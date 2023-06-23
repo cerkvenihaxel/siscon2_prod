@@ -105,7 +105,7 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
 
         $pedidoMedicamento->save();
 
-        return redirect()->back()->with(['message' => 'Pedido autorizado correctamente']);
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
 
     }
 
@@ -116,7 +116,7 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         $pedido->estado_solicitud_id = 5;
         $pedido->save();
 
-        return redirect()->back()->with(['message' => 'Pedido rechazado correctamente']);
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue rechazada con éxito!","danger");
 
 
     }
