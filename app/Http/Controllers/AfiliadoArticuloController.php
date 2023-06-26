@@ -15,8 +15,7 @@ class AfiliadoArticuloController extends Controller
     public function index()
     {
         $afiliadosArticulos = AfiliadosArticulosModel::orderBy('id', 'desc')->paginate(20);
-        $count = AfiliadosArticulosModel::count()->distinct('nro_afiliado');
-
+        $count = DB::table('afiliados_articulos')->distinct()->count('nro_afiliado');
         $data = [
             'afiliados' => DB::table('afiliados')->get(),
             'articulos' => ArticulosZafiro::where('id_familia', '=', '01'),
