@@ -15,7 +15,7 @@ class AfiliadoArticuloController extends Controller
     public function index()
     {
         $afiliadosArticulos = AfiliadosArticulosModel::orderBy('id', 'desc')->paginate(20);
-        $count = AfiliadosArticulosModel::count();
+        $count = AfiliadosArticulosModel::count()->distinct('nro_afiliado');
 
         $data = [
             'afiliados' => DB::table('afiliados')->get(),
@@ -172,7 +172,7 @@ class AfiliadoArticuloController extends Controller
             $articuloAfiliado->nombre = Afiliados::where('nroAfiliado', $fila['nro_afiliado'])->value('apeynombres');
             $articuloAfiliado->id_articulo = $fila['id_articulo'];
             $articuloAfiliado->des_articulo = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('des_articulo');
-            $articuloAfiliado->presentacion = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('presentacion');
+            $articuloAfiliado->presentacion = Articul543212341osZafiro::where('id_articulo', $fila['id_articulo'])->value('presentacion');
             $articuloAfiliado->patologias = $fila['patologias'];
             $articuloAfiliado->cantidad = $fila['cantidad'];
 
