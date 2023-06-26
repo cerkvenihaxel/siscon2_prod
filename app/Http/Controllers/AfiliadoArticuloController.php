@@ -160,8 +160,6 @@ class AfiliadoArticuloController extends Controller
         $filas = $request->input('filas');
 
 
-
-
         // Recorrer las filas y guardarlas en la base de datos
         foreach ($filas as $fila) {
             // Crear una nueva instancia del modelo ArticulosAfiliadosModel
@@ -171,7 +169,7 @@ class AfiliadoArticuloController extends Controller
             $articuloAfiliado->nombre = Afiliados::where('nroAfiliado', $fila['nro_afiliado'])->value('apeynombres');
             $articuloAfiliado->id_articulo = $fila['id_articulo'];
             $articuloAfiliado->des_articulo = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('des_articulo');
-            $articuloAfiliado->presentacion = Articul543212341osZafiro::where('id_articulo', $fila['id_articulo'])->value('presentacion');
+            $articuloAfiliado->presentacion = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('presentacion');
             $articuloAfiliado->patologias = $fila['patologias'];
             $articuloAfiliado->cantidad = $fila['cantidad'];
 
