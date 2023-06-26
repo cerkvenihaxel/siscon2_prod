@@ -23,7 +23,7 @@
     <div class="container-fluid">
         <div class="card bg-white rounded shadow">
             <div class="card-header">
-                <h3 class="card-title">Pedidos por procesar</h3>
+                <h3 class="card-title">Pedidos por por entregar</h3>
             </div>
             <div class="card-body">
                 <table id="tabla-solicitudes" class="table table-bordered">
@@ -34,25 +34,26 @@
                         <th>Afiliado</th>
                         <th>Número de solicitud</th>
                         <th>Médico solicitante</th>
-                        <th>Patología</th>
                         <th>Estado Solicitud</th>
+                        <th>Estado pedido</th>
                         <th>Opciones</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($solicitudes->where('estado_solicitud_id', 3) as $solicitud)
+                    @foreach($solicitudes->where('estado_solicitud_id', 11) as $solicitud)
                         <tr>
                             <td>{{$solicitud->created_at}}</td>
-                            <td> {{ $solicitud->nombre }}</td>
+                            <td> {{ $solicitud->nombreyapellido }}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
                             <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
-                            <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
                             <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
+                            <td>{{ DB::table('estado_pedido')->where('id',$solicitud->estado_pedido_id)->value('estado') }}</td>
+
                             <td>
                                 <div class="button-container">
                                     <button class="btn btn-success btn-xs m-5 btn-autorizar" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#modalGenerar">
-                                        <i class="fas fa-check"></i> Enviar pedido único a depósito
+                                        <i class="fas fa-check"></i> Validar pedido
                                     </button>
                                     <button type="button" class="btn btn-danger btn-xs m-5 btn-rechazar" data-toggle="modal" data-pedido-id="{{ $solicitud->id }}" data-target="#confirmModal">
                                         <i class="fas fa-times"></i> Rechazar pedido
@@ -97,22 +98,22 @@
                     </thead>
                     <tbody>
                     <tr>
-                        @foreach($cotizadas->whereIn('estado_solicitud_id', [6, 11, 12 ,13]) as $cot)
-                        <td>{{ $cot->created_at }}</td>
-                        <td>{{ $cot->nombreyapellido}}</td>
-                        <td>{{ $cot->nrosolicitud }}</td>
-                        <td>{{ DB::table('estado_solicitud')->where('id', $cot->estado_solicitud_id)->value('estado') }}</td>
-                        <td>{{ DB::table('estado_pedido')->where('id', $cot->estado_pedido_id)->value('estado') }}</td>
-                        <td>{{ $cot->id_pedido }} </td>
-                        <td>
-                            <div class="button-container">
-                                <button class="btn btn-info btn-xs m-5 btn-ver-pedido-prov" data-pedido-id="{{ $cot->id }}" data-toggle="modal" data-target="#pedidoModal">
-                                    <i class="fas fa-eye"></i> Ver pedido
-                                </button>
+                        @foreach($solicitudes->whereIn('estado_solicitud_id', [13]) as $cot)
+                            <td>{{ $cot->created_at }}</td>
+                            <td>{{ $cot->nombreyapellido}}</td>
+                            <td>{{ $cot->nrosolicitud }}</td>
+                            <td>{{ DB::table('estado_solicitud')->where('id', $cot->estado_solicitud_id)->value('estado') }}</td>
+                            <td>{{ DB::table('estado_pedido')->where('id', $cot->estado_pedido_id)->value('estado') }}</td>
+                            <td>{{ $cot->id_pedido }} </td>
+                            <td>
+                                <div class="button-container">
+                                    <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $cot->id }}" data-toggle="modal" data-target="#pedidoModal">
+                                        <i class="fas fa-eye"></i> Ver pedido
+                                    </button>
 
-                                <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
-                            </div>
-                        </td>
+                                    <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i>Acuse de recibo</button>
+                                </div>
+                            </td>
 
                     </tr>
                     @endforeach
@@ -144,7 +145,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        @foreach($solicitudes->whereIn('estado_solicitud_id', [10]) as $an)
+                        @foreach($solicitudes->whereIn('estado_solicitud_id', [10, 14]) as $an)
                             <td>{{ $an->created_at }}</td>
                             <td>{{ DB::table('afiliados')->where('nroAfiliado', $an->nroAfiliado)->value('apeynombres') }}</td>
                             <td>{{ $an->nrosolicitud }}</td>
@@ -244,7 +245,7 @@
             <!-- Pie del modal -->
             <div class="modal-footer">
                 <!-- Botón "Confirmar" -->
-                <form action="{{ route('generarpedido.rechazar') }}" method="POST">
+                <form action="{{ route('entregarpedido_farmacia.rechazar') }}" method="POST">
                     @csrf
                     <input type="hidden" id="pedidoIdInput" name="pedidoId" value="">
                     <div class="modal-footer">
@@ -263,46 +264,28 @@
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modalGenerarLabel">Generar pedido</h4>
+                <h4 class="modal-title" id="modalGenerarLabel">Confirmar entrega de medicamentos</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('generarpedido.guardar') }}" method="POST">
+            <form action="{{ route('entregarpedido_farmacia.guardar') }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <table id="tablaAutorizar" class="table table-bordered">
                         <thead>
                         <tr>
-                            <th>Monodroga</th>
                             <th>Presentación</th>
                             <th>Laboratorio</th>
                             <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>SubTotal</th>
-                            <th>Descuento</th>
-                            <th>Total</th>
+                            <th>Cantidad autorizada</th>
+                            <th>Cantidad entregada</th>
                         </tr>
                         </thead>
                         <tbody id="tablaAutorizarBody">
                         </tbody>
                     </table>
-
-                    <div class="form-group">
-                        <label for="zona_retiro">Zona retiro</label>
-                        <input class="form-control-sm" name="zona_retiro" id="zona_retiro" readonly>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="punto_retiro">Punto de Retiro</label>
-                        <select class="form-control" name="punto_retiro" id="punto_retiro"></select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="observaciones">Observaciones</label>
-                        <input class="form-control" name="observaciones" id="observaciones" rows="3" placeholder="Ingrese las observaciones">
-                    </div>
-
+                    <input type="hidden" id="nrosolicitud" name="nrosolicitud" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -370,7 +353,7 @@
     $(document).ready(function() {
         $(document).on('click', '.btn-ver-pedido', function() {
             var pedidoId = $(this).data('pedido-id');
-            var url = '/generarpedido/' + pedidoId + '/detalle'; // Reemplaza la URL con la ruta correcta de tu aplicación
+            var url = '/entregarpedido_farmacia/' + pedidoId + '/detalle'; // Reemplaza la URL con la ruta correcta de tu aplicación
 
             $.ajax({
                 url: url,
@@ -495,7 +478,7 @@
 
         $(document).on('click', '.btn-autorizar', function() {
             var pedidoId = $(this).data('pedido-id');
-            var url = '/generarpedido/' + pedidoId + '/autorizar'; // Reemplaza la URL con la ruta correcta de tu aplicación
+            var url = '/entregarpedido_farmacia/' + pedidoId + '/autorizar'; // Reemplaza la URL con la ruta correcta de tu aplicación
 
             $.ajax({
                 url: url,
@@ -506,70 +489,21 @@
                     $('#tablaAutorizarBody').empty();
 
                     var medicamentos = response.medicamentos;
-                    var pedido = response.pedido;
-                    var zona_retiro = response.pedido.zona_residencia;
-                    var nroSolicitudInput = '<input type="hidden" name="nroSolicitud" value="' + pedido.nrosolicitud + '">';
-                    var nroAfiliadoInput = '<input type="hidden" name="nroAfiliado" value="' + pedido.nroAfiliado + '">';
-
-                    $('#tablaAutorizarBody').append(nroSolicitudInput);
-                    $('#tablaAutorizarBody').append(nroAfiliadoInput);
-                    $('#zona_retiro').val(zona_retiro);
-
-
+                    var nrosolicitud = response.pedido.nrosolicitud;
+                    $('#nrosolicitud').val(nrosolicitud);
                     for (var i = 0; i < medicamentos.length; i++) {
                         var medicamento = medicamentos[i];
                         var filaMedicamento = '<tr>' +
-                            '<input type="hidden" name="medicamentos[' + i + '][articuloZafiro_id]" value="' + medicamento.articuloZafiro_id + '">' +
-                            '<input type="hidden" name="medicamentos[' + i + '][presentacion]" value="' + medicamento.presentacion + '">' +
-                            '<input type="hidden" name="medicamentos[' + i + '][cantidad]" value="' + medicamento.cantidad + '">' +
-
-                            '<td>' + medicamento.des_monodroga + '</td>' +
                             '<td>' + medicamento.presentacion + '</td>' +
-                            '<td><input type="text"  name="medicamentos[' + i + '][laboratorio]" placeholder="Laboratorio"></td>' +
-                            '<td>' +
-                            '<input type="text" class="form-control" name="medicamentos[' + i + '][precio]" placeholder="Ingrese el precio" onchange="calculateTotalWithDiscount(' + i + ')">' +
-                            '</td>' + // PRECIO
-                            '<td>' +
-                            '<input type="number" class="form-control" name="medicamentos[' + i + '][cantidad]" value="' + medicamento.cantidad + '" onchange="calculateTotalWithDiscount(' + i + ')" readonly>' +
-                            '</td>' + // CANTIDAD
-                            '<td>' +
-                            '<input type="number" class="form-control" name="medicamentos[' + i + '][subtotal]" placeholder="Subtotal" readonly>' +
-                            '</td>' +
-                            '<td>' +
-                            '<input type="text" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese el descuento" onchange="calculateTotalWithDiscount(' + i + ')">' +
-                            '</td>' +
-                            '<td>' +
-                            '<input type="number" class="form-control" name="medicamentos[' + i + '][total]" placeholder="Ingrese el total final" readonly>' +
-                            '</td>' +
-                            // TOTAL
+                            '<td>' + medicamento.laboratorio +'</td>' +
+                            '<td>' + medicamento.precio +'</td>' + //precio
+                            '<td>' + medicamento.cantidad + '</td>' + // CANTIDAD
+                            '<td>' + '<input type="hidden" name="medicamentos[' + i + '][id]" value="' + medicamento.id + '">' + '</td>' +
+                            '<td>' + '<input type="number" class="form-control" name="medicamentos[' + i + '][cantidad_entregada]" placeholder="Entregar">' + '</td>' +
                             '</tr>';
 
                         $('#tablaAutorizarBody').append(filaMedicamento);
                     }
-
-                    var puntosRetiro = response.puntosRetiro; // Suponiendo que obtienes los puntos de retiro en la respuesta AJAX
-                    for (var j = 0; j < puntosRetiro.length; j++) {
-                        var puntoRetiro = puntosRetiro[j];
-                        var opcion = new Option(puntoRetiro.nombre, puntoRetiro.id);
-                        $('#punto_retiro').append(opcion);
-                    }
-
-                    $('#punto_retiro').on('select2:select', function(e) {
-                        var puntoRetiroSeleccionadoId = e.params.data.id;
-                        var puntoRetiroSeleccionado = puntosRetiro.find(function(punto) {
-                            return punto.id === puntoRetiroSeleccionadoId;
-                        });
-
-                        if (puntoRetiroSeleccionado) {
-                            var direccion = puntoRetiroSeleccionado.direccion;
-                            var localidad = puntoRetiroSeleccionado.localidad;
-                            var telefono = puntoRetiroSeleccionado.telefono;
-
-                            var puntoRetiroDes = direccion + " | " + localidad + " | " + telefono;
-                            $('#punto_retiro_des').val(puntoRetiroDes);
-                            $('#punto_retiro_des').trigger('change');
-                        }
-                    });
 
 
 

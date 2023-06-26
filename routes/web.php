@@ -247,18 +247,25 @@ Route::post('/generarpedido/guardar', [\App\Http\Controllers\ProveedorConvenioOf
 
 //--------------------------------------------------------------------------------------------------------
 
+//---------- VALIDADOR DE FARMACIAS ------------------
 
 
-//Entregar pedido (validador farmacia)
-Route::get('/entregarpedido_farmacia', function (){
-    return view('farmaciaPedidoMedicamentoView');
-});
+
+//Entregar pedido (validador farmacia
+Route::get('/entregarpedido_farmacia', [\App\Http\Controllers\FarmaciaConvenioController::class, 'index'])->name('entregarpedido_farmacia');
+
+Route::get('/entregarpedido_farmacia/{id}/detalle', [\App\Http\Controllers\FarmaciaConvenioController::class, 'verPedido'])->name('entregarpedido_farmacia.detalle');
+
+Route::post('/entregarpedido_farmacia/rechazar', [\App\Http\Controllers\FarmaciaConvenioController::class, 'rechazarPedido'])->name('entregarpedido_farmacia.rechazar');
+
+Route::get('/entregarpedido_farmacia/{id}/autorizar', [\App\Http\Controllers\FarmaciaConvenioController::class, 'autorizarVerPedido'])->name('entregarpedido_farmacia.autorizar');
+
+Route::post('/entregarpedido_farmacia/guardar', [\App\Http\Controllers\FarmaciaConvenioController::class, 'autorizarGuardarPedido'])->name('entregarpedido_farmacia.guardar');
+
 
 // SECCIÓN DE CONTROLLERS-------
 
 // Seccion 1 - MedicoCrearPedidoMedicamento
-
-
 
 // Ruta para mostrar la tabla de afiliados_articulos
 Route::get('/afiliados_articulos', [\App\Http\Controllers\AfiliadoArticuloController::class, 'index'])->name('afiliados_articulos.index');
