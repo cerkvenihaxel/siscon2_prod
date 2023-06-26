@@ -110,8 +110,6 @@ class ProveedorConvenioOficina extends Controller
         $myID = CRUDBooster::myId();
         $stamp_user = DB::table('cms_users')->where('id', $myID)->value('email');
 
-
-
         $proveedorConvenio = new CotizacionConvenio();
         $proveedorConvenio->nombreyapellido = DB::table('afiliados')->where('nroAfiliado', $nroAfiliado)->value('apeynombres');
         $proveedorConvenio->documento = DB::table('afiliados')->where('nroAfiliado', $nroAfiliado)->value('documento');
@@ -143,6 +141,7 @@ class ProveedorConvenioOficina extends Controller
         $proveedorConvenioD = [];
         foreach ($medicamentos as $med) {
 
+
             $proveedorConvenioDetail = new CotizacionConvenioDetail();
             $proveedorConvenioDetail->cotizacion_convenio_id = $proveedorConvenio->id;
             $proveedorConvenioDetail->articuloZafiro_id = $med['articuloZafiro_id'];
@@ -150,7 +149,7 @@ class ProveedorConvenioOficina extends Controller
             $proveedorConvenioDetail->descuento = $med['banda_descuento'];
             $proveedorConvenioDetail->laboratorio = $med['laboratorio'];
             $proveedorConvenioDetail->presentacion = $med['presentacion'];
-            $proveedorConvenio->precio = $med['precio'];
+            $proveedorConvenioDetail->precio = $med['precio'];
             $proveedorConvenioDetail->total = $med['total'];
 
             $proveedorConvenioD[] = $proveedorConvenioDetail;
@@ -158,6 +157,11 @@ class ProveedorConvenioOficina extends Controller
         }
 
         $proveedorConvenio->oficinaAutorizarDetail()->saveMany($proveedorConvenioD);
+        DB::table('convenio_oficina_os')->where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+        DB::table('pedido_medicamento')->where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+
+
+        $this->enviarPedidoSingular($proveedorConvenio->id);
 
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
 
@@ -167,13 +171,13 @@ class ProveedorConvenioOficina extends Controller
 
 
     public function enviarPedidoSingular($id){
+
         $numero = $this->generatePedidoNumber();
-
         DB::table('cotizacion_convenio')->where('id', $id)->update(['id_pedido' => $numero]);
-
         DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
         $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
         $observaciones = DB::table('convenio_oficina_os')->where('nrosolicitud', $nroSolicitud)->value('observaciones');
+
         $id_solicitud = $id;
         $created_at = date('Y-m-d H:i:s');
         $updated_at = date('Y-m-d H:i:s');
@@ -189,6 +193,8 @@ class ProveedorConvenioOficina extends Controller
         $lin_pedidos = [];
 
         foreach ($linpedidos as $key => $linpedido) {
+
+
             $articuloID = DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('id_articulo');
             $numeroArticulo =  $newNumber = str_pad($articuloID, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
 
