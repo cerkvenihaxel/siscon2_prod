@@ -127,11 +127,22 @@ class MedicoCrearPedidoMedicamentoController extends Controller
             'nombre' => 'required',
             // Añade las validaciones para los demás campos del formulario
         ]);
+
+        $nroAfiliado = $request->input('nroAfiliado');
+        $afiliadoNuevo = PedidoMedicamento::where('nroAfiliado', $nroAfiliado)->first();
+
+        if($afiliadoNuevo){
+            $estado_solicitud = 8;
+        }
+        else{
+            $estado_solicitud = 1;
+        }
+
         // Crear una nueva instancia del modelo PedidoMedicamento y asignar los valores del formulario
         $pedido = new PedidoMedicamento;
         $pedido->created_at = date('Y-m-d H:i:s');
         $pedido->afiliados_id = $request->input('afiliado_id');
-        $pedido->nroAfiliado = $request->input('nroAfiliado');
+        $pedido->nroAfiliado = $nroAfiliado;
         $pedido->edad = $request->input('edad');
         $pedido->nrosolicitud = $request->input('nrosolicitud');
         $pedido->clinicas_id = $request->input('clinicas_id');
@@ -141,7 +152,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
         $pedido->fecha_receta = $request->input('fecha_receta');
         $pedido->postdatada = $request->input('postdatada');
         $pedido->fecha_vencimiento = $request->input('fecha_venicimiento');
-        $pedido->estado_solicitud_id = 1;
+        $pedido->estado_solicitud_id = $estado_solicitud;
         $pedido->tel_afiliado = $request->input('tel_afiliado');
         $pedido->patologia = $request->input('patologias');
         $pedido->provincia = 11;
@@ -178,6 +189,8 @@ class MedicoCrearPedidoMedicamentoController extends Controller
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue creada con éxito!","success");
 
     }
+
+
 
 
 

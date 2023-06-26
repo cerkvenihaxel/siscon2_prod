@@ -49,7 +49,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($solicitudes->where('estado_solicitud_id', 1) as $solicitud)
+                    @foreach($solicitudes->whereIn('estado_solicitud_id', [1, 8]) as $solicitud)
                     <tr>
                         <td>{{$solicitud->created_at}}</td>
                         <td>{{$solicitud->nombre}}</td>
@@ -105,7 +105,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($solicitudes->where('estado_solicitud_id', 3) as $solicitud)
+                    @foreach($solicitudes->whereIn('estado_solicitud_id', [3, 11, 12 , 13]) as $solicitud)
                         <tr>
                             <td>{{$solicitud->updated_at}}</td>
                             <td>{{ $solicitud->nombre }}</td>

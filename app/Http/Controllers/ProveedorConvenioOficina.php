@@ -12,6 +12,7 @@ use App\Models\PedidoC;
 use App\Models\PedidoMedicamento;
 use App\Models\PedidoMedicamentoDetail;
 use App\Models\ProveedoresConvenio;
+use App\Models\ProveedoresConvenioDetail;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,10 +52,11 @@ class ProveedorConvenioOficina extends Controller
     public function verPedidoProveedor($id)
     {
         $pedido =  ProveedoresConvenio::findOrFail($id);
-        $pedido_medicamento_id = DB::table('pedido_medicamento')->where('nrosolicitud', $pedido->nrosolicitud)->value('id');
-        $detalles = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $pedido_medicamento_id)->get();
+        $pedido_medicamento_id = DB::table('cotizacion_convenio')->where('nrosolicitud', $pedido->nrosolicitud)->value('id');
+        $detalles = ProveedoresConvenioDetail::where('cotizacion_convenio_id', $pedido_medicamento_id)->get();
         $nombre = $pedido->nombreyapellido;
         $nombremedico = DB::table('medicos')->where('id', $pedido->medicos_id)->value('nombremedico');
+
 
         return response()->json([
             'pedido' => $pedido,
@@ -125,7 +127,7 @@ class ProveedorConvenioOficina extends Controller
         $postdatada = PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->value('postdatada');
         $proveedorConvenio->postdatada = DB::table('postdatada')->where('id', $postdatada)->value('cantidad');
         $proveedorConvenio->fecha_vencimiento = PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->value('fecha_vencimiento');
-        $proveedorConvenio->estado_solicitud_id = 6;
+        $proveedorConvenio->estado_solicitud_id = 11;
         $proveedorConvenio->estado_pedido_id = 5;
         $proveedorConvenio->punto_retiro_id = $punto_retiro;
         $proveedorConvenio->proveedor = DB::table('proveedores_convenio')->where('id', 2)->value('nombre');
@@ -157,9 +159,8 @@ class ProveedorConvenioOficina extends Controller
         }
 
         $proveedorConvenio->oficinaAutorizarDetail()->saveMany($proveedorConvenioD);
-        DB::table('convenio_oficina_os')->where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
-        DB::table('pedido_medicamento')->where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
-
+        OficinaAutorizar::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+        PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
 
         $this->enviarPedidoSingular($proveedorConvenio->id);
 
@@ -261,7 +262,6 @@ class ProveedorConvenioOficina extends Controller
 
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"El pedido fue cargado con éxito!","success");
 
-        return Redirect::back();
     }
 
     private function generatePedidoNumber()

@@ -77,9 +77,11 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         //$oficinaAutorizar = $pedidoMedicamento->email;
         $oficinaAutorizar->fecha_receta = $pedidoMedicamento->fecha_receta;
         $oficinaAutorizar->postdatada = $pedidoMedicamento->postdatada;
+        $oficinaAutorizar->patologia = $pedidoMedicamento->patologia;
         $oficinaAutorizar->fecha_vencimiento = $pedidoMedicamento->fecha_vencimiento;
         $oficinaAutorizar->observaciones = $observaciones;
         $oficinaAutorizar->estado_solicitud_id = 3;
+        $oficinaAutorizar->tel_afiliado = $pedidoMedicamento->tel_afiliado;
         $oficinaAutorizar->stamp_user = $stamp_user;
         $oficinaAutorizar->discapacidad = $pedidoMedicamento->discapacidad;
         $oficinaAutorizar->provincia = $pedidoMedicamento->provincia;

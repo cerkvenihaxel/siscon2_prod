@@ -89,7 +89,6 @@
                         <th>Fechas de creación</th>
                         <th>Afiliado</th>
                         <th>Número de solicitud</th>
-                        <th>Medicación requerida</th>
                         <th>Estado Solicitud</th>
                         <th>Estado del pedido</th>
                         <th>Nro pedido</th>
@@ -98,11 +97,10 @@
                     </thead>
                     <tbody>
                     <tr>
-                        @foreach($cotizadas->where('estado_solicitud_id', 6) as $cot)
+                        @foreach($cotizadas->whereIn('estado_solicitud_id', [6, 11, 12 ,13]) as $cot)
                         <td>{{ $cot->created_at }}</td>
                         <td>{{ $cot->nombreyapellido}}</td>
                         <td>{{ $cot->nrosolicitud }}</td>
-                        <td> Prueba </td>
                         <td>{{ DB::table('estado_solicitud')->where('id', $cot->estado_solicitud_id)->value('estado') }}</td>
                         <td>{{ DB::table('estado_pedido')->where('id', $cot->estado_pedido_id)->value('estado') }}</td>
                         <td>{{ $cot->id_pedido }} </td>
@@ -140,7 +138,6 @@
                         <th>Fechas de creación</th>
                         <th>Afiliado</th>
                         <th>Número de solicitud</th>
-                        <th>Medicación requerida</th>
                         <th>Estado Solicitud</th>
                         <th>Opciones</th>
                     </tr>
@@ -151,7 +148,6 @@
                             <td>{{ $an->created_at }}</td>
                             <td>{{ DB::table('afiliados')->where('nroAfiliado', $an->nroAfiliado)->value('apeynombres') }}</td>
                             <td>{{ $an->nrosolicitud }}</td>
-                            <td>Medicación requerida</td>
                             <td>{{ DB::table('estado_solicitud')->where('id', $an->estado_solicitud_id)->value('estado') }}</td>
                             <td>
                                 <div class="button-container">
