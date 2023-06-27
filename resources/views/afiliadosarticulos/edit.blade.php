@@ -1,4 +1,6 @@
-
+@php
+    $proveedores = DB::table('proveedores_convenio')->get();
+ @endphp
                     <form action="{{ route('afiliadosarticulos.update', $afiliadoArticulo->id) }}" method="POST">
                         @csrf
                         @method('PUT')
@@ -20,10 +22,18 @@
                         <div class="form-group">
                             <label for="patologias">Patologías</label>
                             <input type="text" class="form-control form-s" id="afiliado" name="afiliado" value="{{ DB::table('patologias')->where('id', $afiliadoArticulo->patologias)->value('nombre') }}" readonly>
-
                         </div>
 
+                        <div class="form-group">
+                            <label for="proveedor">Proveedor</label>
+                            <select class="form-control" id="proveedor" name="proveedor">
+                                @foreach ($proveedores as $proveedor)
+                                    <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
+
                         <a href="{{ route('afiliados_articulos.index') }}" class="btn btn-secondary">Cancelar</a>
                     </form>
 

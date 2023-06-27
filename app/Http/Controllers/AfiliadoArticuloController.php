@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AfiliadosArticulosModel;
 use App\Models\ArticulosZafiro;
+use App\Models\ProveedoresConvenio;
 use Illuminate\Http\Request;
 use App\Models\Afiliados;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,7 @@ class AfiliadoArticuloController extends Controller
 
         // Actualizar la cantidad solamente, los demás valores permanecen iguales
         $afiliadoArticulo->cantidad = $request->cantidad;
+        $afiliadoArticulo->proveedores_convenio_id = $request->proveedor;
         $afiliadoArticulo->save();
 
         // Redireccionar a la página de visualización de afiliados o a donde corresponda
@@ -115,7 +117,7 @@ class AfiliadoArticuloController extends Controller
 
         return view('afiliadosArticulosView', [
             'afiliadosArticulos' => $afiliadosArticulos->appends(['search' => $search]),
-            'count' => $count,
+            'count' => $count
         ]);
 
     }
@@ -171,6 +173,7 @@ class AfiliadoArticuloController extends Controller
             $articuloAfiliado->des_articulo = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('des_articulo');
             $articuloAfiliado->presentacion = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('presentacion');
             $articuloAfiliado->patologias = $fila['patologias'];
+            $articuloAfiliado->proveedores_convenio_id = $fila['proveedor'];
             $articuloAfiliado->cantidad = $fila['cantidad'];
 
             // Guardar el modelo en la base de datos

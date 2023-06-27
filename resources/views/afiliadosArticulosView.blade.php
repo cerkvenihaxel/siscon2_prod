@@ -50,6 +50,7 @@
                             <th>Presentacion</th>
                             <th>Cantidad</th>
                             <th>Patologias</th>
+                            <th>Proveedor asignado</th>
                             <th>Acción</th>
                         </tr>
                         </thead>
@@ -63,6 +64,8 @@
                                 <td>{{ $afiliadoArticulo->presentacion }}</td>
                                 <td>{{ $afiliadoArticulo->cantidad }}</td>
                                 <td>{{ DB::table('patologias')->where('id', $afiliadoArticulo->patologias)->value('nombre') }}</td>
+                                <td>{{DB::table('proveedores_convenio')->where('id', $afiliadoArticulo->proveedores_convenio_id)->value('nombre')}}</td>
+
                                 <td>
                                     <button class="btn btn-primary btn-sm btn-view" data-id="{{ $afiliadoArticulo->id }}">Ver</button>
                                     <button class="btn btn-warning btn-sm btn-edit" data-id="{{ $afiliadoArticulo->id }}" data-toggle="modal" data-target="#editModal">Editar</button>

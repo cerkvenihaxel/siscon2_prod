@@ -2,6 +2,8 @@
     $patologiasTable = DB::table('patologias')->get();
     $patologias = $_GET['patologias'];
     $search = $_GET['search'];
+
+    $proveedores = DB::table('proveedores_convenio')->get();
  @endphp
 
 <!DOCTYPE html>
@@ -61,6 +63,7 @@
                 var afiliado = $('#afiliado').val();
                 var articulo = $('#articulo').val();
                 var patologia = $('#patologia').val();
+                var proveedor = $('#proveedor').val();
                 var cantidad = $('#cantidad').val();
 
                 // Validar que se hayan seleccionado todos los campos
@@ -74,6 +77,7 @@
                     nro_afiliado: afiliado,
                     id_articulo: articulo,
                     patologias: patologia,
+                    proveedor: proveedor,
                     cantidad: cantidad
                 };
 
@@ -91,6 +95,7 @@
             function limpiarCampos() {
                 $('#articulo').val('');
                 $('#patologia').val('');
+                $('#proveedor').val('');
                 $('#cantidad').val('');
             }
 
@@ -110,6 +115,7 @@
                         '<td>' + fila.nro_afiliado + '</td>' +
                         '<td>' + fila.id_articulo + '</td>' +
                         '<td>' + fila.patologias + '</td>' +
+                        '<td>' + fila.proveedor + '</td>' +
                         '<td>' + fila.cantidad + '</td>' +
                         '<td><button class="btn btn-danger btn-eliminar-fila" data-index="' + index + '">Eliminar</button></td>' +
                         '</tr>';
@@ -207,6 +213,15 @@
                 <input type="number" id="cantidad" class="form-control">
             </div>
 
+            <div class="form-group">
+                <label for="proveedor">Proveedor asignado:</label>
+                <select id="proveedor" class="form-control">
+                    @foreach($proveedores as $proveedor)
+                        <option value="{{$proveedor->id}}" >{{$proveedor->nombre}}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <!-- Botón para agregar fila -->
             <button type="button" class="btn btn-primary" id="btn-agregar-fila">Agregar Fila</button>
 
@@ -219,6 +234,7 @@
                     <th>Artículo</th>
                     <th>Patología</th>
                     <th>Cantidad</th>
+                    <th>Proveedor</th>
                     <th>Acción</th>
                 </tr>
                 </thead>
