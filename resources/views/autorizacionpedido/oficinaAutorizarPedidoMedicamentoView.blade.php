@@ -22,6 +22,70 @@
 </head>
 <body>
 
+<!-- Modulo tarjeta Karam auditoría -->
+
+@if($auditor)
+<div class="tarjeta0">
+    <div class="container-fluid">
+        <div class="card bg-white rounded shadow">
+            <div class="card-header">
+                <h3 class="card-title-auditados">Pedidos por auditar</h3>
+            </div>
+            <div class="card-body">
+
+                <div class="form-group">
+                    <label for="input-buscar-afiliado">Buscar por: nombre, dni, número de afiliado, monodroga</label>
+                </div>
+
+                <table id="tabla-solicitudes-auditadas" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Fechas de creación</th>
+                        <th>Nombre afiliado</th>
+                        <th>Afiliado</th>
+                        <th>Número de solicitud</th>
+                        <th>Médico solicitante</th>
+                        <th>Patología</th>
+                        <th>Estado Solicitud</th>
+                        <th>Opciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($solicitudes->whereIn('estado_solicitud_id', [1]) as $solicitud)
+                        <tr>
+                            <td>{{$solicitud->created_at}}</td>
+                            <td>{{$solicitud->nombre}}</td>
+                            <td>{{ $solicitud->nroAfiliado }}</td>
+                            <td>{{ $solicitud->nrosolicitud }}</td>
+                            <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
+                            <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
+                            <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
+                            <td>
+                                <div class="button-container">
+                                    <button class="btn btn-success btn-xs m-5 btn-auditar" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#auditarModal">
+                                        <i class="fas fa-check"></i> Auditar (Aprobar)
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs m-5 btn-rechazar" data-toggle="modal" data-pedido-id="{{ $solicitud->id }}" data-target="#confirmModal">
+                                        <i class="fas fa-times"></i> Auditar (Rechazar)
+                                    </button>                                <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#pedidoModal">
+                                        <i class="fas fa-eye"></i> Ver pedido
+                                    </button>                                <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                    <!-- Agrega más filas según sea necesario -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endif
+<!-- Finaliza modulo Karam -->
+
 
 <div class="tarjeta">
     <div class="container-fluid">
@@ -49,7 +113,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($solicitudes->whereIn('estado_solicitud_id', [1, 8]) as $solicitud)
+                    @foreach($solicitudes->whereIn('estado_solicitud_id', [8]) as $solicitud)
                     <tr>
                         <td>{{$solicitud->created_at}}</td>
                         <td>{{$solicitud->nombre}}</td>
@@ -105,7 +169,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($solicitudes->whereIn('estado_solicitud_id', [3, 11, 12 , 13]) as $solicitud)
+                        @if(!$stamp_userConvenio)
+                            @foreach($solicitudes->whereIn('estado_solicitud_id', [3, 11, 12, 13]) as $solicitud)
                         <tr>
                             <td>{{$solicitud->updated_at}}</td>
                             <td>{{ $solicitud->nombre }}</td>
@@ -123,6 +188,26 @@
                             </td>
                         </tr>
                     @endforeach
+                        @else
+                            @foreach($solicitudesAutorizadas->whereIn('estado_solicitud_id', [3, 11, 12, 13]) as $solicitud)
+                                <tr>
+                                    <td>{{$solicitud->updated_at }}</td>
+                                    <td>{{ DB::table('afiliados')->where('nroAfiliado', $solicitud->nroAfiliado)->value('apeynombres') }}</td>
+                                    <td>{{ $solicitud->nroAfiliado }}</td>
+                                    <td>{{ $solicitud->nrosolicitud }}</td>
+                                    <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
+                                    <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
+                                    <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
+                                    <td>
+                                        <div class="button-container">
+                                            <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#pedidoModal">
+                                                <i class="fas fa-eye"></i> Ver pedido
+                                            </button>                                <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                                @endif
 
                     <!-- Agrega más filas según sea necesario -->
                     </tbody>
@@ -239,6 +324,40 @@
     </div>
 </div>
 
+<!-- Modal auditar pedido -->
+<div class="modal fade" id="auditarModal" tabindex="-1" role="dialog" aria-labelledby="auditarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Cabecera del modal -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="auditarModalLabel">Confirmar Rechazo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Contenido del modal -->
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas aprobar esta solicitud?</p>
+            </div>
+
+            <!-- Pie del modal -->
+            <div class="modal-footer">
+                <!-- Botón "Confirmar" -->
+                <form action="{{ route('pedido.auditar') }}" method="POST">
+                    @csrf
+                    <input type="hidden" id="pedidoIdInput" name="pedidoId" value="">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-success">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Modal autorizar pedido -->
 
 <div class="modal fade" id="modalAutorizar" tabindex="-1" role="dialog" aria-labelledby="modalAutorizarLabel">
@@ -328,12 +447,23 @@
     }
 
     var tablaSolicitudes;
+    var tablaSolicitudesAuditadas;
     var tablaSolicitudesRechazadas;
     var tablaSolicitudesAutorizadas;
 
     $(document).ready(function() {
         // Inicializar DataTables y guardar la instancia en la variable tablaSolicitudes
         tablaSolicitudes = $('#tabla-solicitudes').DataTable({
+            paging: true,
+            pageLength: 5,
+            searching: true,
+            lengthChange: false,
+            info: true,
+            order: [[0, 'desc']] // Ordenar por la primera columna (created_at) en orden descendente
+
+        });
+
+        tablaSolicitudesAuditadas = $('#tabla-solicitudes-auditadas').DataTable({
             paging: true,
             pageLength: 5,
             searching: true,
@@ -490,7 +620,14 @@
             var button = $(event.relatedTarget); // Botón que activó el modal
             var pedidoId = button.data('pedido-id'); // Obtener el valor del atributo data-pedido-id
             var modal = $(this);
+            // Asignar el valor al campo oculto del formulario
+            modal.find('#pedidoIdInput').val(pedidoId);
+        });
 
+        $('#auditarModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var pedidoId = button.data('pedido-id'); // Obtener el valor del atributo data-pedido-id
+            var modal = $(this);
             // Asignar el valor al campo oculto del formulario
             modal.find('#pedidoIdInput').val(pedidoId);
         });
@@ -507,10 +644,22 @@
 </script>
 
 <style>
-    .tarjeta{
+
+    .tarjeta0{
         background-color: white;
         border-radius: 12px;
         padding-bottom: 15px;
+    }
+
+    .tarjeta{
+        margin-top: 18px;
+        background-color: white;
+        border-radius: 12px;
+        padding-bottom: 15px;
+    }
+
+    .card-title-auditados{
+        color: orange;
     }
 
     .card-title{

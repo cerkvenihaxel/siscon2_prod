@@ -7,6 +7,7 @@ use App\Models\OficinaAutorizar;
 use App\Models\OficinaAutorizarDetail;
 use App\Models\PedidoMedicamento;
 use App\Models\PedidoMedicamentoDetail;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
@@ -17,11 +18,33 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
     //
     public function index(){
 
+        $privilegio = CRUDBooster::myPrivilegeId();
+        $id = CRUDBooster::myId();
+
         $solicitudes = PedidoMedicamento::all();
         foreach ($solicitudes as $solicitud) {
             $solicitud->nombre = DB::table('afiliados')->where('id', $solicitud->afiliados_id)->value('apeynombres');
         }
-        return view('autorizacionpedido.oficinaAutorizarPedidoMedicamentoView', compact('solicitudes'));
+
+        if($privilegio==40){
+            $auditor = true;
+        }
+        else{
+            $auditor = false;
+        }
+
+        if($privilegio==41){
+            $stamp_userConvenio = User::where('id', $id)->value('email');
+            $solicitudesPedido = OficinaAutorizar::where('stamp_user', $stamp_userConvenio)->get('nrosolicitud');
+            $solicitudesAutorizadas = PedidoMedicamento::whereIn('nrosolicitud', $solicitudesPedido)->get();
+        }
+        else{
+            $stamp_userConvenio = null;
+            $solicitudesAutorizadas = PedidoMedicamento::all();
+        }
+
+
+        return view('autorizacionpedido.oficinaAutorizarPedidoMedicamentoView', compact('solicitudes', 'auditor', 'stamp_userConvenio', 'solicitudesAutorizadas'));
     }
 
     public function verPedido($id)
@@ -64,6 +87,7 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
 
         $pedidoMedicamento = PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->first();
         $pedidoMedicamento->estado_solicitud_id = 3;
+        $pedidoMedicamento->updated_at = now();
 
         $oficinaAutorizar = new OficinaAutorizar();
         $oficinaAutorizar->afiliados_id = $pedidoMedicamento->afiliados_id;
@@ -121,6 +145,15 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
 
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue rechazada con éxito!","danger");
 
+    }
+
+    public function auditarPedido(Request $request){
+        $id = $request->input('pedidoId');
+        $pedido = PedidoMedicamento::findOrFail($id);
+        $pedido->estado_solicitud_id = 8;
+        $pedido->save();
+
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue rechazada con éxito!","success");
 
     }
 
