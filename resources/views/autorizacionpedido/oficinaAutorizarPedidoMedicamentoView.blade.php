@@ -381,6 +381,7 @@
 
 
 
+
                         var pedido = response.pedido;
                     // Vaciar el contenido anterior del cuerpo del modal
 

@@ -172,10 +172,13 @@
                                 <td>{{ $pedido->created_at }}</td>
                                 <td>{{ $pedido->nroAfiliado }}</td>
                                 <td>{{ $pedido->nrosolicitud }}</td>
-                                <td>Metformina, Insulina, etc</td>
-                                <td>Estado 1</td>
+                                <td>{{ DB::table('afiliados')->where('id', $pedido->afiliados_id)->value('apeynombres') }}</td>
+                                <td>{{ DB::table('estado_solicitud')->where('id', $pedido->estado_solicitud_id)->value('estado') }}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-xs" type="button" data-toggle="modal" data-index="{{$pedido->id}}" data-target="#modalVer">Ver</button>
+                                    <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{$pedido->id}}" data-toggle="modal" data-target="#pedidoModal">
+                                        <i class="fas fa-eye"></i> Ver pedido
+                                    </button>
+
                                     <button class="btn btn-warning btn-xs" type="button">Imprimir</button>
                                 </td>
                             </tr>
@@ -191,24 +194,55 @@
 
 
 <!-- Modal Ver -->
-<div class="modal fade" id="modalVer" tabindex="-1" role="dialog" aria-labelledby="modalVerLabel" aria-hidden="true">
+<div class="modal fade" id="pedidoModal" tabindex="-1" role="dialog" aria-labelledby="pedidoModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalVerLabel">Datos de la solicitud</h5>
+                <h4 class="modal-title" id="pedidoModalLabel">Detalles del pedido</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Dato 1: Valor 1</p>
-                <p>Dato 2: Valor 2</p>
-                <p>Dato 3: Valor 3</p>
-                <p>Dato 4: Valor 4</p>
-                <p>Dato 5: Valor 5</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nombre afiliado</th>
+                        <th>Número Afiliado</th>
+                        <th>Número Solicitud</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pedidoDetalleBody">
+                    <!-- Aquí se agregarán las filas con los detalles del pedido -->
+                    </tbody>
+                </table>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Médico prescriptor</th>
+                        <th>Teléfono Afiliado</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pedidoDetalleBody2">
+                    <!-- Aquí se agregarán las filas con los detalles del pedido -->
+                    </tbody>
+                </table>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Medicación requerida</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pedidoDetalleBodyMedicamento">
+                    <!-- Aquí se agregarán las filas con los detalles del pedido -->
+                    </tbody>
+                </table>
+
+
             </div>
         </div>
     </div>
@@ -374,62 +408,132 @@
 </div>
 @endif
 <script>
+    var tablaSolicitudes;
 
-    var afiliadoNumber = null;
-
-    $('.btn-edit').on('click', function() {
-        var afiliadoId = $(this).data('id');
-        var url = '{{ route("pm.edit", ":id") }}';
-        url = url.replace(':id', afiliadoId);
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(response) {
-                console.log('FUNCIONA');
-                $('#editModal .modal-body').html(response);
-                $('#editModal').modal('show');
-
-            },
-            error: function(xhr) {
-                // Manejo de errores si es necesario
-            }
+    $(document).ready(function() {
+        // Inicializar DataTables y guardar la instancia en la variable tablaSolicitudes
+        tablaSolicitudes = $('#tabla-solicitudes').DataTable({
+            paging: true,
+            pageLength: 5,
+            searching: true,
+            lengthChange: false,
+            info: true,
+            order: [[0, 'desc']] // Ordenar por la primera columna (created_at) en orden descendente
         });
-    });
 
-    $('.btn-delete').on('click', function() {
-        afiliadoNumber = $(this).data('id');
-    });
+        var afiliadoNumber = null;
 
-    $('.btn-eliminar').on('click', function() {
-        if (afiliadoNumber !== null) {
-            var afiliadoId = afiliadoNumber;
-            var url = '{{ route("pm.destroy", ":id") }}';
+        $('.btn-edit').on('click', function () {
+            var afiliadoId = $(this).data('id');
+            var url = '{{ route("pm.edit", ":id") }}';
             url = url.replace(':id', afiliadoId);
 
             $.ajax({
                 url: url,
-                type: 'DELETE',
-                success: function(response) {
-                    // Procesar la respuesta si es necesario
-                    $('#deleteModal').modal('hide');
-                    location.reload();
+                type: 'GET',
+                success: function (response) {
+                    console.log('FUNCIONA');
+                    $('#editModal .modal-body').html(response);
+                    $('#editModal').modal('show');
+
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     // Manejo de errores si es necesario
                 }
             });
+        });
 
-            afiliadoNumber = null; // Restablecer el valor de afiliadoNumber después de utilizarlo
-        }
+        $('.btn-delete').on('click', function () {
+            afiliadoNumber = $(this).data('id');
+        });
+
+        $('.btn-eliminar').on('click', function () {
+            if (afiliadoNumber !== null) {
+                var afiliadoId = afiliadoNumber;
+                var url = '{{ route("pm.destroy", ":id") }}';
+                url = url.replace(':id', afiliadoId);
+
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    success: function (response) {
+                        // Procesar la respuesta si es necesario
+                        $('#deleteModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        // Manejo de errores si es necesario
+                    }
+                });
+
+                afiliadoNumber = null; // Restablecer el valor de afiliadoNumber después de utilizarlo
+            }
+        });
     });
 
     $(document).ready(function() {
+        $(document).on('click', '.btn-ver-pedido', function () {
+            var pedidoId = $(this).data('pedido-id');
+            var url = '/pedido/' + pedidoId + '/detalle'; // Reemplaza la URL con la ruta correcta de tu aplicación
 
-        $('#tabla-solicitudes').DataTable();
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    $('#pedidoDetalleBody').empty();
+                    $('#pedidoDetalleBody2').empty();
+                    $('#pedidoDetalleBodyMedicamento').empty();
 
 
+                    var pedido = response.pedido;
+                    // Vaciar el contenido anterior del cuerpo del modal
+
+                    // Agregar las filas con los detalles del pedido al cuerpo del modal
+                    var nombre = response.nombre;
+                    var nroAfiliado = pedido.nroAfiliado;
+                    var nrosolicitud = pedido.nrosolicitud;
+                    var nombremedico = response.nombremedico;
+
+                    var fila = '<tr>' +
+                        '<td>' + nombre + '</td>' +
+                        '<td>' + nroAfiliado + '</td>' +
+                        '<td>' + nrosolicitud + '</td>' +
+                        '</tr>';
+
+                    $('#pedidoDetalleBody').append(fila);
+
+                    var fila2 = '<tr>' +
+                        '<td>' + nombremedico + '</td>' +
+                        '<td>' + pedido.tel_afiliado + '</td>' +
+                        '</tr>';
+
+                    $('#pedidoDetalleBody2').append(fila2);
+
+                    var medicamentos = response.detalles;
+
+                    for (var i = 0; i < medicamentos.length; i++) {
+                        var medicamento = medicamentos[i];
+                        var filaMedicamento = '<tr>' +
+                            '<td>' + medicamento.presentacion + '</td>' +
+                            '<td>' + medicamento.cantidad + '</td>' +
+                            '</tr>';
+
+                        $('#pedidoDetalleBodyMedicamento').append(filaMedicamento);
+                    }
+
+
+                    // Mostrar el modal
+                    $('#pedidoModal').modal('show');
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
     });
+
+
 
     function openCenteredWindow(url, width, height) {
         var left = (window.screen.width - width) / 2;

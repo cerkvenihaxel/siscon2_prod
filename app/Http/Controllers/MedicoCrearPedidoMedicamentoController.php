@@ -84,7 +84,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
         if ($privilege == 6) {
             $nombreMedico = User::where('id', $id)->value('name');
             $medicoID = DB::table('medicos')->where('nombremedico', 'LIKE', $nombreMedico)->value('id');
-            $pedidosMedicos = DB::table('pedido_medicamento')->get();
+            $pedidosMedicos = DB::table('pedido_medicamento')->where('medicos_id', $medicoID)->get();
         }
 
         return view('medicoCrearPedidoMedicamentoview', compact('search', 'solicitud', 'nombre', 'localidad', 'telefono', 'pedidosMedicos', 'nombreMedico', 'patologias', 'afiliado_id', 'nroSolicitud', 'clinicas', 'medicos', 'postdatada', 'stampuser', 'searchPatologia', 'edad'));
