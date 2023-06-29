@@ -55,6 +55,11 @@
             background-color: #f39c12;
         }
 
+        .info-box.yellow1{
+            background-color: #f39c12;
+            padding-top: 12px;
+        }
+
         .info-box .card-title {
             color: #fff;
             font-size: 18px;
@@ -77,27 +82,46 @@
 <div class="container">
     <h3 class="card-title">Obra social</h3>
     <div class="text-center">
+
+        <div class="col-md-3">
+
         <div class="info-box blue">
             <h4 class="card-title">Pedidos entrantes</h4>
             <div class="card-text">
                 <h3>{{ $nroEntrantes }}</h3>
-                <p><a href="#">Ver más</a></p>
             </div>
         </div>
+        </div>
+
+<div class="col-md-3">
+        <div class="info-box yellow1">
+            <h4 class="card-title">Pedidos auditados (aprobados)</h4>
+            <div class="card-text">
+                <h3>{{$nroAuditados}}</h3>
+            </div>
+        </div>
+</div>
+
+        <div class="col-md-3">
+
         <div class="info-box green">
             <h4 class="card-title">Pedidos autorizados</h4>
             <div class="card-text">
                 <h3>{{$nroAutorizados}}</h3>
-                <p><a href="#">Ver más</a></p>
             </div>
         </div>
+
+        </div>
+
+        <div class="col-md-3">
+
         <div class="info-box red">
             <h4 class="card-title">Pedidos rechazados</h4>
             <div class="card-text">
                 <h3>{{$nroRechazados}}</h3>
-                <p><a href="#">Ver más</a></p>
             </div>
         </div>
+    </div>
     </div>
 
     <h3 class="card-title">Global Medica</h3>
@@ -106,23 +130,30 @@
             <h4 class="card-title">Pedidos asignados</h4>
             <div class="card-text">
                 <h3>{{$nroAsignados}}</h3>
-                <p><a href="#">Ver más</a></p>
             </div>
         </div>
         <div class="info-box yellow">
             <h4 class="card-title">Pedidos procesados</h4>
             <div class="card-text">
                 <h3>{{$nroProcesados}}</h3>
-                <p><a href="#">Ver más</a></p>
             </div>
         </div>
+
         <div class="info-box green">
             <h4 class="card-title">Pedidos entregados</h4>
                     <div class="card-text">
                         <h3>{{$nroEntregados}}</h3>
-                        <p><a href="#">Ver más</a></p>
                     </div>
         </div>
+
+        <div class="info-box red">
+            <h4 class="card-title">Pedidos rechazados</h4>
+            <div class="card-text">
+                <h3>{{$nroRechazadosGlobal}}</h3>
+            </div>
+        </div>
+
+
     </div>
 
     <div class="row">
