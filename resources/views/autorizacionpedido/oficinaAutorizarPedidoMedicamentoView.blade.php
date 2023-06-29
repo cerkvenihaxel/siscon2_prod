@@ -569,6 +569,8 @@
                 success: function(response) {
                     $('#tablaAutorizarBody').empty();
 
+                    console.log(response);
+
                     var medicamentos = response.medicamentos;
                     var pedido = response.pedido;
 
@@ -589,7 +591,7 @@
                             '<td>' + medicamento.presentacion + '</td>' +
                             '<td>' + medicamento.cantidad + '</td>' +
                             '<td>' +
-                            '<input type="number" step="0.01" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese un número decimal" value="52">' +
+                            '<input type="number" step="0.01" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese un número decimal" value="'+ medicamento.banda_descuento +'">' +
                             '</td>' +
                             '<td>' +
                             '<select class="form-control select2 form-control-lg" name="medicamentos[' + i + '][proveedor_convenio_id]" placeholder="Proveedor">' +

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ArticulosZafiro;
 use App\Models\OficinaAutorizar;
 use App\Models\OficinaAutorizarDetail;
 use App\Models\PedidoMedicamento;
@@ -68,9 +69,19 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         $pedidos = PedidoMedicamento::findOrFail($id);
         $medicamentos = PedidoMedicamentoDetail::where('pedido_medicamento_id', $pedidoID)->get();
 
+        $medicamentosActualizados = []; // Arreglo para almacenar los medicamentos actualizados
+
+        foreach ($medicamentos as $medicamento) {
+            $idArticulo = DB::table('articulosZafiro')->where('id', $medicamento->articuloZafiro_id)->value('id_articulo');
+            $medicamento->banda_descuento = DB::table('banda_descuentos')->where('id_articulo', $idArticulo)->value('banda_descuento');
+
+            // Agregar el medicamento actualizado al arreglo
+            $medicamentosActualizados[] = $medicamento;
+        }
+
         // Realiza las operaciones necesarias para obtener los detalles del pedido y la oficina de autorización
         $response = [
-            'medicamentos' => $medicamentos,
+            'medicamentos' => $medicamentosActualizados,
             'pedido' => $pedidos
         ];
 
