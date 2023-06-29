@@ -81,7 +81,7 @@
     <div class="container-fluid">
         <div class="card bg-white rounded shadow">
             <div class="card-header">
-                <h3 class="card-title-autorizados">Pedidos enviados a depósito</h3>
+                <h3 class="card-title-autorizados">Pedidos entregados a afiliados</h3>
             </div>
             <div class="card-body">
                 <table id="tabla-solicitudes-cotizadas" class="table table-bordered">

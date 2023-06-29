@@ -9,6 +9,7 @@ use App\Models\CotizacionConvenioDetail;
 use App\Models\OficinaAutorizar;
 use App\Models\PedidoMedicamento;
 use App\Models\PedidoMedicamentoDetail;
+use App\Models\User;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,17 @@ class FarmaciaConvenioController extends Controller
     public function index(){
 
         $solicitudes = CotizacionConvenio::all();
-        return view('farmaciasconvenio.farmaciaPedidoMedicamentoView', compact('solicitudes'));
+        $privilegio = CRUDBooster::myPrivilegeId();
+        if($privilegio == 45){
+            $id = CRUDBooster::myId();
+            $farmaciaNombre = User::where('id', $id)->value('name');
+            $puntoRetiro = DB::table('punto_retiro')->where('nombre', 'LIKE',  $farmaciaNombre)->value('id');
+            $solicitudes = CotizacionConvenio::where('punto_retiro_id', $puntoRetiro)->get();
+            return view('farmaciasconvenio.farmaciaPedidoMedicamentoView', compact('solicitudes'));
+        }
+        else{
+            return view('farmaciasconvenio.farmaciaPedidoMedicamentoView', compact('solicitudes'));
+        }
     }
 
     public function verPedido($id)
