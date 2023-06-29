@@ -194,8 +194,8 @@ class ProveedorConvenioOficina extends Controller
 
         foreach ($linpedidos as $key => $linpedido) {
 
-            $articuloID = DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('id_articulo');
-            $numeroArticulo =  $newNumber = str_pad($articuloID, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
+            $articuloID = $linpedido->articuloZafiro_id;
+            $numeroArticulo =  str_pad($articuloID, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
 
             $lin_pedidos[] = [
                 'created_at' => $fecha_pedido,
@@ -204,8 +204,8 @@ class ProveedorConvenioOficina extends Controller
                 'item' => $key+1,
                 'id_articulo' => $numeroArticulo,
                 'cantidad' => $linpedido->cantidad,
-                'des_articulo' => DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('des_articulo'),
-                'presentacion' => DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('presentacion'),
+                'des_articulo' => DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('des_articulo'),
+                'presentacion' => DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('presentacion'),
                 'pcio_vta_unisiva' => $linpedido->precio,
                 'pcio_iva_comsiva' => $linpedido->total,
             ];
