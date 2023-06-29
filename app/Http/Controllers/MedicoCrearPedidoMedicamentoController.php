@@ -81,7 +81,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
         $nombreMedico = null;
         $stampuser = DB::table('cms_users')->where('id', $id)->value('email');
 
-        if ($privilege == 6) {
+        if ($privilege == 6 || $privilege == 44) {
             $nombreMedico = User::where('id', $id)->value('name');
             $medicoID = DB::table('medicos')->where('nombremedico', 'LIKE', $nombreMedico)->value('id');
             $pedidosMedicos = DB::table('pedido_medicamento')->where('medicos_id', $medicoID)->get();
