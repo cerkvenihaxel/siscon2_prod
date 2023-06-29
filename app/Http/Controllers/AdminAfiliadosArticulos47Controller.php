@@ -9,7 +9,9 @@
 
 	    public function cbInit() {
 
-			# START CONFIGURATION DO NOT REMOVE THIS LINE
+            $privilegio = CRUDBooster::myPrivilegeId();
+
+            # START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
 			$this->limit = "20";
 			$this->orderby = "id,desc";
@@ -37,8 +39,10 @@
             $this->col[] = ["label"=>"Presentacion","name"=>"presentacion"];
             $this->col[] = ["label"=>"Cantidad","name"=>"cantidad"];
 			$this->col[] = ["label"=>"Patologias","name"=>"patologias","join"=>"patologias,nombre"];
-            $this->col[] = ["label"=>"Prooveedor asignado","name"=>"proveedores_convenio_id","join"=>"proveedores_convenio,nombre"];
 
+            if($privilegio==1 || $privilegio==38) {
+                $this->col[] = ["label" => "Prooveedor asignado", "name" => "proveedores_convenio_id", "join" => "proveedores_convenio,nombre"];
+            }
             # END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
