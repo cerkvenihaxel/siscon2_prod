@@ -572,7 +572,6 @@
                     });
 
 
-
                     // Mostrar el modal
                     $('#modalGenerar').modal('show');
                 },

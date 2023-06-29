@@ -164,6 +164,8 @@ class ProveedorConvenioOficina extends Controller
 
         $this->enviarPedidoSingular($proveedorConvenio->id);
 
+
+
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
 
 
@@ -172,6 +174,8 @@ class ProveedorConvenioOficina extends Controller
 
 
     public function enviarPedidoSingular($id){
+
+        dd($id);
 
         $numero = $this->generatePedidoNumber();
         DB::table('cotizacion_convenio')->where('id', $id)->update(['id_pedido' => $numero]);
