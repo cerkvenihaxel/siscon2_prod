@@ -20,6 +20,7 @@ class FarmaciaConvenioController extends Controller
 
 
         $privilegio = CRUDBooster::myPrivilegeId();
+
         if($privilegio == 45){
             $id = CRUDBooster::myId();
             $farmaciaNombre = User::where('id', $id)->value('name');

@@ -204,7 +204,7 @@ class ProveedorConvenioOficina extends Controller
                 'updated_at' => $fecha_pedido,
                 'id_pedido' => $id_pedido,
                 'item' => $key+1,
-                'id_articulo' => $numeroArticulo,
+                'id_articulo' => $articuloID,
                 'cantidad' => $linpedido->cantidad,
                 'des_articulo' => DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('des_articulo'),
                 'presentacion' => DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('presentacion'),
