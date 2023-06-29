@@ -99,6 +99,7 @@
                     </thead>
                     <tbody>
                     <tr>
+                        @if(!$puntoRetiroId)
                         @foreach($solicitudes->whereIn('estado_solicitud_id', [13]) as $cot)
                             <td>{{ $cot->updated_at }}</td>
                             <td>{{ $cot->nombreyapellido}}</td>
@@ -118,6 +119,27 @@
 
                     </tr>
                     @endforeach
+                    @else
+                        @foreach($solicitudes->whereIn('estado_solicitud_id', [13])->where('punto_retiro_id', $puntoRetiroId) as $cot)
+                            <td>{{ $cot->updated_at }}</td>
+                            <td>{{ $cot->nombreyapellido}}</td>
+                            <td>{{ $cot->nrosolicitud }}</td>
+                            <td>{{ DB::table('estado_solicitud')->where('id', $cot->estado_solicitud_id)->value('estado') }}</td>
+                            <td>{{ DB::table('estado_pedido')->where('id', $cot->estado_pedido_id)->value('estado') }}</td>
+                            <td>{{ $cot->id_pedido }} </td>
+                            <td>
+                                <div class="button-container">
+                                    <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $cot->id }}" data-toggle="modal" data-target="#pedidoModal">
+                                        <i class="fas fa-eye"></i> Ver pedido
+                                    </button>
+
+                                    <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i>Acuse de recibo</button>
+                                </div>
+                            </td>
+
+                            </tr>
+                        @endforeach
+                    @endif
                     <!-- Agrega más filas según sea necesario -->
                     </tbody>
                 </table>

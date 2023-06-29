@@ -18,20 +18,18 @@ class FarmaciaConvenioController extends Controller
 {
     public function index(){
 
+            $privilageId = CRUDBooster::myPrivilegeId();
 
-        $privilegio = CRUDBooster::myPrivilegeId();
+            if($privilageId == 45){
+                $nombre = CRUDBooster::myName();
+                $puntoRetiroId = DB::table('punto_retiro')->where('nombre', 'LIKE', $nombre)->value('id');
+                $solicitudes = CotizacionConvenio::where('punto_retiro_id', $puntoRetiroId)->get();
+                return view('farmaciasconvenio.farmaciaPedidoMedicamentoView', compact('solicitudes','puntoRetiroId'));
+            }
 
-        if($privilegio == 45){
-            $id = CRUDBooster::myId();
-            $farmaciaNombre = User::where('id', $id)->value('name');
-            $puntoRetiro = DB::table('punto_retiro')->where('nombre', 'LIKE',  $farmaciaNombre)->value('id');
-            $solicitudes = CotizacionConvenio::where('punto_retiro_id', $puntoRetiro)->get();
-            return view('farmaciasconvenio.farmaciaPedidoMedicamentoView', compact('solicitudes'));
-        }
-        else{
             $solicitudes = CotizacionConvenio::all();
             return view('farmaciasconvenio.farmaciaPedidoMedicamentoView', compact('solicitudes'));
-        }
+
     }
 
     public function verPedido($id)
