@@ -18,7 +18,7 @@ class FarmaciaConvenioController extends Controller
 {
     public function index(){
 
-        $solicitudes = CotizacionConvenio::all();
+
         $privilegio = CRUDBooster::myPrivilegeId();
         if($privilegio == 45){
             $id = CRUDBooster::myId();
@@ -28,6 +28,7 @@ class FarmaciaConvenioController extends Controller
             return view('farmaciasconvenio.farmaciaPedidoMedicamentoView', compact('solicitudes'));
         }
         else{
+            $solicitudes = CotizacionConvenio::all();
             return view('farmaciasconvenio.farmaciaPedidoMedicamentoView', compact('solicitudes'));
         }
     }
