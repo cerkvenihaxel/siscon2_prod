@@ -153,9 +153,10 @@
                 <h3>{{$nroRechazadosGlobal}}</h3>
             </div>
         </div>
-
-
     </div>
+
+    @endif
+
 
     <div class="row">
         <div class="col-md-12">
@@ -238,7 +239,6 @@
         </div>
     </div>
 </div>
-@endif
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
