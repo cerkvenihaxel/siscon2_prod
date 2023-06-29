@@ -124,6 +124,7 @@
     </div>
     </div>
 
+    @if($privilegio == 1 || $privilegio == 38)
     <h3 class="card-title">Global Medica</h3>
     <div class="text-center">
         <div class="info-box blue">
@@ -237,6 +238,7 @@
         </div>
     </div>
 </div>
+@endif
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
