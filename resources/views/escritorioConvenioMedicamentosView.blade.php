@@ -150,8 +150,10 @@
                                              ->where('patologias', $pato->id)
                                             ->distinct('nro_afiliado')
                                             ->count() }}</td>
-                                    <td><button class="btn btn-info btn-xs m-5 btn-ver-mas" data-pato="{{ $pato->id }}" data-toggle="modal" data-target="#verMasModal">
+                                    <td><button class="btn btn-info btn-xs m-5">
+                                            <a href="/admin/afiliados_articulos47?q={{$pato->nombre}}" style="color: white">
                                              Ver más
+                                            </a>
                                         </button>  </td>
                                 </tr>
                                 @php
