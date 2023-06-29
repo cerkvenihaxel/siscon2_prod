@@ -29,7 +29,8 @@
                 <table id="tabla-solicitudes" class="table table-bordered">
                     <thead>
                     <tr>
-                        <th>Fechas de creación</th>
+                        <th>Fechas de creación
+                        </th>
                         <th>Nombre afiliado</th>
                         <th>Afiliado</th>
                         <th>Número de solicitud</th>
@@ -42,7 +43,7 @@
                     <tbody>
                     @foreach($solicitudes->where('estado_solicitud_id', 11) as $solicitud)
                         <tr>
-                            <td>{{$solicitud->created_at}}</td>
+                            <td>{{$solicitud->updated_at}}</td>
                             <td> {{ $solicitud->nombreyapellido }}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
@@ -87,7 +88,7 @@
                 <table id="tabla-solicitudes-cotizadas" class="table table-bordered">
                     <thead>
                     <tr>
-                        <th>Fechas de creación</th>
+                        <th>Fechas de actualización</th>
                         <th>Afiliado</th>
                         <th>Número de solicitud</th>
                         <th>Estado Solicitud</th>
@@ -99,7 +100,7 @@
                     <tbody>
                     <tr>
                         @foreach($solicitudes->whereIn('estado_solicitud_id', [13]) as $cot)
-                            <td>{{ $cot->created_at }}</td>
+                            <td>{{ $cot->updated_at }}</td>
                             <td>{{ $cot->nombreyapellido}}</td>
                             <td>{{ $cot->nrosolicitud }}</td>
                             <td>{{ DB::table('estado_solicitud')->where('id', $cot->estado_solicitud_id)->value('estado') }}</td>
@@ -212,6 +213,7 @@
                     <tr>
                         <th>Medicación requerida</th>
                         <th>Cantidad</th>
+                        <th>Cantidad entregada</th>
                     </tr>
                     </thead>
                     <tbody id="pedidoDetalleBodyMedicamento">
@@ -397,6 +399,8 @@
                         var filaMedicamento = '<tr>' +
                             '<td>' + medicamento.presentacion + '</td>' +
                             '<td>' + medicamento.cantidad + '</td>' +
+                            '<td>' + medicamento.cantidad_entregada + '</td>' +
+
                             '</tr>';
 
                         $('#pedidoDetalleBodyMedicamento').append(filaMedicamento);
@@ -504,9 +508,6 @@
 
                         $('#tablaAutorizarBody').append(filaMedicamento);
                     }
-
-
-|
                     // Mostrar el modal
                     $('#modalGenerar').modal('show');
                 },

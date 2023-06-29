@@ -93,9 +93,11 @@ class FarmaciaConvenioController extends Controller
             $medicamento->save();
         }
 
-        OficinaAutorizar::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 13])->update(['estado_pedido_id' => 1]);
+        OficinaAutorizar::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 13]);
+        OficinaAutorizar::where('nrosolicitud', $nroSolicitud)->update(['estado_pedido_id' => 1]);
         PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 13]);
-        CotizacionConvenio::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 13])->update(['estado_pedido_id' => 1]);
+        CotizacionConvenio::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 13]);
+        CotizacionConvenio::where('nrosolicitud', $nroSolicitud)->update(['estado_pedido_id' => 1]);
 
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
 
