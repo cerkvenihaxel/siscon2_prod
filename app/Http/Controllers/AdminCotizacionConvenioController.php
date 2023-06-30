@@ -58,7 +58,7 @@
             $this->postdatada = DB::table('postdatada')->where('id', $this->postdatada)->value('cantidad');
             $this->fecha_vencimiento = DB::table('convenio_oficina_os')->where('id', $this->url)->value('fecha_vencimiento');
             $this->zona_residencia = DB::table('convenio_oficina_os')->where('id', $this->url)->value('zona_residencia');
-            $this->proveedorID = DB::table('convenio_oficina_os')->where('id', $this->url)->value('proveedor');
+            $this->proveedorID = 2; //DB::table('convenio_oficina_os')->where('id', $this->url)->value('proveedor');
             $this->proveedor = DB::table('proveedores_convenio')->where('id', $this->proveedorID)->value('nombre');
 
             $this->medicamentosRequiredId = DB::table('pedido_medicamento')->where('nrosolicitud', $this->nroSolicitud)->value('id');
@@ -149,7 +149,7 @@
 
 
             $this->form[] = ['label' => 'Proveedor', 'name' => 'proveedor', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'value'=> $this->proveedor, 'readonly' => true];
-            $this->form[] = ['label' => 'Punto de Retiro', 'name' => 'punto_retiro_id', 'type'=>'datamodal', 'datamodal_table'=>'punto_retiro', 'datamodal_columns'=> 'nombre', 'datamodal_columns_alias'=>'Nombre', 'datamodal_size'=>'large', 'width'=>'col-sm-10', 'datamodal_where' => 'proveedor_convenio_id='.$this->proveedorID, 'datamodal_select_to'=>'direccion:direccion_retiro,localidad:localidad_retiro,telefono:tel_retiro'];
+            $this->form[] = ['label' => 'Punto de Retiro', 'name' => 'punto_retiro_id', 'type'=>'datamodal', 'datamodal_table'=>'punto_retiro', 'datamodal_columns'=> 'nombre', 'datamodal_columns_alias'=>'Nombre', 'datamodal_size'=>'large', 'width'=>'col-sm-10', 'datamodal_where' =>'proveedor_convenio_id='.$this->proveedorID, 'datamodal_select_to'=>'direccion:direccion_retiro,localidad:localidad_retiro,telefono:tel_retiro'];
             $this->form[] = ['label'=>'Direccion de entrega','name'=>'direccion_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Localidad de retiro','name'=>'localidad_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Telefono de punto de retiro','name'=>'tel_retiro','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
