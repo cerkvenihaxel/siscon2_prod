@@ -41,7 +41,12 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         }
         else{
             $stamp_userConvenio = null;
-            $solicitudesAutorizadas = PedidoMedicamento::all();
+            $solicitudesAutorizadas = OficinaAutorizar::all();
+        }
+
+        foreach ($solicitudesAutorizadas as $solicitudAutorizada) {
+            $solicitudAutorizada->nombre = DB::table('afiliados')->where('id', $solicitudAutorizada->afiliados_id)->value('apeynombres');
+            $solicitudAutorizada->proveedorNombre = DB::table('proveedores_convenio')->where('id', $solicitudAutorizada->proveedor)->value('nombre');
         }
 
 
@@ -50,8 +55,8 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
 
     public function verPedido($id)
     {
-        $pedido = PedidoMedicamento::findOrFail($id);
-        $detalles = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $id)->get();
+        $pedido = OficinaAutorizar::findOrFail($id);
+        $detalles = OficinaAutorizarDetail::where('convenio_oficina_os_id', $id)->get();
         $nombre = DB::table('afiliados')->where('id', $pedido->afiliados_id)->value('apeynombres');
         $nombremedico = DB::table('medicos')->where('id', $pedido->medicos_id)->value('nombremedico');
 
@@ -88,7 +93,8 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         return response()->json($response);
     }
 
-    public function autorizarGuardarPedido(Request $request){
+    public function autorizarGuardarPedido(Request $request)
+    {
         $medicamentos = $request->input('medicamentos');
         $nroSolicitud = $request->input('nroSolicitud');
         $nroAfiliado = $request->input('nroAfiliado');
@@ -97,55 +103,71 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         $stamp_user = DB::table('cms_users')->where('id', $myID)->value('email');
 
         $pedidoMedicamento = PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->first();
-        $pedidoMedicamento->estado_solicitud_id = 3;
+        $pedidoMedicamento->estado_solicitud_id = 4;
         $pedidoMedicamento->updated_at = now();
 
-        $oficinaAutorizar = new OficinaAutorizar();
-        $oficinaAutorizar->afiliados_id = $pedidoMedicamento->afiliados_id;
-        $oficinaAutorizar->medicos_id = $pedidoMedicamento->medicos_id;
-        $oficinaAutorizar->edad = $pedidoMedicamento->edad;
-        $oficinaAutorizar->obra_social = $pedidoMedicamento->obra_social;
-        $oficinaAutorizar->nrosolicitud = $nroSolicitud;
-        $oficinaAutorizar->nroAfiliado = $nroAfiliado;
-        $oficinaAutorizar->clinicas_id = $pedidoMedicamento->clinicas_id;
-        $oficinaAutorizar->zona_residencia = $pedidoMedicamento->zona_residencia;
-        //$oficinaAutorizar = $pedidoMedicamento->email;
-        $oficinaAutorizar->fecha_receta = $pedidoMedicamento->fecha_receta;
-        $oficinaAutorizar->postdatada = $pedidoMedicamento->postdatada;
-        $oficinaAutorizar->patologia = $pedidoMedicamento->patologia;
-        $oficinaAutorizar->fecha_vencimiento = $pedidoMedicamento->fecha_vencimiento;
-        $oficinaAutorizar->observaciones = $observaciones;
-        $oficinaAutorizar->estado_solicitud_id = 3;
-        $oficinaAutorizar->tel_afiliado = $pedidoMedicamento->tel_afiliado;
-        $oficinaAutorizar->stamp_user = $stamp_user;
-        $oficinaAutorizar->discapacidad = $pedidoMedicamento->discapacidad;
-        $oficinaAutorizar->provincia = $pedidoMedicamento->provincia;
+        $proveedores = [];
 
-        $oficinaAutorizar->save();
-
-        $oficinaAutorizarD = [];
+        // Agrupar medicamentos por proveedor
         foreach ($medicamentos as $med) {
-            $oficinaAutorizarDetail = new OficinaAutorizarDetail();
-            $oficinaAutorizarDetail->convenio_oficina_os_id = $oficinaAutorizar->id;
-            $oficinaAutorizarDetail->articuloszafiro_id = $med['articuloZafiro_id'];
-            $oficinaAutorizarDetail->cantidad = $med['cantidad'];
-            $oficinaAutorizarDetail->banda_descuento = $med['banda_descuento'];
-            $oficinaAutorizarDetail->proveedores_convenio_id = $med['proveedor_convenio_id'];
-            $oficinaAutorizarDetail->presentacion = $med['presentacion'];
-            $oficinaAutorizarDetail->nrosolicitud = $nroSolicitud;
-            $oficinaAutorizarDetail->observaciones = $observaciones;
-            $oficinaAutorizarDetail->nroAfiliado = $nroAfiliado;
+            $proveedorId = $med['proveedor_convenio_id'];
 
-            $oficinaAutorizarD[] = $oficinaAutorizarDetail;
+            if (!isset($proveedores[$proveedorId])) {
+                $proveedores[$proveedorId] = [];
+            }
+
+            $proveedores[$proveedorId][] = $med;
         }
 
-        $oficinaAutorizar->oficinaAutorizarDetail()->saveMany($oficinaAutorizarD);
+        // Crear y guardar objetos OficinaAutorizar y OficinaAutorizarDetail para cada grupo de medicamentos
+        foreach ($proveedores as $proveedorId => $medicamentosProveedor) {
+            $oficinaAutorizar = new OficinaAutorizar();
+            $oficinaAutorizar->afiliados_id = $pedidoMedicamento->afiliados_id;
+            $oficinaAutorizar->medicos_id = $pedidoMedicamento->medicos_id;
+            $oficinaAutorizar->edad = $pedidoMedicamento->edad;
+            $oficinaAutorizar->obra_social = $pedidoMedicamento->obra_social;
+            $oficinaAutorizar->nrosolicitud = $nroSolicitud;
+            $oficinaAutorizar->nroAfiliado = $nroAfiliado;
+            $oficinaAutorizar->clinicas_id = $pedidoMedicamento->clinicas_id;
+            $oficinaAutorizar->zona_residencia = $pedidoMedicamento->zona_residencia;
+            $oficinaAutorizar->fecha_receta = $pedidoMedicamento->fecha_receta;
+            $oficinaAutorizar->postdatada = $pedidoMedicamento->postdatada;
+            $oficinaAutorizar->patologia = $pedidoMedicamento->patologia;
+            $oficinaAutorizar->fecha_vencimiento = $pedidoMedicamento->fecha_vencimiento;
+            $oficinaAutorizar->observaciones = $observaciones;
+            $oficinaAutorizar->estado_solicitud_id = 4;
+            $oficinaAutorizar->tel_afiliado = $pedidoMedicamento->tel_afiliado;
+            $oficinaAutorizar->stamp_user = $stamp_user;
+            $oficinaAutorizar->discapacidad = $pedidoMedicamento->discapacidad;
+            $oficinaAutorizar->provincia = $pedidoMedicamento->provincia;
+            $oficinaAutorizar->proveedor = $proveedorId;
+
+            $oficinaAutorizar->save();
+
+            $oficinaAutorizarD = [];
+            foreach ($medicamentosProveedor as $med) {
+                $oficinaAutorizarDetail = new OficinaAutorizarDetail();
+                $oficinaAutorizarDetail->convenio_oficina_os_id = $oficinaAutorizar->id;
+                $oficinaAutorizarDetail->articuloszafiro_id = $med['articuloZafiro_id'];
+                $oficinaAutorizarDetail->cantidad = $med['cantidad'];
+                $oficinaAutorizarDetail->banda_descuento = $med['banda_descuento'];
+                $oficinaAutorizarDetail->proveedores_convenio_id = $med['proveedor_convenio_id'];
+                $oficinaAutorizarDetail->presentacion = $med['presentacion'];
+                $oficinaAutorizarDetail->nrosolicitud = $nroSolicitud;
+                $oficinaAutorizarDetail->observaciones = $observaciones;
+                $oficinaAutorizarDetail->nroAfiliado = $nroAfiliado;
+
+                $oficinaAutorizarD[] = $oficinaAutorizarDetail;
+            }
+
+            $oficinaAutorizar->oficinaAutorizarDetail()->saveMany($oficinaAutorizarD);
+        }
 
         $pedidoMedicamento->save();
 
-        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
-
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'], "La solicitud fue autorizada con éxito!", "success");
     }
+
 
     public function rechazarPedido(Request $request){
         $id = $request->input('pedidoId');

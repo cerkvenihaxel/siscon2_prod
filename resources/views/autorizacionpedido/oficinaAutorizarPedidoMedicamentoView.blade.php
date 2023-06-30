@@ -165,20 +165,22 @@
                         <th>Médico solicitante</th>
                         <th>Patología</th>
                         <th>Estado Solicitud</th>
+                        <th>Proveedor asignado</th>
                         <th>Opciones</th>
                     </tr>
                     </thead>
                     <tbody>
                         @if(!$stamp_userConvenio)
-                            @foreach($solicitudes->whereIn('estado_solicitud_id', [3, 11, 12, 13]) as $solicitud)
+                            @foreach($solicitudesAutorizadas->whereIn('estado_solicitud_id', [3, 11, 12, 13]) as $solicitud)
                         <tr>
-                            <td>{{$solicitud->updated_at}}</td>
+                            <td>{{$solicitud->created_at}}</td>
                             <td>{{ $solicitud->nombre }}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
                             <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
                             <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
                             <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
+                            <td>{{$solicitud->proveedorNombre}}</td>
                             <td>
                                 <div class="button-container">
                                     <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#pedidoModal">
@@ -595,8 +597,8 @@
                             '</td>' +
                             '<td>' +
                             '<select class="form-control select2 form-control-lg" name="medicamentos[' + i + '][proveedor_convenio_id]" placeholder="Proveedor">' +
-                            '<option value="1">Global Médica</option>' +
-                            '<option value="2">Zcienza</option>' +
+                            '<option value="2">Global Médica</option>' +
+                            '<option value="1">Scienza</option>' +
                             '<option value="3">Red Farma</option>' +
                             '</select>' +
                             '</td>' +
