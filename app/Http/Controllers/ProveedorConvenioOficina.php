@@ -8,6 +8,7 @@ use App\Models\CotizacionConvenio;
 use App\Models\CotizacionConvenioDetail;
 use App\Models\LinPedido;
 use App\Models\OficinaAutorizar;
+use App\Models\OficinaAutorizarDetail;
 use App\Models\PedidoC;
 use App\Models\PedidoMedicamento;
 use App\Models\PedidoMedicamentoDetail;
@@ -80,15 +81,14 @@ class ProveedorConvenioOficina extends Controller
     public function autorizarVerPedido($id)
     {
         $nroSolicitud = OficinaAutorizar::findOrFail($id)->nrosolicitud;
-        $pedidoID = DB::table('pedido_medicamento')->where('nrosolicitud', $nroSolicitud)->value('id');
         $pedidos = OficinaAutorizar::findOrFail($id);
-        $medicamentos = PedidoMedicamentoDetail::where('pedido_medicamento_id', $pedidoID)->get();
+        $medicamentos = OficinaAutorizarDetail::where('convenio_oficina_os_id', $id)->get();
         $puntosRetiro = DB::table('punto_retiro')->get();
-
+        $pedidos->zonaRetiro = DB::table('punto_retiro')->where('nombre', 'LIKE', '%' . $pedidos->zona_residencia . '%')->first('id');
 
 
         foreach ($medicamentos as $medicamento) {
-            $articuloZafiroID = $medicamento->articuloZafiro_id;
+            $articuloZafiroID = $medicamento->articuloszafiro_id;
             $descripcionMonodroga = DB::table('articulosZafiro')->where('id', $articuloZafiroID)->value('des_monodroga');
             $medicamento->des_monodroga = $descripcionMonodroga;
         }
@@ -97,18 +97,20 @@ class ProveedorConvenioOficina extends Controller
         $response = [
             'medicamentos' => $medicamentos,
             'pedido' => $pedidos,
-            'puntosRetiro'=>$puntosRetiro
+            'puntosRetiro'=>$puntosRetiro,
         ];
 
         return response()->json($response);
     }
 
     public function autorizarGuardarPedido(Request $request){
+
         $medicamentos = $request->input('medicamentos');
         $nroSolicitud = $request->input('nroSolicitud');
         $nroAfiliado = $request->input('nroAfiliado');
         $punto_retiro = $request->input('punto_retiro');
         $observaciones = $request->input('observaciones');
+        $idCotizacion = $request->input('idCotizacion');
         $myID = CRUDBooster::myId();
         $stamp_user = DB::table('cms_users')->where('id', $myID)->value('email');
 
@@ -159,7 +161,7 @@ class ProveedorConvenioOficina extends Controller
         }
 
         $proveedorConvenio->oficinaAutorizarDetail()->saveMany($proveedorConvenioD);
-        OficinaAutorizar::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+        OficinaAutorizar::where('id', $idCotizacion)->update(['estado_solicitud_id' => 11]);
         PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
 
         $this->enviarPedidoSingular($proveedorConvenio->id);

@@ -36,10 +36,13 @@
                         <th>Médico solicitante</th>
                         <th>Patología</th>
                         <th>Estado Solicitud</th>
+                        <th>Proveedor</th>
                         <th>Opciones</th>
                     </tr>
                     </thead>
                     <tbody>
+
+                    <!-- CAMBIAR EL ID SOLICITUD POR EL 4 DESPUES -->
                     @foreach($solicitudes->where('estado_solicitud_id', 3) as $solicitud)
                         <tr>
                             <td>{{$solicitud->created_at}}</td>
@@ -49,6 +52,7 @@
                             <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
                             <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
                             <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
+                            <td>{{ DB::table('proveedores_convenio')->where('id', $solicitud->proveedor)->value('nombre') }}</td>
                             <td>
                                 <div class="button-container">
                                     <button class="btn btn-success btn-xs m-5 btn-autorizar" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#modalGenerar">
@@ -123,6 +127,55 @@
         </div>
     </div>
 </div>
+
+
+<!-- tarjeta entregados -->
+
+<div class="tarjeta3">
+    <div class="container-fluid">
+        <div class="card bg-white rounded shadow">
+            <div class="card-header">
+                <h3 class="card-title-entregados">Pedidos entregados</h3>
+            </div>
+            <div class="card-body">
+                <h3>Solicitudes</h3>
+                <table id="tabla-solicitudes-entregados" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Fechas de creación</th>
+                        <th>Afiliado</th>
+                        <th>Número de solicitud</th>
+                        <th>Estado Solicitud</th>
+                        <th>Opciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        @foreach($solicitudes->whereIn('estado_pedido_id', [1]) as $en)
+                            <td>{{ $en->created_at }}</td>
+                            <td>{{ DB::table('afiliados')->where('nroAfiliado', $en->nroAfiliado)->value('apeynombres') }}</td>
+                            <td>{{ $en->nrosolicitud }}</td>
+                            <td>{{ DB::table('estado_pedido')->where('id', $an->estado_solicitud_id)->value('estado') }}</td>
+                            <td>
+                                <div class="button-container">
+                                    <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $an->id }}" data-toggle="modal" data-target="#pedidoModal">
+                                        <i class="fas fa-eye"></i> Ver pedido
+                                    </button>
+
+                                    <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
+                                </div>
+                            </td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- fin tarjeta entregados -->
 
 <div class="tarjeta3">
     <div class="container-fluid">
@@ -329,6 +382,7 @@
 
     var tablaSolicitudes;
     var tablaCotizaciones;
+    var tablaEntregados;
     var tablaCanceladas;
 
     $(document).ready(function() {
@@ -344,6 +398,16 @@
         });
 
         tablaCotizaciones = $('#tabla-solicitudes-cotizadas').DataTable({
+            paging: true,
+            pageLength: 5,
+            searching: true,
+            lengthChange: false,
+            info: false,
+            order: [[ 0, "desc" ]]
+
+        });
+
+        tablaEntregados = $('#tabla-solicitudes-entregados').DataTable({
             paging: true,
             pageLength: 5,
             searching: true,
@@ -510,8 +574,11 @@
                     var zona_retiro = response.pedido.zona_residencia;
                     var nroSolicitudInput = '<input type="hidden" name="nroSolicitud" value="' + pedido.nrosolicitud + '">';
                     var nroAfiliadoInput = '<input type="hidden" name="nroAfiliado" value="' + pedido.nroAfiliado + '">';
+                    var idCotizacion = '<input type="hidden" name="idCotizacion" value="' + pedido.id + '">';
+
 
                     $('#tablaAutorizarBody').append(nroSolicitudInput);
+                    $('#tablaAutorizarBody').append(idCotizacion);
                     $('#tablaAutorizarBody').append(nroAfiliadoInput);
                     $('#zona_retiro').val(zona_retiro);
 
@@ -519,7 +586,7 @@
                     for (var i = 0; i < medicamentos.length; i++) {
                         var medicamento = medicamentos[i];
                         var filaMedicamento = '<tr>' +
-                            '<input type="hidden" name="medicamentos[' + i + '][articuloZafiro_id]" value="' + medicamento.articuloZafiro_id + '">' +
+                            '<input type="hidden" name="medicamentos[' + i + '][articuloZafiro_id]" value="' + medicamento.articuloszafiro_id + '">' +
                             '<input type="hidden" name="medicamentos[' + i + '][presentacion]" value="' + medicamento.presentacion + '">' +
                             '<input type="hidden" name="medicamentos[' + i + '][cantidad]" value="' + medicamento.cantidad + '">' +
 
@@ -536,7 +603,7 @@
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][subtotal]" placeholder="Subtotal" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese el descuento" onchange="calculateTotalWithDiscount(' + i + ')">' +
+                            '<input type="text" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese el descuento" onchange="calculateTotalWithDiscount(' + i + ')" value="' + medicamento.banda_descuento + '">' +
                             '</td>' +
                             '<td>' +
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][total]" placeholder="Ingrese el total final" readonly>' +
