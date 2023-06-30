@@ -637,7 +637,9 @@ for (var i = 0; i < medicamentos.length; i++) {
 
             DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
             $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
-            $observaciones = DB::table('cotizacion_convenio')->where('nrosolicitud', $nroSolicitud)->value('observaciones');
+            $nombreAfiliadoObs = DB::table('cotizacion_convenio')->where('id', $id)->value('nombreyapellido');
+            $nroAfiliadoObs = DB::table('cotizacion_convenio')->where('id', $id)->value('nroAfiliado');
+            $observaciones = 'Afil. Nro: '.$nroAfiliadoObs.' - '.$nombreAfiliadoObs;
             $id_solicitud = $id;
             $created_at = date('Y-m-d H:i:s');
             $updated_at = date('Y-m-d H:i:s');
