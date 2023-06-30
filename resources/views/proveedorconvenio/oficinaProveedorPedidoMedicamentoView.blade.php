@@ -43,7 +43,7 @@
                     <tbody>
 
                     <!-- CAMBIAR EL ID SOLICITUD POR EL 4 DESPUES -->
-                    @foreach($solicitudes->where('estado_solicitud_id', 3) as $solicitud)
+                    @foreach($solicitudes->whereIn('estado_solicitud_id', [3, 4]) as $solicitud)
                         <tr>
                             <td>{{$solicitud->created_at}}</td>
                             <td> {{ $solicitud->nombre }}</td>
@@ -576,12 +576,10 @@
                     var nroAfiliadoInput = '<input type="hidden" name="nroAfiliado" value="' + pedido.nroAfiliado + '">';
                     var idCotizacion = '<input type="hidden" name="idCotizacion" value="' + pedido.id + '">';
 
-
                     $('#tablaAutorizarBody').append(nroSolicitudInput);
                     $('#tablaAutorizarBody').append(idCotizacion);
                     $('#tablaAutorizarBody').append(nroAfiliadoInput);
                     $('#zona_retiro').val(zona_retiro);
-
 
                     for (var i = 0; i < medicamentos.length; i++) {
                         var medicamento = medicamentos[i];
@@ -614,6 +612,9 @@
                         $('#tablaAutorizarBody').append(filaMedicamento);
                     }
 
+                    var zonaResidencia = pedido.zonaRetiro.id
+
+
                     var puntosRetiro = response.puntosRetiro; // Suponiendo que obtienes los puntos de retiro en la respuesta AJAX
                     for (var j = 0; j < puntosRetiro.length; j++) {
                         var puntoRetiro = puntosRetiro[j];
@@ -621,7 +622,13 @@
                         $('#punto_retiro').append(opcion);
                     }
 
+                    $('#punto_retiro').val(zonaResidencia).trigger('change');
+
+
+
                     $('#punto_retiro').on('select2:select', function(e) {
+
+
                         var puntoRetiroSeleccionadoId = e.params.data.id;
                         var puntoRetiroSeleccionado = puntosRetiro.find(function(punto) {
                             return punto.id === puntoRetiroSeleccionadoId;

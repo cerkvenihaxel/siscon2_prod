@@ -171,7 +171,7 @@
                     </thead>
                     <tbody>
                         @if(!$stamp_userConvenio)
-                            @foreach($solicitudesAutorizadas->whereIn('estado_solicitud_id', [3, 11, 12, 13]) as $solicitud)
+                            @foreach($solicitudesAutorizadas->whereIn('estado_solicitud_id', [3, 4, 11, 12, 13]) as $solicitud)
                         <tr>
                             <td>{{$solicitud->created_at}}</td>
                             <td>{{ $solicitud->nombre }}</td>
@@ -191,7 +191,7 @@
                         </tr>
                     @endforeach
                         @else
-                            @foreach($solicitudesAutorizadas->whereIn('estado_solicitud_id', [3, 11, 12, 13]) as $solicitud)
+                            @foreach($solicitudesAutorizadas->whereIn('estado_solicitud_id', [3, 4, 11, 12, 13]) as $solicitud)
                                 <tr>
                                     <td>{{$solicitud->updated_at }}</td>
                                     <td>{{ DB::table('afiliados')->where('nroAfiliado', $solicitud->nroAfiliado)->value('apeynombres') }}</td>

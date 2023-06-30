@@ -37,8 +37,8 @@ class ProveedorConvenioOficina extends Controller
     public function verPedido($id)
     {
         $pedido =  OficinaAutorizar::findOrFail($id);
-        $pedido_medicamento_id = DB::table('pedido_medicamento')->where('nrosolicitud', $pedido->nrosolicitud)->value('id');
-        $detalles = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $pedido_medicamento_id)->get();
+        $convenio_oficina_os_id = OficinaAutorizar::findOrFail($id)->id;
+        $detalles = OficinaAutorizarDetail::where('convenio_oficina_os_id', $convenio_oficina_os_id)->get();
         $nombre = DB::table('afiliados')->where('id', $pedido->afiliados_id)->value('apeynombres');
         $nombremedico = DB::table('medicos')->where('id', $pedido->medicos_id)->value('nombremedico');
 
@@ -81,25 +81,25 @@ class ProveedorConvenioOficina extends Controller
     public function autorizarVerPedido($id)
     {
         $nroSolicitud = OficinaAutorizar::findOrFail($id)->nrosolicitud;
-        $pedidos = OficinaAutorizar::findOrFail($id);
+        $pedidos = OficinaAutorizar::findOrFail($id); // Hago un get de todos los pedidos con ese ID
         $medicamentos = OficinaAutorizarDetail::where('convenio_oficina_os_id', $id)->get();
-        $puntosRetiro = DB::table('punto_retiro')->get();
-        $pedidos->zonaRetiro = DB::table('punto_retiro')->where('nombre', 'LIKE', '%' . $pedidos->zona_residencia . '%')->first('id');
 
+        $puntosRetiro = DB::table('punto_retiro')->get(); // Hago un get de todas las sucursales
+        $pedidos->zonaRetiro = DB::table('punto_retiro')->where('nombre', 'LIKE', '%' . $pedidos->zona_residencia . '%')->first('id');
+        // Le agrego una variable zonaRetiro al array de los pedidos
 
         foreach ($medicamentos as $medicamento) {
-            $articuloZafiroID = $medicamento->articuloszafiro_id;
-            $descripcionMonodroga = DB::table('articulosZafiro')->where('id', $articuloZafiroID)->value('des_monodroga');
+            $articuloZafiroID = $medicamento->articuloszafiro_id; // 57400 INT
+            $numeroArticulo =  str_pad($articuloZafiroID, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
+            $descripcionMonodroga = DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('des_monodroga');
             $medicamento->des_monodroga = $descripcionMonodroga;
         }
-
         // Realiza las operaciones necesarias para obtener los detalles del pedido y la oficina de autorización
         $response = [
             'medicamentos' => $medicamentos,
             'pedido' => $pedidos,
             'puntosRetiro'=>$puntosRetiro,
         ];
-
         return response()->json($response);
     }
 
@@ -130,6 +130,7 @@ class ProveedorConvenioOficina extends Controller
         $proveedorConvenio->postdatada = DB::table('postdatada')->where('id', $postdatada)->value('cantidad');
         $proveedorConvenio->fecha_vencimiento = PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->value('fecha_vencimiento');
         $proveedorConvenio->estado_solicitud_id = 11;
+        $proveedorConvenio->discapacidad = PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->value('discapacidad');
         $proveedorConvenio->estado_pedido_id = 5;
         $proveedorConvenio->punto_retiro_id = $punto_retiro;
         $proveedorConvenio->proveedor = DB::table('proveedores_convenio')->where('id', 2)->value('nombre');
