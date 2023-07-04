@@ -65,9 +65,6 @@ class ArticulosReportController extends Controller
         $entrantes_detail = DB::table('entrantes_detail')->where('articulos_id', $id)->pluck('entrantes_id')->all();
 
         $data = DB::table('entrantes')->whereIn('id', $entrantes_detail)->whereBetween('created_at', [$start_date, $end_date])->get();
-
-
-
         $data2 = DB::table('entrantes_detail')->whereIn('entrantes_id', $entrantes_detail)->where('articulos_id', $id)->get();
 
         //Table de las cotizaciones
