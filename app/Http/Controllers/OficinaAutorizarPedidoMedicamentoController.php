@@ -53,6 +53,21 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         return view('autorizacionpedido.oficinaAutorizarPedidoMedicamentoView', compact('solicitudes', 'auditor', 'stamp_userConvenio', 'solicitudesAutorizadas'));
     }
 
+    public function verPedidoMedico($id)
+    {
+        $pedido = PedidoMedicamento::findOrFail($id);
+        $detalles = PedidoMedicamentoDetail::where('pedido_medicamento_id', $id)->get();
+        $nombre = DB::table('afiliados')->where('id', $pedido->afiliados_id)->value('apeynombres');
+        $nombremedico = DB::table('medicos')->where('id', $pedido->medicos_id)->value('nombremedico');
+
+        return response()->json([
+            'pedido' => $pedido,
+            'detalles' => $detalles,
+            'nombre' => $nombre,
+            'nombremedico' => $nombremedico
+        ]);
+    }
+
     public function verPedido($id)
     {
         $pedido = OficinaAutorizar::findOrFail($id);
@@ -67,6 +82,7 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
             'nombremedico' => $nombremedico
         ]);
     }
+
 
     public function autorizarVerPedido($id)
     {

@@ -214,8 +214,12 @@ Route::post('/pedidomedicamentostore', [\App\Http\Controllers\MedicoCrearPedidoM
 //Index
 Route::get('/autorizarsolicitud_oficina', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'index'])->name('autorizarsolicitud_oficina');
 
+//Ver pedido Médico
+Route::get('/pedido/{id}/detallemedico', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'verPedidoMedico'])->name('pedido.detallemedico');
+
 //Ver pedido
 Route::get('/pedido/{id}/detalle', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'verPedido'])->name('pedido.detalle');
+
 //Autorizar pedido
 Route::get('/pedido/{id}/autorizar', [\App\Http\Controllers\OficinaAutorizarPedidoMedicamentoController::class, 'autorizarVerPedido'])->name('pedido.autorizar');
 

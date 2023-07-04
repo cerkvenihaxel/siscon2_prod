@@ -87,6 +87,9 @@
 <!-- Finaliza modulo Karam -->
 
 
+
+<!-- Pedidos por autorizar -->
+
 <div class="tarjeta">
     <div class="container-fluid">
         <div class="card bg-white rounded shadow">
@@ -129,7 +132,7 @@
                                 </button>
                                 <button type="button" class="btn btn-danger btn-xs m-5 btn-rechazar" data-toggle="modal" data-pedido-id="{{ $solicitud->id }}" data-target="#confirmModal">
                                     <i class="fas fa-times"></i> Rechazar
-                                </button>                                <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#pedidoModal">
+                                </button>                                <button class="btn btn-info btn-xs m-5 btn-ver-pedido-medico" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#pedidoModalMedico">
                                     <i class="fas fa-eye"></i> Ver pedido
                                 </button>                                <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
                             </div>
@@ -269,6 +272,56 @@
     </div>
 </div>
 
+<!-- Modal Ver pedido -->
+
+<div class="modal fade" id="pedidoModalMedico" tabindex="-1" role="dialog" aria-labelledby="pedidoModalMedicoLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="pedidoModalMedicoLabel">Detalles del pedido</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nombre afiliado</th>
+                        <th>Número Afiliado</th>
+                        <th>Número Solicitud</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pedidoDetalleBodyMedico">
+                    <!-- Aquí se agregarán las filas con los detalles del pedido -->
+                    </tbody>
+                </table>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Médico prescriptor</th>
+                        <th>Teléfono Afiliado</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pedidoDetalleBodyMedico2">
+                    <!-- Aquí se agregarán las filas con los detalles del pedido -->
+                    </tbody>
+                </table>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Medicación requerida</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    </thead>
+                    <tbody id="pedidoDetalleBodyMedicamentoMedico">
+                    <!-- Aquí se agregarán las filas con los detalles del pedido -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Modal Ver pedido -->
@@ -553,6 +606,66 @@
 
                     // Mostrar el modal
                     $('#pedidoModal').modal('show');
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-ver-pedido-medico', function() {
+            var pedidoId = $(this).data('pedido-id');
+            var url = '/pedido/' + pedidoId + '/detallemedico'; // Reemplaza la URL con la ruta correcta de tu aplicación
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    $('#pedidoDetalleBodyMedico').empty();
+                    $('#pedidoDetalleBodyMedico2').empty();
+                    $('#pedidoDetalleBodyMedicamentoMedico').empty();
+
+
+                    var pedido = response.pedido;
+                    // Vaciar el contenido anterior del cuerpo del modal
+
+                    // Agregar las filas con los detalles del pedido al cuerpo del modal
+                    var nombre = response.nombre;
+                    var nroAfiliado = pedido.nroAfiliado;
+                    var nrosolicitud = pedido.nrosolicitud;
+                    var nombremedico = response.nombremedico;
+
+                    var fila = '<tr>' +
+                        '<td>' + nombre + '</td>' +
+                        '<td>' + nroAfiliado + '</td>' +
+                        '<td>' + nrosolicitud + '</td>' +
+                        '</tr>';
+
+                    $('#pedidoDetalleBodyMedico').append(fila);
+
+                    var fila2 = '<tr>' +
+                        '<td>' + nombremedico + '</td>' +
+                        '<td>' + pedido.tel_afiliado + '</td>' +
+                        '</tr>';
+
+                    $('#pedidoDetalleBodyMedico2').append(fila2);
+
+                    var medicamentos = response.detalles;
+
+                    for (var i = 0; i < medicamentos.length; i++) {
+                        var medicamento = medicamentos[i];
+                        var filaMedicamento = '<tr>' +
+                            '<td>' + medicamento.presentacion + '</td>' +
+                            '<td>' + medicamento.cantidad + '</td>' +
+                            '</tr>';
+
+                        $('#pedidoDetalleBodyMedicamentoMedico').append(filaMedicamento);
+                    }
+
+
+                    // Mostrar el modal
+                    $('#pedidoModalMedico').modal('show');
                 },
                 error: function(error) {
                     console.error(error);
