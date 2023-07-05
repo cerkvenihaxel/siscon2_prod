@@ -231,7 +231,6 @@
                 <h3 class="card-title-entregados">Pedidos entregados 📦</h3>
             </div>
             <div class="card-body">
-                <h3>Solicitudes</h3>
                 <table id="tabla-solicitudes-entregados" class="table table-bordered">
                     <thead>
                     <tr>
@@ -842,12 +841,18 @@
     }
 
     .card-title-autorizados{
-        color: #00a65a;
+        color: #ec971f;
+    }
+
+    .card-title-entregados{
+        color: #5cb85c;
     }
 
     .card-title-rechazados{
         color: #c41300;
     }
+
+
 
     .tarjeta2{
         margin-top: 18px;

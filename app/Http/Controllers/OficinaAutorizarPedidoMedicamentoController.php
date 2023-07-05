@@ -93,9 +93,11 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
         $medicamentosActualizados = []; // Arreglo para almacenar los medicamentos actualizados
 
         foreach ($medicamentos as $medicamento) {
-            $idArticulo = DB::table('articulosZafiro')->where('id', $medicamento->articuloZafiro_id)->value('id_articulo');
-            $medicamento->banda_descuento = DB::table('banda_descuentos')->where('id_articulo', $idArticulo)->value('banda_descuento');
 
+            // ! REVISAR EL NÚMERO DE ARTÍCULO QUE SE ESTÁ GUARDANDO EN LA BASE DE DATOS
+            $numeroArticulo =  str_pad($medicamento->articuloZafiro_id, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
+            $idArticulo = DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('id_articulo');
+            $medicamento->banda_descuento = DB::table('banda_descuentos')->where('id_articulo', $idArticulo)->value('banda_descuento');
             // Agregar el medicamento actualizado al arreglo
             $medicamentosActualizados[] = $medicamento;
         }
