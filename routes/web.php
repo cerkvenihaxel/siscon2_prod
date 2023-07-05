@@ -249,6 +249,9 @@ Route::get('/generarpedido/{id}/autorizar', [\App\Http\Controllers\ProveedorConv
 
 Route::post('/generarpedido/guardar', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'autorizarGuardarPedido'])->name('generarpedido.guardar');
 
+Route::get('/generarpedido/cargamasiva', function () {
+    return view('proveedorconvenio.cargaMasiva');
+})->name('generarpedido.cargamasiva');
 
 //--------------------------------------------------------------------------------------------------------
 

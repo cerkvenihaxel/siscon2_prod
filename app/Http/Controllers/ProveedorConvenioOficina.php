@@ -178,7 +178,7 @@ class ProveedorConvenioOficina extends Controller
         DB::table('cotizacion_convenio')->where('id', $id)->update(['id_pedido' => $numero]);
         DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
         $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
-        $observaciones = DB::table('convenio_oficina_os')->where('nrosolicitud', $nroSolicitud)->value('observaciones');
+        $observaciones = CotizacionConvenio::where('id', $id)->value('observaciones');
 
         $id_solicitud = $id;
         $created_at = date('Y-m-d H:i:s');

@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
-	use Session;
+	use App\Models\OficinaAutorizar;
+    use App\Models\OficinaAutorizarDetail;
+    use Session;
 	use Request;
 	use DB;
 	use CRUDBooster;
@@ -254,10 +256,35 @@
 	    public function actionButtonSelected($id_selected,$button_name) {
 
             if($button_name == 'set_active') {
-                DB::table('convenio_oficina_os')->whereIn('id',$id_selected)->update(['estado_solicitud_id'=>6]);
+                $this->cargaMasiva($id_selected);
             }
 
 	    }
+
+        public function cargaMasiva($id)
+        {
+            $medicamentos = [];
+            $pedido = OficinaAutorizar::whereIn('id', $id)->get();
+            $medicamento = OficinaAutorizarDetail::whereIn('convenio_oficina_os_id', $id)->get();
+
+            $medicamento1 = $medicamento->groupBy('articuloszafiro_id')->map(function ($group) {
+                    return [
+                        'articuloszafiro_id' => $group->first()->articuloszafiro_id,
+                        'cantidad' => $group->sum('cantidad'),
+                        'banda_descuento' => $group->first()->banda_descuento,
+                    ];
+                });
+
+                $medicamentos[] = $medicamento1;
+
+
+            $response = [
+                'medicamentos' => $medicamentos,
+                'pedido' => $pedido
+            ];
+
+            return url('/generarpedido/cargamasiva');
+        }
 
 
 
