@@ -74,7 +74,7 @@ class ProveedorConvenioOficina extends Controller
         $pedido->estado_solicitud_id = 10;
         $pedido->save();
 
-        return redirect()->back()->with(['message' => 'Pedido rechazado correctamente']);
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue rechazada con éxito!","success");
 
     }
 
@@ -167,7 +167,6 @@ class ProveedorConvenioOficina extends Controller
 
         $this->enviarPedidoSingular($proveedorConvenio->id);
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
-
 
     }
 
