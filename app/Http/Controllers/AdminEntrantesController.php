@@ -44,17 +44,11 @@
 			$this->col[] = ["label"=>"Sufrió accidente", "name"=>"accidente"];
 			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"grupos,des_grupo"];
-
 			$this->col[] = ["label"=>"Días transcurridos", "name"=>"(DATEDIFF(CURDATE(), created_at)) as dias_transcurridos"];
 			$this->col[] = ["label"=>"Fecha expiracion", "name"=>"fecha_expiracion"];
-
-//<<<<<<< HEAD
 //			$this->col[] = ["label"=> "Usuario Carga", "name"=>"userId"];
 
-//=======
-//>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 			# END COLUMNS DO NOT REMOVE THIS LINE
-
 
 			function adminPrivilegeId(){
 
@@ -65,7 +59,6 @@
 					return true;
 				}
 			}
-
 
 			function medicoPrivilegeId(){
 
@@ -230,7 +223,6 @@
 		$this->addaction[] = ['label'=>'RENOVAR FECHA DE EXPIRACION', 'url'=>CRUDBooster::mainpath('set-date/'.date('Y-m-d', strtotime("+2 days")).'/[id]'),'icon'=>'fa fa-calendar','color'=>'warning','showIf'=>"$PRIVILEGIO == 1", 'confirmation'=>true];
 
 		//=======
-
 
 //>>>>>>> 6d0e1d8c3836d65dfd799117255f7a9325487202
 
