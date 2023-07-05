@@ -20,7 +20,7 @@
 
 <body>
 
-   
+
     <h2>Nombre del Articulo Solicitado = {{ $nombreArticulo }}</h2>
     <h2>Numero de Articulo Solicitado = {{ $id }}</h2>
     <h2>Fecha de consulta = {{ $fecha }}</h2>
@@ -37,12 +37,13 @@
             <th>Clínica</th>
             <th>Especialidad</th>
             <th>Cantidad</th>
+            <th>Estado solicitud</th>
         </tr>
     </thead>
     <tbody>
         @foreach ($data as $item)
 
-       
+
         <tr>
             <td>{{ $item->created_at }}</td>
             <td>{{ $item->nrosolicitud }}</td>
@@ -52,8 +53,9 @@
             <td>{{ $clinicasNombre= DB::table('clinicas')->where('id', $item->clinicas_id)->value('nombre')}}</td>
             <td>{{ $especialidad = DB::table('grupos')->where('id', $item->grupo_articulos)->value('des_grupo') }}</td>
             <td>{{ $cantidad = DB::table('entrantes_detail')->where('entrantes_id', $item->id)->where('articulos_id', $id)->value('cantidad') }}</td>
+            <td>{{ $estado = DB::table('estado_solicitud')->where('id', $item->estado_solicitud_id)->value('estado') }}</td>
 
-        
+
         @endforeach
 
         </tr>
@@ -73,6 +75,7 @@
         <th>Precio unitario</th>
         <th>Cantidad</th>
         <th>Subtotal</th>
+        <th>Estado solicitud</th>
     </tr>
 </thead>
 <tbody>
@@ -88,9 +91,11 @@
         <td>{{ $precioUnitario = DB::table('cotizaciones_detail')->where('entrantes_id', $item->id)->where('articulos_id', $id)->value('precio_unitario') }}</td>
         <td>{{ $cantidad = DB::table('cotizaciones_detail')->where('entrantes_id', $item->id)->where('articulos_id', $id)->value('cantidad') }}</td>
         <td>{{ $subtotal = DB::table('cotizaciones_detail')->where('entrantes_id', $item->id)->where('articulos_id', $id)->value('precio') }}</td>
+        <td>{{ $estado = DB::table('estado_solicitud')->where('id', $item->estado_solicitud_id)->value('estado') }}</td>
 
-    
-    @endforeach
+
+
+        @endforeach
 
     </tr>
 </tbody>
