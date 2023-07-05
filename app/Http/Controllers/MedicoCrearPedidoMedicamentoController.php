@@ -135,7 +135,7 @@ class MedicoCrearPedidoMedicamentoController extends Controller
             $estado_solicitud = 8;
         }
         else{
-            $estado_solicitud = 1;
+            $estado_solicitud = 8;
         }
 
         // Crear una nueva instancia del modelo PedidoMedicamento y asignar los valores del formulario
