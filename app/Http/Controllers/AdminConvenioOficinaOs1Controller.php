@@ -24,7 +24,7 @@
 			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
-			$this->button_export = false;
+			$this->button_export = true;
 			$this->table = "convenio_oficina_os";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
@@ -67,7 +67,7 @@
             $this->form[] = ['label'=>'Patologías','name'=>'patologia','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'datatable'=>'patologias,nombre','required'=>true, 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('patologia')];
             $this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true, 'dataenum'=>'Si;No', 'value'=>DB::table('pedido_medicamento')->where('id',$url)->value('discapacidad')];
 
-	    $this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
+	        $this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$custom_element,'width'=>'col-sm-10'];
 
             $this->form[] = ['label'=>'Proveedor seleccionado','name'=>'proveedor','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'proveedores_convenio,nombre','required'=>true];
             $this->form[] = ['label'=>'Observaciones','name'=>'observaciones','type'=>'textarea','validation'=>'min:1|max:255','width'=>'col-sm-10'];
@@ -79,37 +79,7 @@
 
             $this->form[] = ['label'=>'Usuario de carga','name'=>'stamp_user','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>DB::table('cms_users')->where('id', CRUDBooster::myId())->value('email'), 'readonly'=>true];
 
-
-            # OLD START FORM
-			//$this->form = [];
-			//$this->form[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"afiliados,id"];
-			//$this->form[] = ["label"=>"Archivo","name"=>"archivo","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Archivo2","name"=>"archivo2","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Archivo3","name"=>"archivo3","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Archivo4","name"=>"archivo4","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Clinicas Id","name"=>"clinicas_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"clinicas,id"];
-			//$this->form[] = ["label"=>"Discapacidad","name"=>"discapacidad","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Edad","name"=>"edad","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Email","name"=>"email","type"=>"email","required"=>TRUE,"validation"=>"required|min:1|max:255|email|unique:convenio_oficina_os","placeholder"=>"Introduce una dirección de correo electrónico válida"];
-			//$this->form[] = ["label"=>"Estado Pedido Id","name"=>"estado_pedido_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"estado_pedido,id"];
-			//$this->form[] = ["label"=>"Estado Solicitud Id","name"=>"estado_solicitud_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"estado_solicitud,id"];
-			//$this->form[] = ["label"=>"Fecha Receta","name"=>"fecha_receta","type"=>"date","required"=>TRUE,"validation"=>"required|date"];
-			//$this->form[] = ["label"=>"Fecha Vencimiento","name"=>"fecha_vencimiento","type"=>"date","required"=>TRUE,"validation"=>"required|date"];
-			//$this->form[] = ["label"=>"Medicos Id","name"=>"medicos_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"medicos,id"];
-			//$this->form[] = ["label"=>"NroAfiliado","name"=>"nroAfiliado","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
-			//$this->form[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Obra Social","name"=>"obra_social","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Observaciones","name"=>"observaciones","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Patologia","name"=>"patologia","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Postdatada","name"=>"postdatada","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Proveedor","name"=>"proveedor","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Stamp User","name"=>"stamp_user","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Tel Afiliado","name"=>"tel_afiliado","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Tel Medico","name"=>"tel_medico","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Zona Residencia","name"=>"zona_residencia","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			# OLD END FORM
-
-			/*
+            /*
 	        | ----------------------------------------------------------------------
 	        | Sub Module
 	        | ----------------------------------------------------------------------
@@ -122,7 +92,7 @@
 	        |
 	        */
 
-		$PRIVILEGIO = CRUDBooster::myPrivilegeId();
+		    $PRIVILEGIO = CRUDBooster::myPrivilegeId();
 	        $this->sub_module = array();
             $this->sub_module[] = ['label'=>'Generar pedido', 'path'=>'cotizacion_convenio/add/?id[]=[id]','foreign_key'=>'convenio_oficina_os_id','button_color'=>'success','button_icon'=>'fa fa-check', 'showIf'=>"$PRIVILEGIO == 38"];
 
@@ -153,16 +123,16 @@
             |
             */
 	        $this->button_selected = array();
+            $this->button_selected[] = ['label'=>'Set Active','icon'=>'fa fa-check','name'=>'set_active'];
 
-
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Add alert message to this module at overheader
-	        | ----------------------------------------------------------------------
-	        | @message = Text of message
-	        | @type    = warning,success,danger,info
-	        |
-	        */
+            /*
+            | ----------------------------------------------------------------------
+            | Add alert message to this module at overheader
+            | ----------------------------------------------------------------------
+            | @message = Text of message
+            | @type    = warning,success,danger,info
+            |
+            */
 	        $this->alert        = array();
 
 
@@ -180,14 +150,14 @@
 
 
 
-	        /*
-	        | ----------------------------------------------------------------------
-	        | Customize Table Row Color
-	        | ----------------------------------------------------------------------
-	        | @condition = If condition. You may use field alias. E.g : [id] == 1
-	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.
-	        |
-	        */
+            /*
+            | ----------------------------------------------------------------------
+            | Customize Table Row Color
+            | ----------------------------------------------------------------------
+            | @condition = If condition. You may use field alias. E.g : [id] == 1
+            | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.
+            |
+            */
 	        $this->table_row_color = array();
 
 
@@ -221,7 +191,6 @@
 	        |
 	        */
 	        $this->pre_index_html = null;
-
 
 
 	        /*
@@ -283,9 +252,13 @@
 	    |
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
-	        //Your code here
+
+            if($button_name == 'set_active') {
+                DB::table('convenio_oficina_os')->whereIn('id',$id_selected)->update(['estado_solicitud_id'=>6]);
+            }
 
 	    }
+
 
 
 	    /*
