@@ -96,18 +96,22 @@
                         <th>Estado Solicitud</th>
                         <th>Estado del pedido</th>
                         <th>Nro pedido</th>
+                        <th>Nro Remito</th>
+                        <th>Nro Factura</th>
                         <th>Opciones</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        @foreach($cotizadas->whereIn('estado_solicitud_id', [6, 11, 12 ,13]) as $cot)
+                        @foreach($cotizadas->whereIn('estado_solicitud_id', [6, 11, 12]) as $cot)
                         <td>{{ $cot->created_at }}</td>
                         <td>{{ $cot->nombreyapellido}}</td>
                         <td>{{ $cot->nrosolicitud }}</td>
                         <td>{{ DB::table('estado_solicitud')->where('id', $cot->estado_solicitud_id)->value('estado') }}</td>
                         <td>{{ DB::table('estado_pedido')->where('id', $cot->estado_pedido_id)->value('estado') }}</td>
                         <td>{{ $cot->id_pedido }} </td>
+                        <td>{{$cot->nro_remito}}</td>
+                        <td>{{$cot->nro_factura}}</td>
                         <td>
                             <div class="button-container">
                                 <button class="btn btn-info btn-xs m-5 btn-ver-pedido-prov" data-pedido-id="{{ $cot->id }}" data-toggle="modal" data-target="#pedidoModal">
@@ -155,10 +159,10 @@
                             <td>{{ $en->created_at }}</td>
                             <td>{{ DB::table('afiliados')->where('nroAfiliado', $en->nroAfiliado)->value('apeynombres') }}</td>
                             <td>{{ $en->nrosolicitud }}</td>
-                            <td>{{ DB::table('estado_pedido')->where('id', $an->estado_solicitud_id)->value('estado') }}</td>
+                            <td>{{ DB::table('estado_solicitud')->where('id', $en->estado_solicitud_id)->value('estado') }}</td>
                             <td>
                                 <div class="button-container">
-                                    <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $an->id }}" data-toggle="modal" data-target="#pedidoModal">
+                                    <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $en->id }}" data-toggle="modal" data-target="#pedidoModal">
                                         <i class="fas fa-eye"></i> Ver pedido
                                     </button>
 

@@ -301,7 +301,6 @@
                         <tr>
                             <th>Presentación</th>
                             <th>Laboratorio</th>
-                            <th>Precio</th>
                             <th>Cantidad autorizada</th>
                             <th>Cantidad entregada</th>
                         </tr>
@@ -388,8 +387,7 @@
                     $('#pedidoDetalleBody2').empty();
                     $('#pedidoDetalleBodyMedicamento').empty();
 
-
-
+                    console.log(response);
                     var pedido = response.pedido;
                     // Vaciar el contenido anterior del cuerpo del modal
 
@@ -452,7 +450,6 @@
                     $('#pedidoDetalleBody').empty();
                     $('#pedidoDetalleBody2').empty();
                     $('#pedidoDetalleBodyMedicamento').empty();
-
 
 
                     var pedido = response.pedido;
@@ -522,10 +519,9 @@
                         var filaMedicamento = '<tr>' +
                             '<td>' + medicamento.presentacion + '</td>' +
                             '<td>' + medicamento.laboratorio +'</td>' +
-                            '<td>' + medicamento.precio +'</td>' + //precio
                             '<td>' + medicamento.cantidad + '</td>' + // CANTIDAD
-                            '<td>' + '<input type="hidden" name="medicamentos[' + i + '][id]" value="' + medicamento.id + '">' + '</td>' +
                             '<td>' + '<input type="number" class="form-control" name="medicamentos[' + i + '][cantidad_entregada]" placeholder="Entregar">' + '</td>' +
+                            '<input type="hidden" name="medicamentos[' + i + '][id]" value="' + medicamento.id + '">' +
                             '</tr>';
 
                         $('#tablaAutorizarBody').append(filaMedicamento);

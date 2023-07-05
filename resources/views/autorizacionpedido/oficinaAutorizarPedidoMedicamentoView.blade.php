@@ -222,6 +222,53 @@
     </div>
 </div>
 
+<!-- tarjeta entregados -->
+
+<div class="tarjeta3">
+    <div class="container-fluid">
+        <div class="card bg-white rounded shadow">
+            <div class="card-header">
+                <h3 class="card-title-entregados">Pedidos entregados 📦</h3>
+            </div>
+            <div class="card-body">
+                <h3>Solicitudes</h3>
+                <table id="tabla-solicitudes-entregados" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Fechas de creación</th>
+                        <th>Afiliado</th>
+                        <th>Número de solicitud</th>
+                        <th>Estado Solicitud</th>
+                        <th>Opciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        @foreach($solicitudesAutorizadas->whereIn('estado_pedido_id', [1]) as $en)
+                            <td>{{ $en->created_at }}</td>
+                            <td>{{ DB::table('afiliados')->where('nroAfiliado', $en->nroAfiliado)->value('apeynombres') }}</td>
+                            <td>{{ $en->nrosolicitud }}</td>
+                            <td>{{ DB::table('estado_solicitud')->where('id', $en->estado_solicitud_id)->value('estado') }}</td>
+                            <td>
+                                <div class="button-container">
+                                    <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $en->id }}" data-toggle="modal" data-target="#pedidoModal">
+                                        <i class="fas fa-eye"></i> Ver pedido
+                                    </button>
+
+                                    <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
+                                </div>
+                            </td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <div class="tarjeta3">
     <div class="container-fluid">
@@ -505,6 +552,9 @@
     var tablaSolicitudesAuditadas;
     var tablaSolicitudesRechazadas;
     var tablaSolicitudesAutorizadas;
+    var tablaSolicitudesEntregadas;
+
+
 
     $(document).ready(function() {
         // Inicializar DataTables y guardar la instancia en la variable tablaSolicitudes
@@ -534,8 +584,16 @@
             searching: true,
             lengthChange: false,
             info: true,
-            order: [[0, 'desc']] // Ordenar por la primera columna (created_at) en orden descendente
 
+        });
+
+        tablaSolicitudesEntregadas = $('#tabla-solicitudes-entregados').DataTable({
+            paging: true,
+            pageLength: 5,
+            searching: true,
+            lengthChange: false,
+            info: true,
+            order: [[0, 'desc']] // Ordenar por la primera columna (created_at) en orden descendente
         });
 
         tablaSolicitudesAutorizadas = $('#tabla-solicitudes-autorizadas').DataTable({

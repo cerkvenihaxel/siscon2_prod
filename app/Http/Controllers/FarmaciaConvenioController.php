@@ -35,8 +35,7 @@ class FarmaciaConvenioController extends Controller
     public function verPedido($id)
     {
         $pedido =  CotizacionConvenio::findOrFail($id);
-        $pedido_medicamento_id = DB::table('pedido_medicamento')->where('nrosolicitud', $pedido->nrosolicitud)->value('id');
-        $detalles = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $pedido_medicamento_id)->get();
+        $detalles = CotizacionConvenioDetail::where('cotizacion_convenio_id', $id)->get();
         $nombre = CotizacionConvenio::where('nrosolicitud', $pedido->nrosolicitud)->value('nombreyapellido');
         $nombremedico = DB::table('medicos')->where('id', $pedido->medicos_id)->value('nombremedico');
 
