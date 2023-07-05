@@ -326,9 +326,9 @@
 	    */
 	    public function hook_before_add(&$postdata) {
 	        //Your code here
-            DB::table('entrantes')->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>5]);
-            DB::table('cotizaciones')->where('proveedor',$postdata['autorizado'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>5]);
-            DB::table('adjudicaciones')->where('adjudicatario',$postdata['autorizado'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>5]);
+            DB::table('entrantes')->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>6]);
+            DB::table('cotizaciones')->where('proveedor',$postdata['autorizado'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>6]);
+            DB::table('adjudicaciones')->where('adjudicatario',$postdata['autorizado'])->where('nrosolicitud', $postdata['nrosolicitud'])->update(['estado_solicitud_id'=>6]);
 	        DB::table('autorizaciones')->where('autorizado','!=', $postdata['autorizado'])->where('nrosolicitud',$postdata['nrosolicitud'])->delete();
 //	DB::table('cotizaciones')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
 //	DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->update(['estado_solicitud_id'=>4]);
