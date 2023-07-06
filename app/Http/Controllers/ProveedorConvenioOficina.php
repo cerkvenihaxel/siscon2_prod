@@ -277,4 +277,41 @@ class ProveedorConvenioOficina extends Controller
 
         return 'PE0090-' . $newNumber;
     }
+
+    //Carga masiva index
+
+    public function indexCM(){
+        $solicitudes = OficinaAutorizar::all();
+        foreach ($solicitudes as $solicitud) {
+            $solicitud->nombre = DB::table('afiliados')->where('id', $solicitud->afiliados_id)->value('apeynombres');
+        }
+        return view('proveedorconvenio.cargaMasiva', compact('solicitudes'));
+    }
+
+    public function cargaMasivaProv(Request $request): \Illuminate\Http\JsonResponse
+    {
+        // Obtener los IDs seleccionados del modal
+        $ids = $request->input('selected_ids');
+
+        $medicamento = OficinaAutorizarDetail::whereIn('convenio_oficina_os_id', $ids)
+            ->groupBy('articuloszafiro_id', 'presentacion')
+            ->select('presentacion','articuloszafiro_id',\DB::raw('SUM(cantidad) as cantidad_total'), \DB::raw('MAX(banda_descuento) as banda_descuento'))
+            ->get();
+
+        $medicamentos = $medicamento->groupBy('articuloszafiro_id')->toArray();
+
+        $pedido = OficinaAutorizar::whereIn('id', $ids)->get();
+        $puntosRetiro = DB::table('punto_retiro')->get(); // Hago un get de todas las sucursales
+
+
+        $response = [
+            'medicamentos' => $medicamentos,
+            'pedido' => $pedido,
+            'ids' => $ids,
+            'puntosRetiro' => $puntosRetiro
+        ];
+
+        return response()->json($response);
+    }
+
 }

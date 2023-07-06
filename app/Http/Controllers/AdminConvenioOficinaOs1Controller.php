@@ -283,7 +283,8 @@
                 'pedido' => $pedido
             ];
 
-            return url('/generarpedido/cargamasiva');
+            dd($response);
+
         }
 
 
