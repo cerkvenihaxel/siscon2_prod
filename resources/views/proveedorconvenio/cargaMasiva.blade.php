@@ -61,7 +61,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl"  role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <form action="{{ route('generarpedido.guardar') }}" method="POST">
+                <form action="{{ route('generarpedido.guardarmasivo') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <table id="tablaAutorizar" class="table table-bordered">
@@ -133,19 +133,51 @@
                 url: '{{ route("enviar.pedido.masivo") }}',
                 method: 'POST',
                 data: { selected_ids: selectedPedidos },
+
                 success: function(response) {
+
+
                     console.log(response);
                     $('#tablaAutorizarBody').empty();
 
                     // Obtener un arreglo de los valores de 'medicamentos'
                     var medicamentosArray = Object.values(response.medicamentos);
+                    var pedido = response.pedido;
+
+                    var nroSolicitudArray = response.nroSolicitud;
+                    var nroAfiliadoArray = response.nroAfiliado;
+                    var idsArray = response.ids;
+
+                    for (var h = 0; h < idsArray.length; h++){
+                        var id = idsArray[h];
+                        var idInput = '<input type="hidden" name="id[]" value="' + id + '">';
+                        $('#tablaAutorizarBody').append(idInput);
+                    }
+
+
+                    for (var k = 0; k < nroAfiliadoArray.length; k++){
+                        var nroAfiliado = nroAfiliadoArray[k].afiliados_id;
+                        var nroAfiliadoInput = '<input type="hidden" name="nroAfiliado[]" value="' + nroAfiliado + '">';
+                        $('#tablaAutorizarBody').append(nroAfiliadoInput);
+                    }
+
+                    // Iterar sobre el arreglo 'nroSolicitudArray'
+
+                    for (var j = 0; j < nroSolicitudArray.length; j++) {
+                        var nroSolicitud = nroSolicitudArray[j].nrosolicitud;
+                        var nroSolicitudInput = '<input type="hidden" name="nroSolicitud[]" value="' + nroSolicitud + '">';
+                        $('#tablaAutorizarBody').append(nroSolicitudInput);
+                    }
+
 
                     // Iterar sobre el arreglo 'medicamentosArray'
                     for (var i = 0; i < medicamentosArray.length; i++) {
                         var medicamento = medicamentosArray[i][0];
                         console.log(medicamento);
                         var filaMedicamento =
+
                             '<tr>' +
+                            '<input type="hidden" name="medicamentos[' + i + '][articuloZafiro_id]" value="' + medicamento.articuloszafiro_id + '">' +
                             '<td>' + medicamento.presentacion + '</td>' +
                             '<td><input type="text"  name="medicamentos[' + i + '][laboratorio]" placeholder="Laboratorio"></td>' +
                             '<td>' +

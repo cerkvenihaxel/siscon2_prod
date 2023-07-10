@@ -145,8 +145,6 @@ class ProveedorConvenioOficina extends Controller
 
         $proveedorConvenioD = [];
         foreach ($medicamentos as $med) {
-
-
             $proveedorConvenioDetail = new CotizacionConvenioDetail();
             $proveedorConvenioDetail->cotizacion_convenio_id = $proveedorConvenio->id;
             $proveedorConvenioDetail->articuloZafiro_id = $med['articuloZafiro_id'];
@@ -301,6 +299,8 @@ class ProveedorConvenioOficina extends Controller
         $medicamentos = $medicamento->groupBy('articuloszafiro_id')->toArray();
 
         $pedido = OficinaAutorizar::whereIn('id', $ids)->get();
+        $nroSolicitud = OficinaAutorizar::whereIn('id', $ids)->get('nrosolicitud');
+        $nroAfiliado = OficinaAutorizar::whereIn('id', $ids)->get('afiliados_id');
         $puntosRetiro = DB::table('punto_retiro')->get(); // Hago un get de todas las sucursales
 
 
@@ -308,10 +308,105 @@ class ProveedorConvenioOficina extends Controller
             'medicamentos' => $medicamentos,
             'pedido' => $pedido,
             'ids' => $ids,
+            'nroSolicitud' => $nroSolicitud,
+            'nroAfiliado' => $nroAfiliado,
             'puntosRetiro' => $puntosRetiro
         ];
 
         return response()->json($response);
+    }
+
+    public function autorizarGuardarPedidoMasivo(Request $request){
+
+        $medicamentos = $request->input('medicamentos');
+        $nroSolicitud = $request->input('nroSolicitud');
+        $punto_retiro = $request->input('punto_retiro');
+        $observaciones = $request->input('observaciones');
+        $idCotizacion = $request->input('id');
+        $myID = CRUDBooster::myId();
+        $stamp_user = DB::table('cms_users')->where('id', $myID)->value('email');
+
+        $pedidoMedicamento = OficinaAutorizar::whereIn('id', $idCotizacion)->get();
+        $pedidoMedicamentoDetail = OficinaAutorizarDetail::whereIn('convenio_oficina_os_id', $idCotizacion)->get();
+
+
+
+        foreach ($pedidoMedicamento as $pm) {
+            $proveedorConvenio = new CotizacionConvenio();
+            $proveedorConvenio->nombreyapellido = DB::table('afiliados')->where('nroAfiliado', $pm->nroAfiliado)->value('apeynombres');
+            $proveedorConvenio->documento = DB::table('afiliados')->where('nroAfiliado', $pm->nroAfiliado)->value('documento');
+            $proveedorConvenio->nroAfiliado = $pm->nroAfiliado;
+            $proveedorConvenio->edad = $pm->edad;
+            $proveedorConvenio->nrosolicitud = $pm->nrosolicitud;
+            $proveedorConvenio->clinicas_id = $pm->clinicas_id;
+            $proveedorConvenio->medicos_id = $pm->medicos_id;
+            $proveedorConvenio->zona_residencia = $pm->zona_residencia;
+            $proveedorConvenio->tel_afiliado = $pm->tel_afiliado;
+            $proveedorConvenio->email = Afiliados::where('nroAfiliado', $pm->nroAfiliado)->value('email');
+            $proveedorConvenio->fecha_receta = $pm->fecha_receta;
+            $postdatada = $pm->postdatada;
+            $proveedorConvenio->postdatada = DB::table('postdatada')->where('id', $postdatada)->value('cantidad');
+            $proveedorConvenio->fecha_vencimiento = $pm->fecha_vencimiento;
+            $proveedorConvenio->estado_solicitud_id = 11;
+            $proveedorConvenio->discapacidad = $pm->discapacidad;
+            $proveedorConvenio->estado_pedido_id = 5;
+            $proveedorConvenio->punto_retiro_id = $punto_retiro;
+            $proveedorConvenio->proveedor = DB::table('proveedores_convenio')->where('id', 2)->value('nombre');
+            $proveedorConvenio->stamp_user = $stamp_user;
+            $proveedorConvenio->observaciones = $observaciones;
+            $proveedorConvenio->direccion_retiro = DB::table('punto_retiro')->where('id', $punto_retiro)->value('direccion');
+            $proveedorConvenio->localidad_retiro = DB::table('punto_retiro')->where('id', $punto_retiro)->value('localidad');
+            $proveedorConvenio->tel_retiro = DB::table('punto_retiro')->where('id', $punto_retiro)->value('telefono');
+
+            $proveedorConvenio->save();
+
+
+            $proveedorConvenioD = [];
+
+
+
+            foreach ($pedidoMedicamentoDetail as $pmd) {
+                $proveedorConvenioDetail = new CotizacionConvenioDetail();
+                $proveedorConvenioDetail->cotizacion_convenio_id = $proveedorConvenio->id;
+                $articuloZafiro_id = $pmd->where('convenio_oficina_os_id', $pm->id)->value('articuloszafiro_id');
+
+                // Verificar si se encontró el medicamento en el arreglo 'medicamentos'
+                if (isset($medicamentos[$articuloZafiro_id])) {
+                    $medicamento = $medicamentos[$articuloZafiro_id][0];
+                    $proveedorConvenioDetail->articuloZafiro_id = $articuloZafiro_id;
+                    $proveedorConvenioDetail->cantidad = $pmd->where('convenio_oficina_os_id', $pm->id)->value('cantidad');
+                    $proveedorConvenioDetail->descuento = $pmd->where('convenio_oficina_os_id', $pm->id)->value('banda_descuento');
+                    $proveedorConvenioDetail->laboratorio = $medicamento['laboratorio'];
+                    $proveedorConvenioDetail->presentacion = $pmd->where('convenio_oficina_os_id', $pm->id)->value('presentacion');
+                    $proveedorConvenioDetail->precio = $medicamento['precio'];
+
+                    // Calcular el subtotal
+                    $subtotal = $proveedorConvenioDetail->cantidad * $proveedorConvenioDetail->precio;
+                    // Aplicar el descuento
+                    $descuento = ($subtotal * $proveedorConvenioDetail->descuento) / 100;
+                    $proveedorConvenioDetail->total = $subtotal - $descuento;
+
+                    $proveedorConvenioD[] = $proveedorConvenioDetail;
+                }
+            }
+
+                    $idsProveedor = [];
+                    $idsProveedor[] = $proveedorConvenio->id;
+                    $proveedorConvenio->oficinaAutorizarDetail()->saveMany($proveedorConvenioD);
+
+
+        }
+
+
+        OficinaAutorizar::whereIn('id', $idCotizacion)->update(['estado_solicitud_id' => 11]);
+        PedidoMedicamento::whereIn('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+
+        //$this->enviarPedidoSingular($proveedorConvenio->id);
+
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
+
+
+
     }
 
 }

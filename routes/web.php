@@ -252,6 +252,10 @@ Route::post('/generarpedido/guardar', [\App\Http\Controllers\ProveedorConvenioOf
 Route::get('/generarpedido/cargamasiva', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'indexCM'])->name('generarpedido.cargamasiva');
 
 Route::post('/enviar-pedido-masivo', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'cargaMasivaProv'])->name('enviar.pedido.masivo');
+
+Route::post('/generarpedido/guardarmasivo', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'autorizarGuardarPedidoMasivo'])->name('generarpedido.guardarmasivo');
+
+
 //--------------------------------------------------------------------------------------------------------
 
 //---------- VALIDADOR DE FARMACIAS ------------------
