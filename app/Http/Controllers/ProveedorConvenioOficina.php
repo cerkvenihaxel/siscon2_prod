@@ -53,8 +53,8 @@ class ProveedorConvenioOficina extends Controller
     public function verPedidoProveedor($id)
     {
         $pedido =  ProveedoresConvenio::findOrFail($id);
-        $pedido_medicamento_id = DB::table('cotizacion_convenio')->where('nrosolicitud', $pedido->nrosolicitud)->value('id');
-        $detalles = ProveedoresConvenioDetail::where('cotizacion_convenio_id', $pedido_medicamento_id)->get();
+        $pedido_medicamento_id = DB::table('convenio_oficina_os')->where('nrosolicitud', $pedido->nrosolicitud)->value('id');
+        $detalles = OficinaAutorizarDetail::where('convenio_oficina_os_id', $pedido_medicamento_id)->get();
         $nombre = $pedido->nombreyapellido;
         $nombremedico = DB::table('medicos')->where('id', $pedido->medicos_id)->value('nombremedico');
 
@@ -330,6 +330,7 @@ class ProveedorConvenioOficina extends Controller
         $pedidoMedicamentoDetail = OficinaAutorizarDetail::whereIn('convenio_oficina_os_id', $idCotizacion)->get();
 
 
+        $idsPedidos = [];
 
         foreach ($pedidoMedicamento as $pm) {
             $proveedorConvenio = new CotizacionConvenio();
@@ -360,52 +361,145 @@ class ProveedorConvenioOficina extends Controller
 
             $proveedorConvenio->save();
 
-
-            $proveedorConvenioD = [];
-
-
-
-            foreach ($pedidoMedicamentoDetail as $pmd) {
-                $proveedorConvenioDetail = new CotizacionConvenioDetail();
-                $proveedorConvenioDetail->cotizacion_convenio_id = $proveedorConvenio->id;
-                $articuloZafiro_id = $pmd->where('convenio_oficina_os_id', $pm->id)->value('articuloszafiro_id');
-
-                // Verificar si se encontró el medicamento en el arreglo 'medicamentos'
-                if (isset($medicamentos[$articuloZafiro_id])) {
-                    $medicamento = $medicamentos[$articuloZafiro_id][0];
-                    $proveedorConvenioDetail->articuloZafiro_id = $articuloZafiro_id;
-                    $proveedorConvenioDetail->cantidad = $pmd->where('convenio_oficina_os_id', $pm->id)->value('cantidad');
-                    $proveedorConvenioDetail->descuento = $pmd->where('convenio_oficina_os_id', $pm->id)->value('banda_descuento');
-                    $proveedorConvenioDetail->laboratorio = $medicamento['laboratorio'];
-                    $proveedorConvenioDetail->presentacion = $pmd->where('convenio_oficina_os_id', $pm->id)->value('presentacion');
-                    $proveedorConvenioDetail->precio = $medicamento['precio'];
-
-                    // Calcular el subtotal
-                    $subtotal = $proveedorConvenioDetail->cantidad * $proveedorConvenioDetail->precio;
-                    // Aplicar el descuento
-                    $descuento = ($subtotal * $proveedorConvenioDetail->descuento) / 100;
-                    $proveedorConvenioDetail->total = $subtotal - $descuento;
-
-                    $proveedorConvenioD[] = $proveedorConvenioDetail;
-                }
-            }
-
-                    $idsProveedor = [];
-                    $idsProveedor[] = $proveedorConvenio->id;
-                    $proveedorConvenio->oficinaAutorizarDetail()->saveMany($proveedorConvenioD);
-
+            $idPedido = $proveedorConvenio->id;
+            $idsPedidos[] = $idPedido;
 
         }
 
+        $proveedorConvenioD = [];
+
+
+        foreach ($pedidoMedicamentoDetail as $pmd) {
+
+                $proveedorConvenioDetail = new CotizacionConvenioDetail();
+                $articuloZafiro_id = $pmd->articuloszafiro_id;
+
+                foreach ($medicamentos as $med) {
+
+                    // Verificar si se encontró el medicamento en el arreglo 'medicamentos'
+                    if ($med['articuloZafiro_id'] == $articuloZafiro_id) {
+                        $proveedorConvenioDetail->articuloZafiro_id = $articuloZafiro_id;
+                        $proveedorConvenioDetail->cantidad = $med['cantidad'];
+                        $proveedorConvenioDetail->descuento = $med['banda_descuento'];
+                        $proveedorConvenioDetail->laboratorio = $med['laboratorio'];
+                        $proveedorConvenioDetail->presentacion = $med['presentacion'];
+                        $proveedorConvenioDetail->precio = $med['precio'];
+                        // Calcular el subtotal
+                        $subtotal = $proveedorConvenioDetail->cantidad * $proveedorConvenioDetail->precio;
+                        // Aplicar el descuento
+                        $descuento = ($subtotal * $proveedorConvenioDetail->descuento) / 100;
+                        $proveedorConvenioDetail->total = $subtotal - $descuento;
+
+                    }
+                }
+
+                $proveedorConvenioD[] = $proveedorConvenioDetail;
+                $proveedorConvenioDetail->save();
+        }
+
+        //$idsPedidos = Esto es un array con los ids de los pedidos que se crearon
+        //$proveedorConvenioD = Esto es un array con los detalles de los pedidos que se crearon
+
+        $this->enviarPedidoMultiple($idsPedidos, $proveedorConvenioD, $punto_retiro);
 
         OficinaAutorizar::whereIn('id', $idCotizacion)->update(['estado_solicitud_id' => 11]);
         PedidoMedicamento::whereIn('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
-
         //$this->enviarPedidoSingular($proveedorConvenio->id);
-
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
 
+    }
 
+    //ENVIAR PEDIDO MULTIPLE
+
+    public function enviarPedidoMultiple($id, $provDetail, $ptoRetiro){
+
+        $numero = $this->generatePedidoNumber();
+
+
+        DB::table('cotizacion_convenio')->whereIn('id', $id)->update(['id_pedido' => $numero]);
+        DB::table('cotizacion_convenio')->whereIn('id', $id)->update(['estado_pedido_id' => 5]);
+        //$nroSolicitud = DB::table('cotizacion_convenio')->whereIn('id', $id)->value('nrosolicitud');
+        $observaciones = CotizacionConvenio::where('id', $id)->value('observaciones');
+
+        $created_at = date('Y-m-d H:i:s');
+        $updated_at = date('Y-m-d H:i:s');
+        $id_empresa = 2;
+        $id_pedido = $numero;
+        $fecha_pedido = date('Y-m-d H:i:s');
+        $origen_id_sucursal = 99;
+        $id_punto = $ptoRetiro;
+        $id_cliente = DB::table('punto_retiro')->where('id', $id_punto)->value('id_cliente');
+
+        $linpedidos = $provDetail;
+
+        $lin_pedidos = [];
+
+        foreach ($linpedidos as $key => $linpedido) {
+
+            $articuloID = $linpedido->articuloZafiro_id;
+            $numeroArticulo =  str_pad($articuloID, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
+
+            $lin_pedidos[] = [
+                'created_at' => $fecha_pedido,
+                'updated_at' => $fecha_pedido,
+                'id_pedido' => $id_pedido,
+                'item' => $key+1,
+                'id_articulo' => $numeroArticulo,
+                'cantidad' => $linpedido->cantidad,
+                'des_articulo' => DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('des_articulo'),
+                'presentacion' => DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('presentacion'),
+                'pcio_vta_unisiva' => $linpedido->precio,
+                'pcio_iva_comsiva' => $linpedido->total,
+            ];
+        }
+
+        $objeto = [
+            [
+                "id" => 1,
+                "created_at" => $created_at,
+                "updated_at" => $created_at,
+                "id_empresa" => $id_empresa,
+                "id_pedido" => $id_pedido,
+                "estado_pedido" => "EM",
+                "fecha_pedido" => $fecha_pedido,
+                "_origen_id_sucursal" => $origen_id_sucursal,
+                "id_cliente" => $id_cliente,
+                "lin_pedido" => $lin_pedidos
+
+            ]
+        ];
+
+
+        $pedido = new PedidoC();
+        $pedido->created_at = $created_at;
+        $pedido->updated_at = $updated_at;
+        $pedido->id_empresa = $id_empresa;
+        $pedido->id_pedido = $id_pedido;
+        $pedido->fecha_pedido = $fecha_pedido;
+        $pedido->estado_pedido = 'EM'; // Estado "EM" = "Enviado a Mostrador
+        $pedido->_origen_id_sucursal = $origen_id_sucursal;
+        $pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
+        $pedido->observaciones = $observaciones;
+        //$pedido->nrosolicitud = $nroSolicitud;
+        $pedido->save();
+
+// Insertar en la tabla lin_pedido
+        foreach ($objeto[0]['lin_pedido'] as $linpedido) {
+            $linPedido = new LinPedido();
+            $linPedido->created_at = $linpedido['created_at'];
+            $linPedido->updated_at = $linpedido['updated_at'];
+            $linPedido->id_pedido = $linpedido['id_pedido'];
+            $linPedido->item = $linpedido['item'];
+            $linPedido->id_articulo = $linpedido['id_articulo'];
+            $linPedido->cantidad = $linpedido['cantidad'];
+            $linPedido->des_articulo = $linpedido['des_articulo'];
+            $linPedido->presentacion = $linpedido['presentacion'];
+            $linPedido->pcio_vta_uni_siva = $linpedido['pcio_vta_unisiva'];
+            $linPedido->pcio_com_uni_siva = $linpedido['pcio_iva_comsiva'];
+            $linPedido->save();
+        }
+
+        CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"El pedido fue cargado con éxito!","success");
 
     }
 

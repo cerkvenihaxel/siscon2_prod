@@ -177,6 +177,7 @@
                         var filaMedicamento =
 
                             '<tr>' +
+                            '<input type="hidden" name="medicamentos[' + i + '][presentacion]" value="' + medicamento.presentacion + '">' +
                             '<input type="hidden" name="medicamentos[' + i + '][articuloZafiro_id]" value="' + medicamento.articuloszafiro_id + '">' +
                             '<td>' + medicamento.presentacion + '</td>' +
                             '<td><input type="text"  name="medicamentos[' + i + '][laboratorio]" placeholder="Laboratorio"></td>' +
