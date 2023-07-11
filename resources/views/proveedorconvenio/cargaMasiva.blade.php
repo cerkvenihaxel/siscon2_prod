@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
 </head>
 
-<div class="container">
+<div class="container container-fluid">
     <h1>Pedidos</h1>
 
     <table id="pedidos-table" class="table table-striped">
@@ -35,7 +35,7 @@
         </thead>
         <tbody>
         <!-- CAMBIAR EL ID SOLICITUD POR EL 4 DESPUES -->
-        @foreach($solicitudes as $solicitud)
+        @foreach($solicitudes->where('estado_solicitud_id', 4) as $solicitud)
             <tr>
                 <td><input type="checkbox" name="pedido[]" value="{{ $solicitud->id }}"></td>
                 <td>{{ $solicitud->created_at }}</td>

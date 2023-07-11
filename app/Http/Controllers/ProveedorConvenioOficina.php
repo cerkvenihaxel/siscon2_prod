@@ -400,11 +400,13 @@ class ProveedorConvenioOficina extends Controller
         //$idsPedidos = Esto es un array con los ids de los pedidos que se crearon
         //$proveedorConvenioD = Esto es un array con los detalles de los pedidos que se crearon
 
-        $this->enviarPedidoMultiple($idsPedidos, $proveedorConvenioD, $punto_retiro);
 
         OficinaAutorizar::whereIn('id', $idCotizacion)->update(['estado_solicitud_id' => 11]);
         PedidoMedicamento::whereIn('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
         //$this->enviarPedidoSingular($proveedorConvenio->id);
+
+        $this->enviarPedidoMultiple($idsPedidos, $proveedorConvenioD, $punto_retiro);
+
         CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","success");
 
     }

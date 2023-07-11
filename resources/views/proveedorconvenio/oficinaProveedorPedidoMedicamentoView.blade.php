@@ -25,6 +25,14 @@
             <div class="card-header">
                 <h3 class="card-title">Pedidos por procesar</h3>
             </div>
+            <div class="button-container">
+                <a href="/generarpedido/cargamasiva">
+            <button class="btn btn-info btn-xs m-5 btn-autorizar">
+                    <i class="fas fa-send"></i> Enviar varios pedidos a depósito
+                </button>
+                </a>
+
+            </div>
             <div class="card-body">
                 <table id="tabla-solicitudes" class="table table-bordered">
                     <thead>
