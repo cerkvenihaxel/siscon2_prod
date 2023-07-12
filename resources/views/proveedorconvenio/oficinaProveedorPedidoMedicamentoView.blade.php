@@ -127,8 +127,10 @@
                                 </button>
                                 <button class="btn btn-warning btn-xs mr-2">
                                     <a class="link-pdf" href="/generarPDF_convenio/{{$cot->id}}">
-                                    <i class="fas fa-print"></i> Imprimir pedido</button>
-                                </a>
+                                    <i class="fas fa-print"> </i> Imprimir pedido
+                                    </a>
+                                </button>
+
                             </div>
                         </td>
 
@@ -252,6 +254,7 @@
                         <th>Nombre afiliado</th>
                         <th>Número Afiliado</th>
                         <th>Número Solicitud</th>
+                        <th>ID PEDIDO</th>
                     </tr>
                     </thead>
                     <tbody id="pedidoDetalleBody">
@@ -529,11 +532,13 @@
                     var nroAfiliado = pedido.nroAfiliado;
                     var nrosolicitud = pedido.nrosolicitud;
                     var nombremedico = response.nombremedico;
+                    var nroPedido = pedido.id_pedido;
 
                     var fila = '<tr>' +
                         '<td>' + nombre + '</td>' +
                         '<td>' + nroAfiliado + '</td>' +
                         '<td>' + nrosolicitud + '</td>' +
+                        '<td>' + nroPedido + '</td>' +
                         '</tr>';
 
                     $('#pedidoDetalleBody').append(fila);
