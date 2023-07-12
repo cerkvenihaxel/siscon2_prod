@@ -80,7 +80,7 @@
         @foreach($detalles as $key => $detalle)
             <tr>
                 <td>{{ $key +1 }}</td>
-                <td>{{ DB::table('articulosZafiro')->where('id', $detalle->articuloZafiro_id)->value('des_articulo') }} | {{DB::table('articulosZafiro')->where('id', $detalle->articuloZafiro_id)->value('presentacion')}}</td>
+                <td>{{ $detalle->presentacion}}</td>
                 <td>{{ $detalle->cantidad }}</td>
                 <td>{{$detalle->total}}</td>
                 <!-- Agrega aquí más celdas según los datos que desees mostrar de $detalles -->
