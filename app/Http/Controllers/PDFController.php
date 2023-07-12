@@ -26,6 +26,7 @@ class PDFController extends Controller
 
         $pedido = CotizacionConvenio::where('id', $id)->first();
         $detalles = CotizacionConvenioDetail::where('cotizacion_convenio_id', $id)->get();
+        $fecha = now();
 
         $pdf = PDF::loadView('pdf.tablaprint', compact('pedido', 'detalles'));
 
@@ -43,6 +44,6 @@ class PDFController extends Controller
         // Establecer el tamaño de fuente
         $pdf->getDomPDF()->set_option('font_size', 10);
 
-        return $pdf->download('cotizacion.pdf');
+        return $pdf->stream('PEDIDO-SISCON-'.$pedido->nombreyapellido.' ('.$fecha.').pdf');
     }
 }

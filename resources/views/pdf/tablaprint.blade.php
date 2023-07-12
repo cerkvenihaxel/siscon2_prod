@@ -27,6 +27,7 @@
             <th>Número de Afiliado</th>
             <th>Patología</th>
             <th>ID PEDIDO</th>
+            <th>Sucursal</th>
             <!-- Agrega aquí más columnas según los datos que desees mostrar de $pedido -->
         </tr>
         </thead>
@@ -40,6 +41,8 @@
             @endphp
             <td>{{ DB::table('patologias')->where('id', $patologiaNro)->value('nombre') }}</td>
             <td>{{ $pedido->id_pedido }}</td>
+            <td>{{ DB::table('punto_retiro')->where('id', $pedido->punto_retiro_id)->value('nombre') }}</td>
+
 
         </tr>
         </tbody>

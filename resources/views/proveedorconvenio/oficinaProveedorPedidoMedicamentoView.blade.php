@@ -126,7 +126,7 @@
                                     <i class="fas fa-eye"></i> Ver pedido
                                 </button>
                                 <button class="btn btn-warning btn-xs mr-2">
-                                    <a class="link-pdf" href="/generarPDF_convenio/{{$cot->id}}">
+                                    <a class="link-pdf" href="/generarPDF_convenio/{{$cot->id}}" target="_blank">
                                     <i class="fas fa-print"> </i> Imprimir pedido
                                     </a>
                                 </button>
