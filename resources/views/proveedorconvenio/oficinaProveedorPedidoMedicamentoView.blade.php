@@ -602,7 +602,7 @@
                             '<td>' + medicamento.presentacion + '</td>' +
                             '<td><input type="text"  name="medicamentos[' + i + '][laboratorio]" placeholder="Laboratorio"></td>' +
                             '<td>' +
-                            '<input type="text" class="form-control" name="medicamentos[' + i + '][precio]" placeholder="Ingrese el precio" onchange="calculateTotalWithDiscount(' + i + ')">' +
+                            '<input type="text" class="form-control" name="medicamentos[' + i + '][precio]" placeholder="Ingrese el precio" onchange="calculateTotalWithDiscount(' + i + ')" required>' +
                             '</td>' + // PRECIO
                             '<td>' +
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][cantidad]" value="' + medicamento.cantidad + '" onchange="calculateTotalWithDiscount(' + i + ')" readonly>' +
@@ -611,7 +611,7 @@
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][subtotal]" placeholder="Subtotal" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese el descuento" onchange="calculateTotalWithDiscount(' + i + ')" value="' + medicamento.banda_descuento + '">' +
+                            '<input type="text" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese el descuento" onchange="calculateTotalWithDiscount(' + i + ')" value="' + medicamento.banda_descuento + '" required>' +
                             '</td>' +
                             '<td>' +
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][total]" placeholder="Ingrese el total final" readonly>' +
@@ -632,12 +632,10 @@
                         $('#punto_retiro').append(opcion);
                     }
 
-                    $('#punto_retiro').val(zonaResidencia).trigger('change');
-
+                    //$('#punto_retiro').val(zonaResidencia).trigger('change');
 
 
                     $('#punto_retiro').on('select2:select', function(e) {
-
 
                         var puntoRetiroSeleccionadoId = e.params.data.id;
                         var puntoRetiroSeleccionado = puntosRetiro.find(function(punto) {
