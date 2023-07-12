@@ -422,8 +422,7 @@
             pageLength: 5,
             searching: true,
             lengthChange: false,
-            info: false,
-            //order: [[ 0, "desc" ]]
+            info: false
 
         });
 

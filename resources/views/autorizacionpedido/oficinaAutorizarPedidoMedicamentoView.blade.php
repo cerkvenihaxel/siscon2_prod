@@ -591,8 +591,7 @@
             pageLength: 5,
             searching: true,
             lengthChange: false,
-            info: true,
-            //order: [[0, 'desc']] // Ordenar por la primera columna (created_at) en orden descendente
+            info: true
         });
 
         tablaSolicitudesAutorizadas = $('#tabla-solicitudes-autorizadas').DataTable({
