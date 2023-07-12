@@ -78,7 +78,11 @@
         @foreach($detalles as $key => $detalle)
             <tr>
                 <td>{{ $key +1 }}</td>
-                <td>{{ DB::table('articulosZafiro')->where('id', $detalle->articuloZafiro_id)->value('presentacion_completa') }}</td>
+                @php
+                    $articuloID = $detalle->articuloZafiro_id;
+                    $numeroArticulo = str_pad($articuloID, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
+                @endphp
+                <td>{{ DB::table('articuloszafiro')->where('id_articulo', $numeroArticulo)->value('presentacion_completa') }}</td>
                 <td>{{ $detalle->cantidad }}</td>
                 <td>{{$detalle->total}}</td>
                 <!-- Agrega aquí más celdas según los datos que desees mostrar de $detalles -->

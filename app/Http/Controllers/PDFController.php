@@ -17,7 +17,6 @@ class PDFController extends Controller
 
         //$pdf = PDF::loadView('pdf.tabla', compact('pedido', 'detalles'));
         //return $pdf->download('cotizacion.pdf');
-
         return view('pdf.tabla', compact('pedido', 'detalles'));
     }
 

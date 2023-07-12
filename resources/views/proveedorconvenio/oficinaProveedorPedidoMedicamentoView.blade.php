@@ -125,8 +125,10 @@
                                 <button class="btn btn-info btn-xs m-5 btn-ver-pedido-prov" data-pedido-id="{{ $cot->id }}" data-toggle="modal" data-target="#pedidoModal">
                                     <i class="fas fa-eye"></i> Ver pedido
                                 </button>
-
-                                <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i> Imprimir pedido</button>
+                                <button class="btn btn-warning btn-xs mr-2">
+                                    <a class="link-pdf" href="/generarPDF_convenio/{{$cot->id}}">
+                                    <i class="fas fa-print"></i> Imprimir pedido</button>
+                                </a>
                             </div>
                         </td>
 
@@ -763,6 +765,15 @@
     .full-screen-modal {
         align-items: center;
         justify-content: center;
+    }
+    .link-pdf{
+        text-decoration: none ;
+        color: white;
+    }
+
+    .link-pdf:hover{
+        text-decoration: none ;
+        color: white;
     }
 
 </style>
