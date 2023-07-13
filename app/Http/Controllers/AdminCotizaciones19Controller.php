@@ -61,6 +61,9 @@
 			}
 		}
 
+
+
+
 			# START FORM DO NOT REMOVE THIS LINE
 
 /*			$this->form = [];
@@ -190,7 +193,9 @@
 	        */
 	        $this->sub_module = array();
 
-		$this->sub_module[] = ['label'=>'Adjudicar', 'path'=>'adjudicaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-circle-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(CRUDBooster::myId() == 8) ? "1" : "0"];
+            $boolAudit = CRUDBooster::myPrivilegeId() == 17 && CRUDBooster::myId() == 69 ? true : false;
+
+		    $this->sub_module[] = ['label'=>'Adjudicar', 'path'=>'adjudicaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-circle-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>$boolAudit];
 
 
 	        /*
@@ -455,9 +460,9 @@
 
 			$present['content'] = "NUEVA NOTIFICACIÓN ℹ️ Se habilitó el módulo de PRESENTACIÓN FINAL por favor revise el manual para cargar sus solicitudes previamente AUTORIZADAS.";
 			$present['to'] = url('pdf/asistProveedor.pdf');
-			$present['id_cms_users'] = $allProveedores;
+			//$present['id_cms_users'] = $allProveedores;
 			CRUDBooster::sendNotification($config);
-			CRUDBooster::sendNotification($present);
+			//CRUDBooster::sendNotification($present);
 
 	        //Your code here
 //					$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
