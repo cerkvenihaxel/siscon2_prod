@@ -190,7 +190,7 @@
 	        */
 	        $this->sub_module = array();
 
-		$this->sub_module[] = ['label'=>'Adjudicar', 'path'=>'adjudicaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-circle-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(CRUDBooster::myPrivilegeId() == 17) ? "1" : "0"];
+		$this->sub_module[] = ['label'=>'Adjudicar', 'path'=>'adjudicaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-circle-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(CRUDBooster::myId() == 8) ? "1" : "0"];
 
 
 	        /*
