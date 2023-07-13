@@ -61,7 +61,13 @@
 			}
 		}
 
-
+        function auditorPrivilege(){
+            $privilege = CRUDBooster::myPrivilegeId();
+            $id = CRUDBooster::myId();
+            if( $privilege == 17 && $id == 8){
+                return false;
+        }
+    }
 
 
 			# START FORM DO NOT REMOVE THIS LINE
@@ -193,9 +199,7 @@
 	        */
 	        $this->sub_module = array();
 
-            $boolAudit = CRUDBooster::myPrivilegeId() == 17 && CRUDBooster::myId() == 69 ? true : false;
-
-		    $this->sub_module[] = ['label'=>'Adjudicar', 'path'=>'adjudicaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-circle-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>$boolAudit];
+		$this->sub_module[] = ['label'=>'Adjudicar', 'path'=>'adjudicaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-circle-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(CRUDBooster::myId() == 69) ? "1" : "0"];
 
 
 	        /*
