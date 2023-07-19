@@ -333,3 +333,12 @@ Route::get('/searchprueba', function (){
 Route::get('/addNewPrecarga', function(){
     return view('addModalPrecarga');
 })->name('addNewPrecarga');
+
+
+//--- SECCION PROTESIS NUEVOS CONVENIOS
+
+Route::get('/protesis/entrantes', function (){
+    return view('protesis.entrantes');
+})->name('protesis.entrantes');
+
+

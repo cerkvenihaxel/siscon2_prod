@@ -24,7 +24,7 @@ class Entrante extends Model
         return $this->belongsTo(EstadoPaciente::class, 'estado_paciente_id');
     }
 
-    public function necesidad()
+    public function nec()
     {
 
         return $this->belongsTo(Necesidad::class, 'necesidad');
