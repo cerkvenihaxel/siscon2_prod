@@ -577,6 +577,7 @@
             var pedidoId = $(this).data('pedido-id');
             var url = '/generarpedido/' + pedidoId + '/autorizar'; // Reemplaza la URL con la ruta correcta de tu aplicación
 
+
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -597,6 +598,8 @@
                     $('#tablaAutorizarBody').append(nroAfiliadoInput);
                     $('#zona_retiro').val(zona_retiro);
 
+
+
                     for (var i = 0; i < medicamentos.length; i++) {
                         var medicamento = medicamentos[i];
                         var filaMedicamento = '<tr>' +
@@ -604,11 +607,11 @@
                             '<input type="hidden" name="medicamentos[' + i + '][presentacion]" value="' + medicamento.presentacion + '">' +
                             '<input type="hidden" name="medicamentos[' + i + '][cantidad]" value="' + medicamento.cantidad + '">' +
 
-                            '<td>' + medicamento.des_monodroga + '</td>' +
+                            '<td>' + (medicamento.des_monodroga ?? '') + '</td>' +
                             '<td>' + medicamento.presentacion + '</td>' +
-                            '<td><input type="text"  name="medicamentos[' + i + '][laboratorio]" placeholder="Laboratorio"></td>' +
+                            '<td><input type="text"  name="medicamentos[' + i + '][laboratorio]" placeholder="Laboratorio" value="'+ medicamento.laboratorio + '"></td>' +
                             '<td>' +
-                            '<input type="text" class="form-control" name="medicamentos[' + i + '][precio]" placeholder="Ingrese el precio" onchange="calculateTotalWithDiscount(' + i + ')" required>' +
+                            '<input type="text" class="form-control" name="medicamentos[' + i + '][precio]" placeholder="Ingrese el precio" onchange="calculateTotalWithDiscount(' + i + ')" required value="'+(medicamento.precio ?? '') +'">' +
                             '</td>' + // PRECIO
                             '<td>' +
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][cantidad]" value="' + medicamento.cantidad + '" onchange="calculateTotalWithDiscount(' + i + ')" readonly>' +
@@ -617,7 +620,7 @@
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][subtotal]" placeholder="Subtotal" readonly>' +
                             '</td>' +
                             '<td>' +
-                            '<input type="text" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese el descuento" onchange="calculateTotalWithDiscount(' + i + ')" value="' + medicamento.banda_descuento + '" required>' +
+                            '<input type="text" class="form-control" name="medicamentos[' + i + '][banda_descuento]" placeholder="Ingrese el descuento" onchange="calculateTotalWithDiscount(' + i + ')" value="' + (medicamento.banda_descuento ?? '')+'" required>' +
                             '</td>' +
                             '<td>' +
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][total]" placeholder="Ingrese el total final" readonly>' +
@@ -627,6 +630,7 @@
 
                         $('#tablaAutorizarBody').append(filaMedicamento);
                     }
+
 
                     var zonaResidencia = pedido.zonaRetiro.id
 
@@ -638,7 +642,10 @@
                         $('#punto_retiro').append(opcion);
                     }
 
+
+
                     //$('#punto_retiro').val(zonaResidencia).trigger('change');
+
 
 
                     $('#punto_retiro').on('select2:select', function(e) {
@@ -658,6 +665,7 @@
                             $('#punto_retiro_des').trigger('change');
                         }
                     });
+
 
 
                     // Mostrar el modal
@@ -681,6 +689,8 @@
             // Asignar el valor al campo oculto del formulario
             modal.find('#pedidoIdInput').val(pedidoId);
         });
+
+
     });
 
 
@@ -707,6 +717,10 @@
         subtotalInput.value = subtotal.toFixed(2);
         totalInput.value = total.toFixed(2);
     }
+
+
+
+
 </script>
 
 <style>
