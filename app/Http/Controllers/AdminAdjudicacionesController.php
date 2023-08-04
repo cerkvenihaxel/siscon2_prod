@@ -32,7 +32,7 @@
 	function adminPrivilegeId(){
 
 				$privilege = CRUDBooster::myPrivilegeId();
-				if($privilege == 1 || $privilege == 17){
+				if($privilege == 1 || $privilege == 17 || $privilege == 33 || $privilege == 34 || $privilege == 35){
 					return false;
 				}else{
 					return true;
