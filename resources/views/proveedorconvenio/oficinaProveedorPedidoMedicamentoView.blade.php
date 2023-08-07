@@ -373,7 +373,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary btn-guardar">Guardar</button>
+                    <button type="submit" class="btn btn-primary btn-guardar" id="btnGuardar">Guardar</button>
                 </div>
             </form>
         </div>
@@ -669,6 +669,13 @@
 
                     // Mostrar el modal
                     $('#modalGenerar').modal('show');
+
+                    // Ejecutar la función de actualización de precios al abrir el modal
+                    $('#modalGenerar').on('shown.bs.modal', function () {
+                        for (var i = 0; i < medicamentos.length; i++) {
+                            calculateTotalWithDiscount(i); // Llama a la función para cada medicamento
+                        }
+                    });
                 },
                 error: function(error) {
                     console.log('error', error);
@@ -677,6 +684,11 @@
             });
         });
 
+    });
+
+    $(document).on('change', 'input[name^="medicamentos["][name$="[precio]"]', function () {
+        var index = $(this).closest('tr').index(); // Obtén el índice de la fila
+        calculateTotalWithDiscount(index); // Llama a tu función de cálculo con el índice correspondiente
     });
 
     $(document).ready(function() {
@@ -700,22 +712,53 @@
     }
 
     function calculateTotalWithDiscount(index) {
-        var precioInput = document.getElementsByName('medicamentos[' + index + '][precio]')[0];
-        var cantidadInput = document.getElementsByName('medicamentos[' + index + '][cantidad]')[0];
-        var subtotalInput = document.getElementsByName('medicamentos[' + index + '][subtotal]')[0];
-        var descuentoInput = document.getElementsByName('medicamentos[' + index + '][banda_descuento]')[0];
-        var totalInput = document.getElementsByName('medicamentos[' + index + '][total]')[0];
+        var medicamentoRow = $('input[name="medicamentos[' + index + '][precio]"]').closest('tr');
 
-        var precio = parseFloat(precioInput.value);
-        var cantidad = parseFloat(cantidadInput.value);
+        var precioInput = medicamentoRow.find('input[name$="[precio]"]');
+        var cantidadInput = medicamentoRow.find('input[name$="[cantidad]"]');
+        var subtotalInput = medicamentoRow.find('input[name$="[subtotal]"]');
+        var descuentoInput = medicamentoRow.find('input[name$="[banda_descuento]"]');
+        var totalInput = medicamentoRow.find('input[name$="[total]"]');
+
+        var precio = parseFloat(precioInput.val());
+        var cantidad = parseFloat(cantidadInput.val());
         var subtotal = precio * cantidad;
 
-        var descuento = parseFloat(descuentoInput.value);
+        var descuento = parseFloat(descuentoInput.val());
         var total = subtotal - (subtotal * (descuento / 100));
 
-        subtotalInput.value = subtotal.toFixed(2);
-        totalInput.value = total.toFixed(2);
+        subtotalInput.val(subtotal.toFixed(2));
+        totalInput.val(total.toFixed(2));
     }
+
+    $('#btnGuardar').on('click', function() {
+        var camposVacios = [];
+
+        $('input[name^="medicamentos["]').each(function(index, element) {
+            var medicamentoRow = $(element).closest('tr');
+            var precioInput = medicamentoRow.find('input[name$="[precio]"]');
+            var descuentoInput = medicamentoRow.find('input[name$="[banda_descuento]"]');
+            var laboratorioInput = medicamentoRow.find('input[name$="[laboratorio]"]');
+
+            if (!precioInput.val() || !descuentoInput.val() || !laboratorioInput.val()) {
+                camposVacios.push(index + 1); // Agrega +1 para mostrar números de medicamentos humanamente legibles (no índices de array)
+            }
+        });
+
+        if (camposVacios.length > 0) {
+            var mensaje = "Por favor complete todos los campos antes de enviar:\n";
+
+            alert(mensaje);
+            return false; // Evita que el formulario se envíe si hay campos vacíos
+        }
+
+        // Si no hay campos vacíos, el formulario se enviará normalmente
+    });
+
+
+
+
+
 
 
 
