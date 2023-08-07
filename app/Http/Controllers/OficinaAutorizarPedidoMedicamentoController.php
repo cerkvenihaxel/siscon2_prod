@@ -17,38 +17,22 @@ use crocodicstudio\crudbooster\helpers\CRUDBooster;
 class OficinaAutorizarPedidoMedicamentoController extends Controller
 {
     //
-    public function index(){
-
+    public function index()
+    {
         $privilegio = CRUDBooster::myPrivilegeId();
         $id = CRUDBooster::myId();
 
-        $solicitudes = PedidoMedicamento::all();
-        foreach ($solicitudes as $solicitud) {
-            $solicitud->nombre = DB::table('afiliados')->where('id', $solicitud->afiliados_id)->value('apeynombres');
-        }
+        $solicitudes = PedidoMedicamento::with('detalles', 'afiliados')->get();
 
-        if($privilegio==40){
-            $auditor = true;
-        }
-        else{
-            $auditor = false;
-        }
+        $auditor = $privilegio == 40;
 
-        if($privilegio==41){
-            $stamp_userConvenio = User::where('id', $id)->value('email');
-            $solicitudesPedido = OficinaAutorizar::where('stamp_user', $stamp_userConvenio)->get('nrosolicitud');
+        if ($privilegio == 41) {
+            $stamp_userConvenio = User::where('id', $id)->pluck('email')->first();
+            $solicitudesPedido = OficinaAutorizar::where('stamp_user', $stamp_userConvenio)->pluck('nrosolicitud');
             $solicitudesAutorizadas = PedidoMedicamento::whereIn('nrosolicitud', $solicitudesPedido)->get();
-        }
-        else{
-            $stamp_userConvenio = null;
+        } else {
             $solicitudesAutorizadas = OficinaAutorizar::all();
         }
-
-        foreach ($solicitudesAutorizadas as $solicitudAutorizada) {
-            $solicitudAutorizada->nombre = DB::table('afiliados')->where('id', $solicitudAutorizada->afiliados_id)->value('apeynombres');
-            $solicitudAutorizada->proveedorNombre = DB::table('proveedores_convenio')->where('id', $solicitudAutorizada->proveedor)->value('nombre');
-        }
-
 
         return view('autorizacionpedido.oficinaAutorizarPedidoMedicamentoView', compact('solicitudes', 'auditor', 'stamp_userConvenio', 'solicitudesAutorizadas'));
     }

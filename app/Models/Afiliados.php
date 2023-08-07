@@ -14,4 +14,12 @@ class Afiliados extends Model
         return $this->hasMany(AfiliadosArticulos::class, 'nro_afiliado');
     }
 
+    public function pedidosMedicamento()
+    {
+        return $this->hasMany(PedidoMedicamento::class, 'afiliados_id', 'id');
+    }
+
+    public function oficinaAutorizar(){
+        return $this->hasMany(PedidoMedicamento::class, 'afiliados', 'id');
+    }
 }

@@ -54,7 +54,7 @@
                     @foreach($solicitudes->whereIn('estado_solicitud_id', [1]) as $solicitud)
                         <tr>
                             <td>{{$solicitud->created_at}}</td>
-                            <td>{{$solicitud->nombre}}</td>
+                            <td>{{$solicitud->afiliados->apeynombres}}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
                             <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
@@ -119,7 +119,7 @@
                     @foreach($solicitudes->whereIn('estado_solicitud_id', [8]) as $solicitud)
                     <tr>
                         <td>{{$solicitud->created_at}}</td>
-                        <td>{{$solicitud->nombre}}</td>
+                        <td>{{$solicitud->afiliados->apeynombres}}</td>
                         <td>{{ $solicitud->nroAfiliado }}</td>
                         <td>{{ $solicitud->nrosolicitud }}</td>
                         <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
@@ -177,7 +177,7 @@
                             @foreach($solicitudesAutorizadas->whereIn('estado_solicitud_id', [3, 4, 11, 12, 13]) as $solicitud)
                         <tr>
                             <td>{{$solicitud->created_at}}</td>
-                            <td>{{ $solicitud->nombre }}</td>
+                            <td>{{ $solicitud->afiliados->apeynombres }}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
                             <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
@@ -197,7 +197,7 @@
                             @foreach($solicitudesAutorizadas->whereIn('estado_solicitud_id', [3, 4, 11, 12, 13]) as $solicitud)
                                 <tr>
                                     <td>{{$solicitud->updated_at }}</td>
-                                    <td>{{ DB::table('afiliados')->where('nroAfiliado', $solicitud->nroAfiliado)->value('apeynombres') }}</td>
+                                    <td>{{ $solicitud->afiliados->apeynombres }}</td>
                                     <td>{{ $solicitud->nroAfiliado }}</td>
                                     <td>{{ $solicitud->nrosolicitud }}</td>
                                     <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
@@ -245,7 +245,7 @@
                     <tr>
                         @foreach($solicitudesAutorizadas->whereIn('estado_pedido_id', [1]) as $en)
                             <td>{{ $en->created_at }}</td>
-                            <td>{{ DB::table('afiliados')->where('nroAfiliado', $en->nroAfiliado)->value('apeynombres') }}</td>
+                            <td>{{ $en->afiliados->apeynombres }}</td>
                             <td>{{ $en->nrosolicitud }}</td>
                             <td>{{ DB::table('estado_solicitud')->where('id', $en->estado_solicitud_id)->value('estado') }}</td>
                             <td>
@@ -292,7 +292,7 @@
                  @foreach($solicitudes->whereIn('estado_solicitud_id', [5,9]) as $solicitud)
                      <tr>
                          <td>{{$solicitud->updated_at}}</td>
-                            <td>{{ $solicitud->nombre }}</td>
+                            <td>{{ $solicitud->afiliados->apeynombres }}</td>
                          <td>{{ $solicitud->nroAfiliado }}</td>
                          <td>{{ $solicitud->nrosolicitud }}</td>
                          <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>

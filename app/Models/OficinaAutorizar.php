@@ -15,5 +15,9 @@ class OficinaAutorizar extends Model
         return $this->hasMany(OficinaAutorizarDetail::class, 'convenio_oficina_os_id');
     }
 
+    public function afiliados(){
+        return $this->belongsTo(Afiliados::class, 'afiliados_id', 'id');
+    }
+
 
 }

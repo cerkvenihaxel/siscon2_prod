@@ -22,14 +22,11 @@ use Illuminate\Support\Facades\Redirect;
 class ProveedorConvenioOficina extends Controller
 {
     //
-    public function index(){
-
+    public function index()
+    {
         $solicitudes = OficinaAutorizar::all();
         $cotizadas = CotizacionConvenio::all();
 
-        foreach ($solicitudes as $solicitud) {
-            $solicitud->nombre = DB::table('afiliados')->where('id', $solicitud->afiliados_id)->value('apeynombres');
-        }
 
         return view('proveedorconvenio.oficinaProveedorPedidoMedicamentoView', compact('solicitudes', 'cotizadas'));
     }

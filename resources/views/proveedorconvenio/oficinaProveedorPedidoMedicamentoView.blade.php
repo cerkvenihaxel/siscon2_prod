@@ -53,7 +53,7 @@
                     @foreach($solicitudes->whereIn('estado_solicitud_id', [3, 4]) as $solicitud)
                         <tr>
                             <td>{{$solicitud->created_at}}</td>
-                            <td> {{ $solicitud->nombre }}</td>
+                            <td> {{ $solicitud->afiliados->apeynombres}}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
                             <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>

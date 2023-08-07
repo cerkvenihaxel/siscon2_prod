@@ -15,4 +15,9 @@ class PedidoMedicamento extends Model
     {
         return $this->hasMany(PedidoMedicamentoDetail::class, 'pedido_medicamento_id');
     }
+
+    public function afiliados()
+    {
+        return $this->belongsTo(Afiliados::class, 'afiliados_id', 'id');
+    }
 }
