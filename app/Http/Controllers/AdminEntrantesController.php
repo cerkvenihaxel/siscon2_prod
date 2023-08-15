@@ -53,7 +53,7 @@
 			function adminPrivilegeId(){
 
 				$privilege = CRUDBooster::myPrivilegeId();
-				if($privilege == 1 || $privilege == 17 || $privilege == 5){
+				if($privilege == 1 || $privilege == 17 || $privilege == 5 || $privilege == 46){
 					return false;
 				}else{
 					return true;
@@ -448,6 +448,10 @@
 		$query->where('nrosolicitud', '!=', $cotizacion->nrosolicitud);
 		}
 	}
+
+    if(CRUDBooster::myPrivilegeId() == 46){
+        $query->where('clinicas_id', 18);
+    }
 
 
 	    }
