@@ -164,8 +164,8 @@ Route::post('/actualizar-datos', [\App\Http\Controllers\ValidadorFarmaciaControl
 
 Route::get('/generarPDF_convenio/{id}', [\App\Http\Controllers\PDFController::class, 'generarPDF'])->name('generarPDF');
 Route::get('/imprimirPDF_convenio/{id}', [\App\Http\Controllers\PDFController::class, 'imprimirPDF'])->name('imprimirPDF');
-
 Route::get('/printPDF_convenio/{id}', [\App\Http\Controllers\PDFController::class, 'printPDF'])->name('printPDF');
+Route::get('/generarPDF_farmacia/{id}', [\App\Http\Controllers\PDFController::class, 'printFarmaciaPDF'])->name('printFarmaciaPDF');
 
 
 //ESCRITORIO CONVENIO
@@ -273,6 +273,7 @@ Route::get('/entregarpedido_farmacia/{id}/autorizar', [\App\Http\Controllers\Far
 
 Route::post('/entregarpedido_farmacia/guardar', [\App\Http\Controllers\FarmaciaConvenioController::class, 'autorizarGuardarPedido'])->name('entregarpedido_farmacia.guardar');
 
+Route::get('/entregarpedido_farmacia/imprimir/{id}', [\App\Http\Controllers\FarmaciaConvenioController::class, 'printPdf'])->name('entregarpedido_farmacia.imprimir');
 
 // SECCIÓN DE CONTROLLERS-------
 

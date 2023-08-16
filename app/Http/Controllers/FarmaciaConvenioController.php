@@ -10,6 +10,7 @@ use App\Models\OficinaAutorizar;
 use App\Models\PedidoMedicamento;
 use App\Models\PedidoMedicamentoDetail;
 use App\Models\User;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -100,4 +101,13 @@ class FarmaciaConvenioController extends Controller
 
     }
 
+    public function printPdf($id)
+    {
+        $pedido =  CotizacionConvenio::findOrFail($id);
+        $detalles = CotizacionConvenioDetail::where('cotizacion_convenio_id', $id)->get();
+
+        return view('pdf.tablaprintacuse', compact('pedido', 'detalles'));
+
     }
+
+}
