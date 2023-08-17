@@ -93,7 +93,7 @@ class ProveedorConvenioOficina extends Controller
             $id_proveedor = DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('id_proveedor');
             $id_organizacion = DB::table('proveedores')->where('id_proveedor', $id_proveedor)->value('id_organizacion');
             $medicamento->laboratorio = DB::table('organizaciones')->where('id_organizacion', $id_organizacion)->value('nombre') ?? '';
-            $precio = DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('pcio_com_siva');
+            $precio = DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('pcio_vta_siva');
             $medicamento->precio = round($precio, 2);
         }
         // Realiza las operaciones necesarias para obtener los detalles del pedido y la oficina de autorización
