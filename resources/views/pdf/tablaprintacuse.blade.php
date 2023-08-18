@@ -96,7 +96,11 @@
         <div>
             <p class="text-muted mt-12">Firma: ______________________________________</p>
             <p class="text-muted mt-12">Aclaración: ________________________________</p>
-            <p class="text-muted mt-4">Documento: ________________________________</p>
+            <p class="text-muted mt-12">Domicilio : _____________________________________</p>
+            <p class="text-muted mt-12">Documento: ________________________________</p>
+            <p class="text-muted mt-12">Parentesco: ________________________________</p>
+            <p class="text-muted mt-12">Teléfono: ________________________________</p>
+
         </div>
 
 
