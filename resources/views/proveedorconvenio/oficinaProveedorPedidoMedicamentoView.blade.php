@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.2/css/jquery.dataTables.min.css">
@@ -362,7 +362,7 @@
 
                     <div class="form-group">
                         <label for="punto_retiro">Punto de Retiro</label>
-                        <select class="form-control" name="punto_retiro" id="punto_retiro"></select>
+                        <select class="form-control-lg" name="punto_retiro" id="punto_retiro"></select>
                     </div>
 
                     <div class="form-group">
@@ -582,7 +582,9 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    console.log('response', response);
+
+                    //LOG DE LA RESPUESTA
+                    console.log({response : response, message: 'Success respuesta'});
                     $('#tablaAutorizarBody').empty();
 
                     var medicamentos = response.medicamentos;
@@ -596,7 +598,6 @@
                     $('#tablaAutorizarBody').append(idCotizacion);
                     $('#tablaAutorizarBody').append(nroAfiliadoInput);
                     $('#zona_retiro').val(zona_retiro);
-
 
 
                     for (var i = 0; i < medicamentos.length; i++) {
@@ -631,9 +632,6 @@
                     }
 
 
-                    var zonaResidencia = pedido.zonaRetiro.id
-
-
                     var puntosRetiro = response.puntosRetiro; // Suponiendo que obtienes los puntos de retiro en la respuesta AJAX
                     for (var j = 0; j < puntosRetiro.length; j++) {
                         var puntoRetiro = puntosRetiro[j];
@@ -641,9 +639,6 @@
                         $('#punto_retiro').append(opcion);
                     }
 
-
-
-                    //$('#punto_retiro').val(zonaResidencia).trigger('change');
 
 
 
@@ -672,6 +667,7 @@
 
                     // Ejecutar la función de actualización de precios al abrir el modal
                     $('#modalGenerar').on('shown.bs.modal', function () {
+                        console.log("ACTUALIZAR")
                         for (var i = 0; i < medicamentos.length; i++) {
                             calculateTotalWithDiscount(i); // Llama a la función para cada medicamento
                         }
@@ -712,8 +708,8 @@
     }
 
     function calculateTotalWithDiscount(index) {
+        console.log("Me ejecuté");
         var medicamentoRow = $('input[name="medicamentos[' + index + '][precio]"]').closest('tr');
-
         var precioInput = medicamentoRow.find('input[name$="[precio]"]');
         var cantidadInput = medicamentoRow.find('input[name$="[cantidad]"]');
         var subtotalInput = medicamentoRow.find('input[name$="[subtotal]"]');
