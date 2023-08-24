@@ -49,9 +49,9 @@
                 <div class="col-sm-6 bg-white">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title text-bold">Informe por médicos</h5>
-                            <p class="card-text">Descargar informe de cada médico diferenciado por meses.</p>
-                            <a href="#" class="btn btn-success">Descargar excel</a>
+                            <h5 class="card-title text-bold">Informe solicitudes sin cotizar</h5>
+                            <p class="card-text">Descargar informe solicitudes sin cotizar</p>
+                            <a href="{{route('reportes_generales.sin-cotizar')}}" class="btn btn-success">Descargar excel</a>
                         </div>
                     </div>
                 </div>

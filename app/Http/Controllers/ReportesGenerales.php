@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ReporteASDJ;
 use App\Exports\ReporteMedicosExport;
 use App\Exports\ReporteProveedoresExport;
+use App\Exports\ReporteSinCotizar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Excel;
@@ -173,6 +174,83 @@ $resultados = DB::connection($connection)->table(
 
         $resultados = DB::table('cotizaciones', 'c')->selectRaw('
             c.proveedor AS "Proveedor",
+            CASE
+			WHEN c.proveedor IN ("Angiocor") THEN "ANGIOCOR"
+			WHEN c.proveedor IN ("Artro", "ARTRO S.A") THEN "ARTRO S.A"
+	        WHEN c.proveedor IN ("Aved") THEN "AVED"
+	        WHEN c.proveedor IN ("BERNAT.", "Ortopedia Bernat", "ORTOPEDIA BERNAT.", "BERNAT") THEN "ORTOPEDIA BERNAT"
+	        WHEN c.proveedor IN ("Biolatina") THEN "BIOLATINA"
+	        WHEN c.proveedor IN ("Bionor") THEN "BIONOR"
+	        WHEN c.proveedor IN ("CARDIO -PACK","CardioPack") THEN "CARDIO-PACK"
+	        WHEN c.proveedor IN ("CARE QUIP","CARE-QUIP") THEN "CARE QUIP."
+			WHEN c.proveedor IN ("CareMedical","CarMedical", "CAR MEDICAL") THEN "CARE MEDICAL"
+			WHEN c.proveedor IN ("CHEMA","ORTOPEDIA CHEMA.") THEN "ORTOPEDIA CHEMA"
+			WHEN c.proveedor IN ("CHIAVASSA.") THEN "ORTOPEDIA CHIAVASSA"
+			WHEN c.proveedor IN ("CONSELGI WIDEX") THEN "WIDEX"
+			-- DEBENE SA se cargó bien
+			WHEN c.proveedor IN ("DECADE.") THEN "DECADE"
+			WHEN c.proveedor IN ("DOCTOR PIE.","DR PIE","DR PIE.","PROPIEDAD DR PIE.") THEN "DOCTOR PIE"
+			-- DrGLOBAL MEDICA quedó en rojo en el excel de sol, hay que borrarlo?
+			-- ELVIRA se cargó bien
+			-- ENDOVIA se cargó bien
+			-- EXACTECH se elimina? está en rojo en el excel de sol
+			WHEN c.proveedor IN ("Forca", "Forca SRL","FORCA.") THEN "FORCA"
+			-- FORUM se cargó bien
+			WHEN c.proveedor IN ("Global Medica","Global Medica  S.A.","Global Medica S.A","Global Medica S.A.","GLOBAL MEDICA.","GLOBAL MEDICAL","GM","GM SA","GMSA") THEN "GLOBAL MEDICA S.A."
+			-- GMR S.A. ? lo dejé así
+			WHEN c.proveedor IN ("GD.BIO","GS  BIO.","GS BIO","GS BIO.","GS-BIO","GS.BIO","GSBIO") THEN "GS-BIO"
+			WHEN c.proveedor IN ("GMR S.A.") THEN "GMRS"
+			WHEN c.proveedor IN ("IGMA.") THEN "IGMA"
+			WHEN c.proveedor IN ("IM Salud") THEN "IM SALUD"
+			-- IMECO se cargó bien
+			WHEN c.proveedor IN ("IMPLACOR.", "Implacor") THEN "IMPLACOR"
+			WHEN c.proveedor IN ("Implantes Medicos", "Implantes Medicos - cotización sin tornillos solicitados") THEN "IMPLANTES MEDICOS"
+			WHEN c.proveedor IN ("IMTERMED","INTERMED", "Intermed Rehab","INTERMED.") THEN "INTERMED."
+			WHEN c.proveedor IN ("INTERSIL.") THEN "INTERSIL"
+			WHEN c.proveedor IN ("Ip Magna") THEN "IP MAGNA"
+			WHEN c.proveedor IN ("Kineret") THEN "KINERET"
+			WHEN c.proveedor IN ("Mat Medical") THEN "MAT MEDICAL"
+			-- MC MEDICAL se cargó bien
+			WHEN c.proveedor IN ("Medcare") THEN "MED CARE"
+			WHEN c.proveedor IN ("Medel") THEN "MED-EL"
+			WHEN c.proveedor IN ("Medical Implants") THEN "MEDICAL IMPLANTS"
+			WHEN c.proveedor IN ("Medical Milenium") THEN "MEDICAL MILENIUM"
+			WHEN c.proveedor IN ("Medical Supplies") THEN "MEDICAL SUPPLIES"
+			WHEN c.proveedor IN ("Medical Team") THEN "MEDICAL TEAM"
+			WHEN c.proveedor IN ("MEDKIT") THEN "MEDKIT SRL"
+			WHEN c.proveedor IN ("Medpro") THEN "MEDPRO"
+			WHEN c.proveedor IN ("Miguel Angel", "ORT. MIGUEL ANGEL","Ortopedia Miguel Angel") THEN "ORTOPEDIA MIGUEL ANGEL"
+			-- MT? qué hacer? se deja como está o se elimina?
+			WHEN c.proveedor IN ("Nexo") THEN "NEXO"
+			WHEN c.proveedor IN ("North Medical") THEN "NORTH MEDICAL"
+			WHEN c.proveedor IN ("Nova","Nova Soluciones Quirúrgicas", "Nova Soluciones") THEN "NOVA SOLUCIONES"
+			WHEN c.proveedor IN ("Nowa", "Nowa Portesis", "Nowa Protesis", "Nowa Protesis", "Nowakowski Maria Clara") THEN "NOWA"
+			-- OLYMPIA está bien cargado
+			WHEN c.proveedor IN ("Omicron") THEN "OMICRON"
+			WHEN c.proveedor IN ("Ortopedia Mayo") THEN "ORTOPEDIA MAYO"
+			WHEN c.proveedor IN ("Ortopedia Rapalar", "RAPALAR") THEN "ORTOPEDIA RAPALAR"
+			WHEN c.proveedor IN ("Santa Lucia", "SANTA LUCIA.", "SANTA LUCIA") THEN "ORTOPEDIA SANTA LUCIA"
+			WHEN c.proveedor IN ("OSTEORIESTRA.", "Osteoriestra") THEN "OSTEORIESTRA"
+			-- PFM? qué es?
+			WHEN c.proveedor IN ("PROMEDICAL.") THEN "PROMEDICAL"
+			WHEN c.proveedor IN ("PROMEDON.") THEN "PROMEDON"
+			-- c.proveedor prueba, c.proveedorDOS, c.proveedorTRES, c.proveedorUNO, Prueba deberían borrarse no?
+			WHEN c.proveedor IN ("QRA INSUMOS") THEN "QRA"
+			WHEN c.proveedor IN ("REHAVITA.") THEN "REHAVITA"
+			-- ROFREN está bien cargado
+			-- RS MEDICA ? lo dejo como está
+			-- SANTA LUCIA lo dejé como ORTOPEDIA SANTA LUCIA
+			WHEN c.proveedor IN ("SbTorres", "SB Torres") THEN "SB TORRES"
+			WHEN c.proveedor IN ("SILFAB.") THEN "SILFAB"
+			WHEN c.proveedor IN ("Silmag") THEN "SILMAG"
+			WHEN c.proveedor IN ("SURGICAL SUPLLY","SURGICAL SUPPLY","SURGICAL SUPPLY.","SURGICALSUPPLY") THEN "SURGICAL SUPPLY"
+			WHEN c.proveedor IN ("SURMESH.") THEN "SURMESH"
+			-- SWIPRO está bien cargado
+			WHEN c.proveedor IN ("TECHNO  HEALTH", "Techno Healt", "TECHNO HEALTH", "Tecnosalud","TECNOSALUD.", "TECHNO-HEAT") THEN "TECHNO HEALTH"
+			-- UNIFARMA está bien cargado
+			WHEN c.proveedor IN ("Valmi") THEN "VALMI"
+	        ELSE c.proveedor
+		END AS "Proveedor",
             c.created_at AS "Fecha de carga",
             CASE
 	   		WHEN MONTH(c.created_at) = 1 THEN "Enero"
@@ -191,8 +269,6 @@ $resultados = DB::connection($connection)->table(
 	    END AS "Mes de Carga",
 	    afiliados.apeynombres AS "Nombre", clinicas.nombre AS "Clínica", c.edad AS "Edad",
 	   c.nrosolicitud AS "N° de Solicitud", medicos.nombremedico AS "Médico", estado_solicitud.estado AS "Estado Solicitud"
-
-
         ')
             ->join('afiliados', 'c.afiliados_id', '=', 'afiliados.id')
             ->join('clinicas', 'c.clinicas_id', '=', 'clinicas.id')
@@ -201,10 +277,44 @@ $resultados = DB::connection($connection)->table(
             ->orderBy('c.proveedor', 'asc')
             ->get();
 
-       //dd($resultados[0]);
+       //dd($resultados[280]);
 
         return \Maatwebsite\Excel\Facades\Excel::download(new ReporteASDJ($resultados), 'ReporteASDJ.xlsx');
+    }
 
+    public function reporteSinCotizar(){
+
+            $connection = config('database.default'); // Esto asumirá la conexión predeterminada definida en config/database.php
+
+            $resultados = DB::table('entrantes', 'e')->selectRaw('
+            e.created_at AS "Fecha",
+	        CASE
+   			WHEN MONTH(e.created_at) = 1 THEN "Enero"
+            WHEN MONTH(e.created_at) = 2 THEN "Febrero"
+	    	WHEN MONTH(e.created_at) = 3 THEN "Marzo"
+			WHEN MONTH(e.created_at) = 4 THEN "Abril"
+	    	WHEN MONTH(e.created_at) = 5 THEN "Mayo"
+			WHEN MONTH(e.created_at) = 6 THEN "Junio"
+	    	WHEN MONTH(e.created_at) = 7 THEN "Julio"
+			WHEN MONTH(e.created_at) = 8 THEN "Agosto"
+	    	WHEN MONTH(e.created_at) = 9 THEN "Septiembre"
+			WHEN MONTH(e.created_at) = 10 THEN "Octubre"
+	    	WHEN MONTH(e.created_at) = 11 THEN "Noviembre"
+			WHEN MONTH(e.created_at) = 12 THEN "Diciembre"
+	    ELSE "Otros"
+	    END AS "Mes de Carga",
+       e.nrosolicitud AS "N° de Solicitud", afiliados.apeynombres AS "Nombre", clinicas.nombre AS "Clínica",
+	   e.edad AS "Edad", medicos.nombremedico AS "Médico", estado_solicitud.estado AS "Estado Solicitud"
+            ')->leftJoin('afiliados', 'e.afiliados_id', '=', 'afiliados.id')
+                ->leftJoin('clinicas', 'e.clinicas_id', '=', 'clinicas.id')
+                ->leftJoin('medicos', 'e.medicos_id', '=', 'medicos.id')
+                ->leftJoin('estado_solicitud', 'e.estado_solicitud_id', '=', 'estado_solicitud.id')
+                ->whereBetween('e.created_at', ['2023-01-01', '2024-01-01'])
+                ->whereIn('e.estado_solicitud_id', [5,8,9])
+                ->get();
+
+           // dd($resultados);
+        return \Maatwebsite\Excel\Facades\Excel::download(new ReporteSinCotizar($resultados), 'reporte-solicitudes-sin-cotizar'.now().'.xlsx');
 
     }
 
