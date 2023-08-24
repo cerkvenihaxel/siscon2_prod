@@ -348,3 +348,4 @@ Route::get('/protesis/entrantes', function (){
 Route::get('/reportes_generales', [\App\Http\Controllers\ReportesGenerales::class, 'index'])->name('reportes_generales.index');
 Route::get('/reportes_generales/proveedores', [\App\Http\Controllers\ReportesGenerales::class, 'reporteProveedoresExcel'])->name('reportes_generales.proveedores');
 Route::get('/reportes_generales/medicos', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMedicosExcel'])->name('reportes_generales.medicos');
+Route::get('/reportes_generales/adj-an-sinadj', [\App\Http\Controllers\ReportesGenerales::class, 'reporteAdjudicadosAnuladosSA'])->name('reportes_generales.adj-an-sinadj');

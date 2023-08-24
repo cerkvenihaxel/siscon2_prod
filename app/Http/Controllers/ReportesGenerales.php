@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ReporteASDJ;
 use App\Exports\ReporteMedicosExport;
 use App\Exports\ReporteProveedoresExport;
 use Illuminate\Http\Request;
@@ -163,6 +164,47 @@ $resultados = DB::connection($connection)->table(
 
 
         return \Maatwebsite\Excel\Facades\Excel::download(new ReporteMedicosExport($resultados), 'ReporteMedicos.xlsx');
+    }
+
+    public function reporteAdjudicadosAnuladosSA(){
+
+        $connection = config('database.default'); // Esto asumirá la conexión predeterminada definida en config/database.php
+
+
+        $resultados = DB::table('cotizaciones', 'c')->selectRaw('
+            c.created_at AS "Fecha de carga",
+            CASE
+	   		WHEN MONTH(c.created_at) = 1 THEN "Enero"
+			WHEN MONTH(c.created_at) = 2 THEN "Febrero"
+	    	WHEN MONTH(c.created_at) = 3 THEN "Marzo"
+			WHEN MONTH(c.created_at) = 4 THEN "Abril"
+	    	WHEN MONTH(c.created_at) = 5 THEN "Mayo"
+			WHEN MONTH(c.created_at) = 6 THEN "Junio"
+	    	WHEN MONTH(c.created_at) = 7 THEN "Julio"
+			WHEN MONTH(c.created_at) = 8 THEN "Agosto"
+	    	WHEN MONTH(c.created_at) = 9 THEN "Septiembre"
+			WHEN MONTH(c.created_at) = 10 THEN "Octubre"
+	    	WHEN MONTH(c.created_at) = 11 THEN "Noviembre"
+			WHEN MONTH(c.created_at) = 12 THEN "Diciembre"
+	    ELSE "Otros"
+	    END AS "Mes de Carga",
+	   c.proveedor AS "Proveedor", afiliados.apeynombres AS "Nombre", clinicas.nombre AS "Clínica", c.edad AS "Edad",
+	   c.nrosolicitud AS "N° de Solicitud", medicos.nombremedico AS "Médico", estado_solicitud.estado AS "Estado Solicitud"
+
+
+        ')
+            ->join('afiliados', 'c.afiliados_id', '=', 'afiliados.id')
+            ->join('clinicas', 'c.clinicas_id', '=', 'clinicas.id')
+            ->join('medicos', 'c.medicos_id', '=', 'medicos.id')
+            ->join('estado_solicitud', 'c.estado_solicitud_id', '=', 'estado_solicitud.id')
+            ->orderBy('c.proveedor', 'asc')
+            ->get();
+
+       //dd($resultados[0]);
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new ReporteASDJ($resultados), 'ReporteASDJ.xlsx');
+
+
     }
 
 }

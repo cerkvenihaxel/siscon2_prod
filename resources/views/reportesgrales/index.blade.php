@@ -35,6 +35,28 @@
             </div>
         </div>
 
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body bg-white">
+                            <h5 class="card-title text-bold">Informe Adjudicadas-Anuladas-Sin Adjudicar</h5>
+                            <p class="card-text">Descargar informe con todas las solicitudes restantes</p>
+                            <a href="{{route('reportes_generales.adj-an-sinadj')}}" class="btn btn-success">
+                                Descargar excel</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 bg-white">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-bold">Informe por médicos</h5>
+                            <p class="card-text">Descargar informe de cada médico diferenciado por meses.</p>
+                            <a href="#" class="btn btn-success">Descargar excel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         <style>
             .card {
