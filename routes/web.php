@@ -343,3 +343,8 @@ Route::get('/protesis/entrantes', function (){
 })->name('protesis.entrantes');
 
 
+//-- Sección de reportes generales
+
+Route::get('/reportes_generales', [\App\Http\Controllers\ReportesGenerales::class, 'index'])->name('reportes_generales.index');
+Route::get('/reportes_generales/proveedores', [\App\Http\Controllers\ReportesGenerales::class, 'reporteProveedoresExcel'])->name('reportes_generales.proveedores');
+Route::get('/reportes_generales/medicos', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMedicosExcel'])->name('reportes_generales.medicos');
