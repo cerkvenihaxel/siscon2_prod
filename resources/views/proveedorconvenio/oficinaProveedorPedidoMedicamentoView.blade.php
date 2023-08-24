@@ -666,12 +666,11 @@
                     $('#modalGenerar').modal('show');
 
                     // Ejecutar la función de actualización de precios al abrir el modal
-                    $('#modalGenerar').on('shown.bs.modal', function () {
                         console.log("ACTUALIZAR")
                         for (var i = 0; i < medicamentos.length; i++) {
                             calculateTotalWithDiscount(i); // Llama a la función para cada medicamento
                         }
-                    });
+
                 },
                 error: function(error) {
                     console.log('error', error);
