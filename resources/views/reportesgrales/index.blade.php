@@ -57,8 +57,31 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body bg-white">
+                            <h5 class="card-title text-bold">Informe por especialidad</h5>
+                            <p class="card-text">Descargar informe con todas especialidades</p>
+                            <a href="{{route('reportes_generales.especialidad')}}" class="btn btn-success">
+                                Descargar excel</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 bg-white">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-bold">Informe por mes</h5>
+                            <p class="card-text">Descargar informe solicitudes entrantes por mes</p>
+                            <a href="{{route('reportes_generales.mes')}}" class="btn btn-success">Descargar excel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <style>
+
+
+            <style>
             .card {
                 margin-bottom: 20px;
                 background: white;

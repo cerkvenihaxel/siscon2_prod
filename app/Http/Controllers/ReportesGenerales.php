@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ReporteASDJ;
+use App\Exports\ReporteEspecialidad;
 use App\Exports\ReporteMedicosExport;
+use App\Exports\ReporteMes;
 use App\Exports\ReporteProveedoresExport;
 use App\Exports\ReporteSinCotizar;
 use Illuminate\Http\Request;
@@ -138,7 +140,7 @@ $resultados = DB::connection($connection)->table(
     COUNT(CASE WHEN subconsulta.tabla = "presentacion" THEN 1 END) AS Finalizadas
     ')->groupBy('Proveedor', 'Mes')->orderBy('Proveedor', 'asc')->get();
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new ReporteProveedoresExport($resultados), 'ReporteProveedores.xlsx');
+        return \Maatwebsite\Excel\Facades\Excel::download(new ReporteProveedoresExport($resultados), 'ReporteProveedorestado_solicitud.xlsx');
     }
 
     public function reporteMedicosExcel()
@@ -158,7 +160,7 @@ $resultados = DB::connection($connection)->table(
         SUM(CASE WHEN e.created_at BETWEEN "2023-06-01" AND "2023-07-01" THEN 1 ELSE 0 END) AS JUNIO,
         SUM(CASE WHEN e.created_at BETWEEN "2023-07-01" AND "2023-08-01" THEN 1 ELSE 0 END) AS JULIO
     ')
-            ->join('medicos', 'e.medicos_id', '=', 'medicos.id')
+            ->leftJoin('medicos', 'e.medicos_id', '=', 'medicos.id')
             ->groupBy('e.medicos_id') // Agregar esta línea para agrupar por medicos_id
             ->get();
 
@@ -270,10 +272,10 @@ $resultados = DB::connection($connection)->table(
 	    afiliados.apeynombres AS "Nombre", clinicas.nombre AS "Clínica", c.edad AS "Edad",
 	   c.nrosolicitud AS "N° de Solicitud", medicos.nombremedico AS "Médico", estado_solicitud.estado AS "Estado Solicitud"
         ')
-            ->join('afiliados', 'c.afiliados_id', '=', 'afiliados.id')
-            ->join('clinicas', 'c.clinicas_id', '=', 'clinicas.id')
-            ->join('medicos', 'c.medicos_id', '=', 'medicos.id')
-            ->join('estado_solicitud', 'c.estado_solicitud_id', '=', 'estado_solicitud.id')
+            ->leftJoin('afiliados', 'c.afiliados_id', '=', 'afiliados.id')
+            ->leftJoin('clinicas', 'c.clinicas_id', '=', 'clinicas.id')
+            ->leftJoin('medicos', 'c.medicos_id', '=', 'medicos.id')
+            ->leftJoin('estado_solicitud', 'c.estado_solicitud_id', '=', 'estado_solicitud.id')
             ->orderBy('c.proveedor', 'asc')
             ->get();
 
@@ -316,6 +318,74 @@ $resultados = DB::connection($connection)->table(
            // dd($resultados);
         return \Maatwebsite\Excel\Facades\Excel::download(new ReporteSinCotizar($resultados), 'reporte-solicitudes-sin-cotizar'.now().'.xlsx');
 
+    }
+
+
+    public function reporteEspecialidad(){
+
+        $connection = config('database.default'); // Esto asumirá la conexión predeterminada definida en config/database.php
+
+        $resultados = DB::table('entrantes', 'e')->selectRaw('
+        grupos.des_grupo as Especialidad,
+               SUM(CASE WHEN e.created_at BETWEEN "2023-01-01" AND "2023-02-01" THEN 1 END) AS "INGRESO ENERO",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-02-01" AND "2023-03-01" THEN 1 END) AS "INGRESO FEBRERO",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-03-01" AND "2023-04-01" THEN 1 END) AS "INGRESO MARZO",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-04-01" AND "2023-05-01" THEN 1 END) AS "INGRESO ABRIL",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-05-01" AND "2023-06-01" THEN 1 END) AS "INGRESO MAYO",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-06-01" AND "2023-07-01" THEN 1 END) AS "INGRESO JUNIO",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-07-01" AND "2023-08-01" THEN 1 END) AS "INGRESO JULIO",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-08-01" AND "2023-09-01" THEN 1 END) AS "INGRESO AGOSTO",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-09-01" AND "2023-10-01" THEN 1 END) AS "INGRESO SEPTIEMBRE",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-10-01" AND "2023-11-01" THEN 1 END) AS "INGRESO OCTUBRE",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-11-01" AND "2023-12-01" THEN 1 END) AS "INGRESO NOVIEMBRE",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-12-01" AND "2024-01-01" THEN 1 END) AS "INGRESO DICIEMBRE"
+       ')
+            ->leftJoin('grupos', 'e.grupo_articulos', '=', 'grupos.id')
+            ->groupBy('e.grupo_articulos')
+            ->get();
+        //ddd($resultados[0]);
+        return \Maatwebsite\Excel\Facades\Excel::download(new ReporteEspecialidad($resultados), 'reporte-especialidad'.now().'.xlsx');
+    }
+
+    public function reporteMes(){
+
+        $resultados = DB::table('entrantes', 'e')->selectRaw('
+
+        e.created_at as "Fecha de carga",
+         CASE
+	   		WHEN MONTH(e.created_at) = 1 THEN "Enero"
+			WHEN MONTH(e.created_at) = 2 THEN "Febrero"
+	    	WHEN MONTH(e.created_at) = 3 THEN "Marzo"
+			WHEN MONTH(e.created_at) = 4 THEN "Abril"
+	    	WHEN MONTH(e.created_at) = 5 THEN "Mayo"
+			WHEN MONTH(e.created_at) = 6 THEN "Junio"
+	    	WHEN MONTH(e.created_at) = 7 THEN "Julio"
+			WHEN MONTH(e.created_at) = 8 THEN "Agosto"
+	    	WHEN MONTH(e.created_at) = 9 THEN "Septiembre"
+			WHEN MONTH(e.created_at) = 10 THEN "Octubre"
+	    	WHEN MONTH(e.created_at) = 11 THEN "Noviembre"
+			WHEN MONTH(e.created_at) = 12 THEN "Diciembre"
+	    ELSE "Otros"
+	    END AS "Mes de Carga",
+	    afiliados.apeynombres AS "Nombre" , afiliados.nroAfiliado AS "N° Afiliado",
+	   clinicas.nombre AS "Clínica", e.edad AS "Edad", e.nrosolicitud AS "N° Solicitud", medicos.nombremedico as "Médico",
+	   estado_paciente.estado AS "Estado Paciente", estado_solicitud.estado AS "Estado Solicitud", e.fecha_cirugia AS "Fecha de Cirugía",
+	   e.accidente AS "Sufrió Accidente", necesidad.necesidad AS "Necesidad", grupos.des_grupo AS "Grupo Articulos",
+	   e.fecha_expiracion AS "Fecha de Expiración"
+        ')->leftJoin('afiliados', 'e.afiliados_id', '=', 'afiliados.id')
+            ->leftJoin('clinicas', 'e.clinicas_id', '=', 'clinicas.id')
+            ->leftJoin('medicos', 'e.medicos_id', '=', 'medicos.id')
+            ->leftJoin('estado_paciente', 'e.estado_paciente_id', '=', 'estado_paciente.id')
+            ->leftJoin('estado_solicitud', 'e.estado_solicitud_id', '=', 'estado_solicitud.id')
+            ->leftJoin('necesidad', 'e.necesidad', '=', 'necesidad.id')
+            ->leftJoin('grupos', 'e.grupo_articulos', '=', 'grupos.id')
+            ->whereBetween('e.created_at', ['2023-01-01', '2024-01-01'])
+            ->orderBy('e.created_at', 'asc')
+            ->get();
+
+        //dd($resultados);
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new ReporteMes($resultados), 'reporte-por-mes'.now().'.xlsx');
     }
 
 }
