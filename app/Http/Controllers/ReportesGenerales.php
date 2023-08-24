@@ -172,6 +172,7 @@ $resultados = DB::connection($connection)->table(
 
 
         $resultados = DB::table('cotizaciones', 'c')->selectRaw('
+            c.proveedor AS "Proveedor",
             c.created_at AS "Fecha de carga",
             CASE
 	   		WHEN MONTH(c.created_at) = 1 THEN "Enero"
@@ -188,7 +189,7 @@ $resultados = DB::connection($connection)->table(
 			WHEN MONTH(c.created_at) = 12 THEN "Diciembre"
 	    ELSE "Otros"
 	    END AS "Mes de Carga",
-	   c.proveedor AS "Proveedor", afiliados.apeynombres AS "Nombre", clinicas.nombre AS "Clínica", c.edad AS "Edad",
+	    afiliados.apeynombres AS "Nombre", clinicas.nombre AS "Clínica", c.edad AS "Edad",
 	   c.nrosolicitud AS "N° de Solicitud", medicos.nombremedico AS "Médico", estado_solicitud.estado AS "Estado Solicitud"
 
 

@@ -27,9 +27,9 @@ class ReporteASDJ implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'Proveedor',
             'Fecha de carga',
             'Mes de carga',
-            'Proveedor',
             'Nombre',
             'Clínica',
             'Edad',
