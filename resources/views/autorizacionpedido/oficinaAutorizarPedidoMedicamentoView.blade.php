@@ -58,7 +58,7 @@
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
                             <td>{{ $solicitud->medicos->nombremedico }}</td>
-                            <td>{{ $solicitud->patologiasName->nombre }}</td>
+                            <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre')}}</td>
                             <td>{{ $solicitud->estadoSolicitud->estado }}</td>
                             <td>
                                 <div class="button-container">
@@ -123,7 +123,7 @@
                         <td>{{ $solicitud->nroAfiliado }}</td>
                         <td>{{ $solicitud->nrosolicitud }}</td>
                         <td>{{ $solicitud->medicos->nombremedico }}</td>
-                        <td>{{ $solicitud->patologiasName->nombre }}</td>
+                        <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
                         <td>{{ $solicitud->estadoSolicitud->estado }}</td>
                         <td>
                             <div class="button-container">
@@ -181,7 +181,7 @@
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
                             <td>{{ $solicitud->medicos->nombremedico }}</td>
-                            <td>{{ $solicitud->patologiasName->nombre  }}</td>
+                            <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
                             <td>{{ $solicitud->estadoSolicitud->estado }}</td>
                             <td>{{ $solicitud->proveedorNombre}}</td>
                             <td>

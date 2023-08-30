@@ -25,7 +25,7 @@ class PedidoMedicamento extends Model
         return $this->belongsTo(Medicos::class, 'medicos_id', 'id');
     }
 
-    public function patologiaName(){
+    public function patologia(){
         return $this->belongsTo(Patologias::class, 'patologias', 'id');
     }
 
