@@ -56,10 +56,10 @@
                             <td> {{ $solicitud->afiliados->apeynombres}}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
-                            <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
-                            <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
-                            <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
-                            <td>{{ DB::table('proveedores_convenio')->where('id', $solicitud->proveedor)->value('nombre') }}</td>
+                            <td>{{ $solicitud->medicos->nombremedico }}</td>
+                            <td>{{ $solicitud->patologias->nombre}}</td>
+                            <td>{{ $solicitud->estadoSolicitud->estado }}</td>
+                            <td>{{ $solicitud->proveedoresConvenio->nombre  }}</td>
                             <td>
                                 <div class="button-container">
                                     <button class="btn btn-success btn-xs m-5 btn-autorizar" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#modalGenerar">
@@ -114,8 +114,8 @@
                         <td>{{ $cot->created_at }}</td>
                         <td>{{ $cot->nombreyapellido}}</td>
                         <td>{{ $cot->nrosolicitud }}</td>
-                        <td>{{ DB::table('estado_solicitud')->where('id', $cot->estado_solicitud_id)->value('estado') }}</td>
-                        <td>{{ DB::table('estado_pedido')->where('id', $cot->estado_pedido_id)->value('estado') }}</td>
+                        <td>{{ $cot->estadoSolicitud->estado }}</td>
+                        <td>{{ $cot->estadoPedido->estado }}</td>
                         <td>{{ $cot->id_pedido }} </td>
                         <td>{{$cot->nro_remito}}</td>
                         <td>{{$cot->nro_factura}}</td>
@@ -167,9 +167,9 @@
                     <tr>
                         @foreach($solicitudes->whereIn('estado_pedido_id', [1]) as $en)
                             <td>{{ $en->created_at }}</td>
-                            <td>{{ DB::table('afiliados')->where('nroAfiliado', $en->nroAfiliado)->value('apeynombres') }}</td>
+                            <td>{{ $en->afiliados->apeynombres }}</td>
                             <td>{{ $en->nrosolicitud }}</td>
-                            <td>{{ DB::table('estado_solicitud')->where('id', $en->estado_solicitud_id)->value('estado') }}</td>
+                            <td>{{ $en->estadoSolicitud->estado }}</td>
                             <td>
                                 <div class="button-container">
                                     <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $en->id }}" data-toggle="modal" data-target="#pedidoModal">
@@ -638,7 +638,6 @@
                         var opcion = new Option(puntoRetiro.nombre, puntoRetiro.id);
                         $('#punto_retiro').append(opcion);
                     }
-
 
 
 

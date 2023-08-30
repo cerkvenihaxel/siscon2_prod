@@ -19,4 +19,13 @@ class CotizacionConvenio extends Model
     {
         return $this->hasMany(CotizacionConvenioDetail::class, 'cotizacion_convenio_id');
     }
+
+    public function estadoSolicitud()
+    {
+        return $this->belongsTo(EstadoSolicitud::class, 'estado_solicitud_id', 'id');
+    }
+
+    public function estadoPedido(){
+        return $this->belongsTo(EstadoPedido::class, 'estado_pedido_id', 'id');
+    }
 }

@@ -20,6 +20,6 @@ class Afiliados extends Model
     }
 
     public function oficinaAutorizar(){
-        return $this->hasMany(PedidoMedicamento::class, 'afiliados', 'id');
+        return $this->hasMany(PedidoMedicamento::class, 'afiliados_id', 'id');
     }
 }

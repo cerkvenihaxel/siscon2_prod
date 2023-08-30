@@ -24,8 +24,8 @@ class ProveedorConvenioOficina extends Controller
     //
     public function index()
     {
-        $solicitudes = OficinaAutorizar::all();
-        $cotizadas = CotizacionConvenio::all();
+        $solicitudes = OficinaAutorizar::with('medicos', 'afiliados', 'patologias', 'estadoSolicitud')->get();
+        $cotizadas = CotizacionConvenio::with('estadoSolicitud')->get();
 
 
         return view('proveedorconvenio.oficinaProveedorPedidoMedicamentoView', compact('solicitudes', 'cotizadas'));
