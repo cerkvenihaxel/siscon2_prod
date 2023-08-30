@@ -18,4 +18,8 @@ class EstadoSolicitud extends Model
     public function cotizacionConvenio(){
         return $this->hasMany(CotizacionConvenio::class, 'estado_solicitud_id', 'id');
     }
+
+    public function pedidoMedicamento(){
+        return $this->hasMany(PedidoMedicamento::class, 'estado_solicitud_id', 'id');
+    }
 }

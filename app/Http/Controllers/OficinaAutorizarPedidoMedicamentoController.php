@@ -21,7 +21,7 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
     {
         $privilegio = CRUDBooster::myPrivilegeId();
         $id = CRUDBooster::myId();
-        $solicitudes = PedidoMedicamento::with('detalles', 'afiliados')->get();
+        $solicitudes = PedidoMedicamento::with('detalles', 'afiliados', 'patologias', 'medicos', 'estadoSolicitud', 'patologiasName')->get();
         $stamp_userConvenio = null;
         $auditor = $privilegio == 40;
 

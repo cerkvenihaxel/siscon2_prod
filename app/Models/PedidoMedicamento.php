@@ -20,4 +20,16 @@ class PedidoMedicamento extends Model
     {
         return $this->belongsTo(Afiliados::class, 'afiliados_id', 'id');
     }
+
+    public function medicos(){
+        return $this->belongsTo(Medicos::class, 'medicos_id', 'id');
+    }
+
+    public function patologiaName(){
+        return $this->belongsTo(Patologias::class, 'patologias', 'id');
+    }
+
+    public function estadoSolicitud(){
+        return $this->belongsTo(EstadoSolicitud::class, 'estado_solicitud_id', 'id');
+    }
 }

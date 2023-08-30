@@ -17,4 +17,8 @@ class Patologias extends Model
     public function oficinaAutorizar(){
         return $this->hasMany(OficinaAutorizar::class, 'patologia', 'id');
     }
+
+    public function pedidoMedicamento(){
+        return $this->hasMany(PedidoMedicamento::class, 'patologias', 'id');
+    }
 }

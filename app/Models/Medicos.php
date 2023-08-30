@@ -14,4 +14,8 @@ class Medicos extends Model
     {
         return $this->hasMany(OficinaAutorizar::class, 'medicos_id', 'id');
     }
+
+    public function pedidoMedicamento(){
+        return $this->hasMany(PedidoMedicamento::class, 'medicos_id', 'id');
+    }
 }
