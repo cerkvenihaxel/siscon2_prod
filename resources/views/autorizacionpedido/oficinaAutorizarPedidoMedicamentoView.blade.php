@@ -57,9 +57,9 @@
                             <td>{{$solicitud->afiliados->apeynombres}}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
-                            <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
-                            <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
-                            <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
+                            <td>{{ $solicitud->medicos->nombremedico }}</td>
+                            <td>{{ $solicitud->patologiasName->nombre }}</td>
+                            <td>{{ $solicitud->estadoSolicitud->estado }}</td>
                             <td>
                                 <div class="button-container">
                                     <button class="btn btn-success btn-xs m-5 btn-auditar" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#auditarModal">
@@ -122,9 +122,9 @@
                         <td>{{$solicitud->afiliados->apeynombres}}</td>
                         <td>{{ $solicitud->nroAfiliado }}</td>
                         <td>{{ $solicitud->nrosolicitud }}</td>
-                        <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
-                        <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
-                        <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
+                        <td>{{ $solicitud->medicos->nombremedico }}</td>
+                        <td>{{ $solicitud->patologiasName->nombre }}</td>
+                        <td>{{ $solicitud->estadoSolicitud->estado }}</td>
                         <td>
                             <div class="button-container">
                                 <button class="btn btn-success btn-xs m-5 btn-autorizar" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#modalAutorizar">
@@ -180,10 +180,10 @@
                             <td>{{ $solicitud->afiliados->apeynombres }}</td>
                             <td>{{ $solicitud->nroAfiliado }}</td>
                             <td>{{ $solicitud->nrosolicitud }}</td>
-                            <td>{{ DB::table('medicos')->where('id', $solicitud->medicos_id)->value('nombremedico') }}</td>
-                            <td>{{ DB::table('patologias')->where('id', $solicitud->patologia)->value('nombre') }}</td>
-                            <td>{{ DB::table('estado_solicitud')->where('id',$solicitud->estado_solicitud_id)->value('estado') }}</td>
-                            <td>{{$solicitud->proveedorNombre}}</td>
+                            <td>{{ $solicitud->medicos->nombremedico }}</td>
+                            <td>{{ $solicitud->patologiasName->nombre  }}</td>
+                            <td>{{ $solicitud->estadoSolicitud->estado }}</td>
+                            <td>{{ $solicitud->proveedorNombre}}</td>
                             <td>
                                 <div class="button-container">
                                     <button class="btn btn-info btn-xs m-5 btn-ver-pedido" data-pedido-id="{{ $solicitud->id }}" data-toggle="modal" data-target="#pedidoModal">
