@@ -145,10 +145,7 @@ $resultados = DB::connection($connection)->table(
 
     public function reporteMedicosExcel()
     {
-
         $connection = config('database.default'); // Esto asumirá la conexión predeterminada definida en config/database.php
-
-
         $resultados = DB::table('entrantes', 'e')
             ->selectRaw('
         medicos.nombremedico as Medico,
@@ -158,7 +155,13 @@ $resultados = DB::connection($connection)->table(
         SUM(CASE WHEN e.created_at BETWEEN "2023-04-01" AND "2023-05-01" THEN 1 ELSE 0 END) AS ABRIL,
         SUM(CASE WHEN e.created_at BETWEEN "2023-05-01" AND "2023-06-01" THEN 1 ELSE 0 END) AS MAYO,
         SUM(CASE WHEN e.created_at BETWEEN "2023-06-01" AND "2023-07-01" THEN 1 ELSE 0 END) AS JUNIO,
-        SUM(CASE WHEN e.created_at BETWEEN "2023-07-01" AND "2023-08-01" THEN 1 ELSE 0 END) AS JULIO
+        SUM(CASE WHEN e.created_at BETWEEN "2023-07-01" AND "2023-08-01" THEN 1 ELSE 0 END) AS JULIO,
+        SUM(CASE WHEN e.created_at BETWEEN "2023-08-01" AND "2023-09-01" THEN 1 END) AS "INGRESO AGOSTO",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-09-01" AND "2023-10-01" THEN 1 END) AS "INGRESO SEPTIEMBRE",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-10-01" AND "2023-11-01" THEN 1 END) AS "INGRESO OCTUBRE",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-11-01" AND "2023-12-01" THEN 1 END) AS "INGRESO NOVIEMBRE",
+       SUM(CASE WHEN e.created_at BETWEEN "2023-12-01" AND "2024-01-01" THEN 1 END) AS "INGRESO DICIEMBRE"
+
     ')
             ->leftJoin('medicos', 'e.medicos_id', '=', 'medicos.id')
             ->groupBy('e.medicos_id') // Agregar esta línea para agrupar por medicos_id

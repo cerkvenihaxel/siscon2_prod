@@ -29,7 +29,7 @@
                     <div class="card-body">
                         <h5 class="card-title text-bold">Informe por médicos</h5>
                         <p class="card-text">Descargar informe de cada médico diferenciado por meses.</p>
-                        <a href="#" class="btn btn-success">Descargar excel</a>
+                        <a href="{{route('reportes_generales.medicos')}}" class="btn btn-success">Descargar excel</a>
                     </div>
                 </div>
             </div>
