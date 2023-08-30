@@ -30,7 +30,10 @@ class OficinaAutorizar extends Model
         return $this->belongsTo(ProveedoresConvenioMedicamentos::class, 'proveedor', 'id');
     }
 
-
+    public function oficinaAutorizarDetail()
+    {
+        return $this->hasMany(OficinaAutorizarDetail::class, 'convenio_oficina_os_id');
+    }
 
 
 }
