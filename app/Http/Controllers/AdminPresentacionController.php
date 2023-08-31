@@ -288,7 +288,6 @@
 	        $this->load_js = array();
 
 
-
 	        /*
 	        | ----------------------------------------------------------------------
 	        | Add css style at body
@@ -388,7 +387,8 @@
 	    public function hook_after_add($id) {
 	        //Your code here
 
-	DB::table('entrantes')->where('nrosolicitud', Request::input('nroSolicitud'))->update(['estado_solicitud_id'=>6]);
+	DB::table('entrantes')->where('nrosolicitud', Request::input('nroSolicitud'))->update(['estado_solicitud_id'=>15]);
+
 	$materialNumber = DB::table('presentacion')->where('id', $id)->value('materialEntregado');
 	$materialName = DB::table('articulos')->where('id', $materialNumber)->value('des_articulo');
 
