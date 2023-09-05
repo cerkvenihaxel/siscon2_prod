@@ -124,7 +124,7 @@
 	        |
 	        */
 	        $this->sub_module = array();
-	  	$this->sub_module[] = ['label'=>'Agregar a presentacion final', 'path'=>'presentacion/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-paper-plane-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
+	  	$this->sub_module[] = ['label'=>'Agregar a presentacion final', 'path'=>'presentadas/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'success','button_icon'=>'fa fa-paper-plane-o','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 
 
 	        /*
