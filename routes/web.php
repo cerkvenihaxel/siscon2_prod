@@ -256,6 +256,20 @@ Route::post('/enviar-pedido-masivo', [\App\Http\Controllers\ProveedorConvenioOfi
 Route::post('/generarpedido/guardarmasivo', [\App\Http\Controllers\ProveedorConvenioOficina::class, 'autorizarGuardarPedidoMasivo'])->name('generarpedido.guardarmasivo');
 
 
+//PEDIDO MASIVO 2
+
+Route::group(['prefix' => 'generar-pedido'], function (){
+
+    Route::get('index', [\App\Http\Controllers\Backoffice\GlobalMedica\PedidosConvenio::class, 'index'])->name('generar-pedido.index');
+    Route::post('store', [\App\Http\Controllers\Backoffice\GlobalMedica\PedidosConvenio::class, 'store'])->name('generar-pedido.store');
+    Route::get('vaciar', [\App\Http\Controllers\Backoffice\GlobalMedica\PedidosConvenio::class, 'vaciar'])->name('generar-pedido.vaciar');
+    Route::post('enviar', [\App\Http\Controllers\Backoffice\GlobalMedica\PedidosConvenio::class, 'enviarPedido'])->name('generar-pedido.enviar');
+    Route::post('editar-articulo', [\App\Http\Controllers\Backoffice\GlobalMedica\PedidosConvenio::class, 'editarArticulo'])->name('generar-pedido.editar-articulo');
+    Route::get('eliminar-articulo/{index}', [\App\Http\Controllers\Backoffice\GlobalMedica\PedidosConvenio::class, 'eliminarArticulo'])->name('generar-pedido.eliminar-articulo');
+    Route::get('buscar-articulos', [\App\Http\Controllers\Backoffice\GlobalMedica\PedidosConvenio::class, 'buscarArticulos'])->name('generar-pedido.buscar-articulos');
+
+});
+
 //--------------------------------------------------------------------------------------------------------
 
 //---------- VALIDADOR DE FARMACIAS ------------------

@@ -1,11 +1,14 @@
 <?php namespace App\Http\Controllers;
 
-	use Session;
+	use App\Models\User;
+    use Barryvdh\Debugbar\Facades\Debugbar;
+    use Session;
 	use Request;
 	use DB;
 	use CRUDBooster;
+    use Symfony\Component\ErrorHandler\Debug;
 
-	class AdminCotizaciones19Controller extends \crocodicstudio\crudbooster\controllers\CBController {
+    class AdminCotizaciones19Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -50,6 +53,8 @@
 
 			$url = $_GET['id'];
 			$custom_element = view('articulosEntrantes')->render();
+            $name = CRUDBooster::myName();
+
 
 	function adminPrivilegeId(){
 
@@ -60,6 +65,8 @@
 				return true;
 			}
 		}
+
+
 
         function auditorPrivilege(){
             $privilege = CRUDBooster::myPrivilegeId();
@@ -144,7 +151,8 @@
 
 
 
-			$this->form[] =['label'=>'Proveedor', 'name'=>'proveedor','readonly'=>adminPrivilegeId(), 'type'=>'text', 'width'=>'col-sm-10', 'value'=>CRUDBooster::myName()];
+            $this->form[] =['label'=>'Proveedor', 'name'=>'proveedor','type'=>'select','width'=>'col-sm-10','datatable'=>'proveedores_protesis,name','value'=>$this->setProveedorName($name)];
+
 			$this->form[] = ['label'=>'Total','name'=>'total','type'=>'text','validation'=>'required|gt:1','width'=>'col-sm-10','prefix'=>'$' , 'readonly'=>true];
 /*			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
@@ -401,7 +409,6 @@
 		}
 		else if( $privilege == 37 || $privilege == 34 || $privilege == 35 || $privilege == 33){
 			$query->where('stamp_user',CRUDBooster::myName());}
-
 	    }
 
 	    /*
@@ -430,6 +437,7 @@
 			$postdata['medicos_id'] = DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->value('medicos_id');
 			$postdata['estado_paciente_id'] = DB::table('entrantes')->where('nrosolicitud',$postdata['nrosolicitud'])->value('estado_paciente_id');
 
+
 	    }
 
 	    /*
@@ -446,7 +454,9 @@
 //			DB::table('entrantes')->where('nrosolicitud',$nroSolicitud)->update(['estado_solicitud_id'=>2]);
 			DB::table('cotizaciones')->where('id',$id)->update(['afiliadoName'=>DB::table('afiliados')->where('id',$afiliadoId)->value('apeynombres')]);
 
-			$stampName = CRUDBooster::myName();
+            $email = User::where('id',CRUDBooster::myId())->first()->email;
+
+			$stampName = $email;
 
 			DB::table('cotizaciones')->where('id', $id)->update(array('stamp_user' => $stampName));
 
@@ -549,6 +559,18 @@
 
 			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue anulada con éxito!","info");
 		 }
+
+         public function setProveedorName($string) : string{
+
+            $proveedorName = DB::table('proveedores_protesis')->where('name', 'LIKE', '%'. $string .'%')->value('id');
+
+            if($proveedorName)
+            return $proveedorName;
+            else
+            return "";
+         }
+
+
 
 
 	}

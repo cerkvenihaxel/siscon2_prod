@@ -25,13 +25,13 @@
             <div class="card-header">
                 <h3 class="card-title">Pedidos por procesar</h3>
             </div>
-            <!--<div class="button-container">
-                <a href="/generarpedido/cargamasiva">
+            <div class="button-container">
+                <a href={{route('generar-pedido.index')}}>
             <button class="btn btn-info btn-xs m-5 btn-autorizar">
-                    <i class="fas fa-send"></i> Enviar varios pedidos a depósito
+                    <i class="fas fa-send"></i> Generar pedido masivo
                 </button>
                 </a>
-            </div> -->
+            </div>
             <div class="card-body">
                 <table id="tabla-solicitudes" class="table table-bordered">
                     <thead>
