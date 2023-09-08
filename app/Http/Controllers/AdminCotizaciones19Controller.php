@@ -151,7 +151,7 @@
 
 
 
-            $this->form[] =['label'=>'Proveedor', 'name'=>'proveedor','type'=>'select','width'=>'col-sm-10','datatable'=>'proveedores_protesis,name','value'=>$this->setProveedorName($name)];
+            $this->form[] =['label'=>'Proveedor', 'name'=>'proveedor','readonly'=>adminPrivilegeId(), 'type'=>'text', 'width'=>'col-sm-10', 'value'=>CRUDBooster::myName()];
 
 			$this->form[] = ['label'=>'Total','name'=>'total','type'=>'text','validation'=>'required|gt:1','width'=>'col-sm-10','prefix'=>'$' , 'readonly'=>true];
 /*			# START COLUMNS DO NOT REMOVE THIS LINE
@@ -560,7 +560,7 @@
 			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue anulada con éxito!","info");
 		 }
 
-         public function setProveedorName($string) : string{
+         /*public function setProveedorName($string) : string{
 
             $proveedorName = DB::table('proveedores_protesis')->where('name', 'LIKE', '%'. $string .'%')->value('id');
 
@@ -568,7 +568,7 @@
             return $proveedorName;
             else
             return "";
-         }
+         }*/
 
 
 
