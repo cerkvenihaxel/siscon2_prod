@@ -456,6 +456,8 @@
 //			DB::table('entrantes')->where('nrosolicitud',$nroSolicitud)->update(['estado_solicitud_id'=>2]);
 			DB::table('cotizaciones')->where('id',$id)->update(['afiliadoName'=>DB::table('afiliados')->where('id',$afiliadoId)->value('apeynombres')]);
 
+            DB::table('cotizaciones')->where('id', $id)->update(['fecha_de_carga' => date('Y-m-d')]);
+
             $email = User::where('id',CRUDBooster::myId())->first()->email;
 
 			$stampName = $email;
@@ -484,6 +486,8 @@
 //					$postdata['clinicas_id'] = DB::table('entrantes')->where('id',$url)->value('clinicas_id');
 //			$postdata['medicos_id'] = DB::table('entrantes')->where('id',$url)->value('medicos_id');
 //			$postdata['estado_paciente_id'] = DB::table('entrantes')->where('id',$url)->value('estado_paciente_id');
+
+
 
 	    }
 
