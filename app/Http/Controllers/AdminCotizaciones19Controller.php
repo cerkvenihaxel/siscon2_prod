@@ -35,6 +35,7 @@
 			$this->col = [];
 			$this->col[] = ['label'=>'Fecha de carga','name'=>'fecha_de_carga'];
 			$this->col[] = ['label'=>'Fecha de carga del médico','name'=>'fecha_solicitud'];
+            $this->col[] = ['label'=>'Fecha límite de oferta','name'=>'fecha_limite_oferta'];
 			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
 			$this->col[] = ["label"=>"Clínica","name"=>"clinicas_id","join"=>"clinicas,nombre"];
 			$this->col[] = ["label"=>"Edad","name"=>"edad"];
@@ -140,6 +141,7 @@
 
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'cotizaciones_detail', 'type'=>'child','table'=>'cotizaciones_detail', 'foreign_key'=>'entrantes_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
 
+            $this->form[] = ['label' => 'Fecha límite de oferta', 'name'=>'fecha_limite_oferta', 'type'=>'date', 'validation'=>'required|date', 'width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Observacion','name'=>'observaciones','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 
 			//$this->form[] = ['label'=>'Archivo', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
