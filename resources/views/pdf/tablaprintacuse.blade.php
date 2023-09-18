@@ -81,7 +81,7 @@
             <tr>
                 <td>{{ $key +1 }}</td>
                 <td> {{ $detalle->presentacion }}</td>
-                <td>{{ $detalle->cantidad }}</td>
+                <td>{{ $detalle->cantidad_entregada }}</td>
               
                 <!-- Agrega aquí más celdas según los datos que desees mostrar de $detalles -->
             </tr>
