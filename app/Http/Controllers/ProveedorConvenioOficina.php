@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Afiliados;
+use App\Models\ArticulosZafiro;
 use App\Models\CotizacionConvenio;
 use App\Models\CotizacionConvenioDetail;
 use App\Models\LinPedido;
@@ -14,6 +15,7 @@ use App\Models\PedidoMedicamento;
 use App\Models\PedidoMedicamentoDetail;
 use App\Models\ProveedoresConvenio;
 use App\Models\ProveedoresConvenioDetail;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -299,6 +301,14 @@ class ProveedorConvenioOficina extends Controller
             ->groupBy('articuloszafiro_id', 'presentacion')
             ->select('presentacion','articuloszafiro_id',\DB::raw('SUM(cantidad) as cantidad_total'), \DB::raw('MAX(banda_descuento) as banda_descuento'))
             ->get();
+
+        foreach($medicamento as $med){
+            $med->precio = ArticulosZafiro::where('id_articulo', $med->articuloszafiro_id)->value('pcio_vta_siva');
+            $med->precio = round($med->precio, 2);
+            $med->laboratorio = DB::table('banda_descuentos')->where('id_articulo', $med->articuloszafiro_id)->value('laboratorio') ?? '';
+        }
+
+        Debugbar::info($medicamento);
 
         $medicamentos = $medicamento->groupBy('articuloszafiro_id')->toArray();
 
