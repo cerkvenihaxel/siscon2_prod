@@ -33,7 +33,7 @@
 
 		# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ['label'=>'Fecha de carga','name'=>'fecha_de_carga'];
+			$this->col[] = ['label'=>'Fecha de carga','name'=>'created_at'];
 			$this->col[] = ['label'=>'Fecha de carga del médico','name'=>'fecha_solicitud'];
             $this->col[] = ['label'=>'Fecha límite de oferta','name'=>'fecha_limite_oferta'];
 			$this->col[] = ["label"=>"Nombre y Apellido Afiliado","name"=>"afiliados_id","join"=>"afiliados,apeynombres"];
