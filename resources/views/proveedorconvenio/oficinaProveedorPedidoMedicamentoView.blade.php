@@ -28,8 +28,13 @@
             <div class="button-container">
                 <a href={{route('generar-pedido.index')}}>
             <button class="btn btn-info btn-xs m-5 btn-autorizar">
-                    <i class="fas fa-send"></i> Generar pedido masivo
+                    <i class="fas fa-send"></i> Generar pedido masivo sin receta
                 </button>
+                </a>
+                <a href={{route('generarpedido.cargamasiva')}}>
+                    <button class="btn btn-warning btn-xs m-5 btn-autorizar">
+                        <i class="fas fa-send"></i> Generar pedido masivo CON receta cargada
+                    </button>
                 </a>
             </div>
             <div class="card-body">

@@ -180,9 +180,9 @@
                             '<input type="hidden" name="medicamentos[' + i + '][presentacion]" value="' + medicamento.presentacion + '">' +
                             '<input type="hidden" name="medicamentos[' + i + '][articuloZafiro_id]" value="' + medicamento.articuloszafiro_id + '">' +
                             '<td>' + medicamento.presentacion + '</td>' +
-                            '<td><input type="text"  name="medicamentos[' + i + '][laboratorio]" placeholder="Laboratorio"></td>' +
+                            '<td><input type="text"  name="medicamentos[' + i + '][laboratorio]" placeholder="Laboratorio" value=' + medicamento.laboratorio +'></td>' +
                             '<td>' +
-                            '<input type="text" class="form-control" name="medicamentos[' + i + '][precio]" placeholder="Ingrese el precio" onchange="calculateTotalWithDiscount(' + i + ')">' +
+                            '<input type="text" class="form-control" name="medicamentos[' + i + '][precio]" placeholder="Ingrese el precio" onchange="calculateTotalWithDiscount(' + i + ')" value=' + medicamento.precio + '>' +
                             '</td>' + // PRECIO
                             '<td>' +
                             '<input type="number" class="form-control" name="medicamentos[' + i + '][cantidad]" value="' + medicamento.cantidad_total + '" onchange="calculateTotalWithDiscount(' + i + ')" readonly>' +
@@ -228,6 +228,15 @@
                             $('#punto_retiro_des').trigger('change');
                         }
                     });
+
+                    // Mostrar el modal
+                    $('#pedidoModal').modal('show');
+
+                    // Ejecutar la función de actualización de precios al abrir el modal
+                    console.log("ACTUALIZAR")
+                    for (var i = 0; i < medicamentosArray.length; i++) {
+                        calculateTotalWithDiscount(i); // Llama a la función para cada medicamento
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.error(error, status, xhr);
