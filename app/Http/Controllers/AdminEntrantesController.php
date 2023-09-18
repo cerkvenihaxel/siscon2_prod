@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
-	use Session;
+	use App\Models\User;
+    use Session;
 	use Request;
 	use DB;
 	use CRUDBooster;
@@ -92,6 +93,7 @@
 			}
 
 
+
 				$id = DB::table('entrantes')->where('id', Request::get('id'))->value('id');
 			function contadordeDias(){
 				$fecha_de_carga = DB::table('entrantes')->where('id', Request::get('id'))->value('created_at');
@@ -104,17 +106,32 @@
 				$dias = floor($diferencia / (60 * 60 * 24));
 				return $dias;
 
-
-
 			}
+
+            function getObraSocial(): int{
+                $myId = CRUDBooster::myId();
+                $obra_social_id = DB::table('cms_users')->where('id', $myId)->value('obra_social_id');
+                return $obra_social_id;
+            }
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 //<<<<<<< HEAD
 //			$this->form[]= ['label'=>'Fecha de carga', 'name'=>'created_at','type'=>'datetime','validation'=>'required','width'=>'col-sm-10','required'=>true];
 			//$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,nroAfiliado,documento,sexo,localidad','datamodal_size'=>'large','required'=>true];
-			$this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamodal_select_to'=>'nroAfiliado:nroAfiliado,documento:documento','datamodal_size'=>'large'];
-			$this->form[] = ['label'=>'Nro de Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'readonly'=>true];
+
+            $myID = CRUDBooster::myId();
+
+
+            if(User::where('id', $myID)->value('obra_social_id') == 1){
+                $this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamodal_select_to'=>'nroAfiliado:nroAfiliado,documento:documento','datamodal_where'=>'obra_social_id = 1' ,'datamodal_size'=>'large'];
+            }
+            else if(User::where('id', $myID)->value('obra_social_id') == null){
+                $this->form[] = ['label'=>'Nombre y Apellido Afiliado','name'=>'afiliados_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados','datamodal_columns'=>'apeynombres,documento,sexo,localidad','datamodal_select_to'=>'nroAfiliado:nroAfiliado,documento:documento','datamodal_where'=>'obra_social_id = 3' ,'datamodal_size'=>'large'];
+
+            }
+
+            $this->form[] = ['label'=>'Nro de Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'readonly'=>true];
 			$this->form[] = ['label'=>'Documento','name'=>'documento','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'readonly'=>true];
             $this->form[] = ['label'=>'Clínica','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre','required'=>true];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:1|digits_between: 1,3|lt:120','width'=>'col-sm-10','required'=>true];
@@ -449,10 +466,6 @@
 		}
 	}
 
-    if(CRUDBooster::myPrivilegeId() == 46){
-        $query->where('clinicas_id', 18);
-    }
-
 
 	    }
 
@@ -495,6 +508,14 @@
 			$medicoCms = DB::table('cms_users')->where('name', $medicoName)->value('id');
 			DB::table('entrantes')->where('id', $id)->update(['medicos_id' => $medicoId]);
 			}
+
+            //GET OBRA SOCIAL
+            $obra_social_id = getObraSocial();
+            if($obra_social_id != null ){
+                Entrante::where('id', $id)->update(['obra_social_id' => $obra_social_id]);
+            }
+
+
 
 			$necesidad = DB::table('entrantes')->where('id', $id)->value('necesidad');
 			$necesidad2 = $necesidad * $necesidad;
