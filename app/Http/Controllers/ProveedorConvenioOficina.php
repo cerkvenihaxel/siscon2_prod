@@ -15,7 +15,7 @@ use App\Models\PedidoMedicamento;
 use App\Models\PedidoMedicamentoDetail;
 use App\Models\ProveedoresConvenio;
 use App\Models\ProveedoresConvenioDetail;
-use Barryvdh\Debugbar\Facades\Debugbar;
+//use Barryvdh\Debugbar\Facades\Debugbar;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -308,7 +308,7 @@ class ProveedorConvenioOficina extends Controller
             $med->laboratorio = DB::table('banda_descuentos')->where('id_articulo', $med->articuloszafiro_id)->value('laboratorio') ?? '';
         }
 
-        Debugbar::info($medicamento);
+        //Debugbar::info($medicamento);
 
         $medicamentos = $medicamento->groupBy('articuloszafiro_id')->toArray();
 
