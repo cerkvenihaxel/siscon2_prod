@@ -133,7 +133,10 @@
                                         <i class="fas fa-eye"></i> Ver pedido
                                     </button>
 
-                                    <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i>Acuse de recibo</button>
+
+//                                    <button class="btn btn-warning btn-xs mr-2"><i class="fas fa-print"></i>Acuse de recibo</button>
+                                    <a href="{{ route('printFarmaciaPDF', $cot->id) }}" class="btn btn-warning btn-xs mr-2"  target="_blank"><i class="fas fa-print"></i>Acuse de recibo</a>
+
                                 </div>
                             </td>
 
