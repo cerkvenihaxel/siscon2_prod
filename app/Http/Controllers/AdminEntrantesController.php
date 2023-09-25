@@ -424,8 +424,9 @@
 	    public function hook_query_index(&$query) {
 	        //Your code here
 
+            $myEmail = DB::table('cms_users')->where('id', CRUDBooster::myId())->value('email');
 	$cotizaciones = DB::table('cotizaciones')->where('proveedor', CRUDBooster::myName())->get();
-	$cotizacionesAdmin = DB::table('cotizaciones')->where('stamp_user', CRUDBooster::myName())->get();
+	$cotizacionesAdmin = DB::table('cotizaciones')->where('stamp_user', $myEmail)->get();
 
 
 	if(CRUDBooster::myPrivilegeId() == 6 && CRUDBooster::myId() != 83) {
