@@ -306,12 +306,15 @@
 	    */
 	    public function hook_after_add($id) {
 	        //Your code here
+
+            if(CRUDBooster::myPrivilegeId() != 1){
             $obra_social_id = getObraSocial();
             if($obra_social_id) {
                 DB::table('afiliados')->where('id', $id)->update(['obra_social_id' => getObraSocial()]);
             }
             else{
                 DB::table('afiliados')->where('id', $id)->update(['obra_social_id' => '']);
+            }
             }
 	    }
 
