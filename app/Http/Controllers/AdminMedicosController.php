@@ -256,15 +256,16 @@
 	    public function hook_query_index(&$query) {
 	        //Your code here
 
-            $obra_social_id = getObraSocial();
-
-            if($obra_social_id) {
-                $medicosTeam = DB::table('medicos_team')->where('obra_social_id', $obra_social_id)->get();
-                $medicosTeamIds = [];
-                foreach ($medicosTeam as $medicoTeam) {
-                    $medicosTeamIds[] = $medicoTeam->medicos_id;
+            if(CRUDBooster::myPrivilegeId() != 1) {
+                $obra_social_id = getObraSocial();
+                if ($obra_social_id) {
+                    $medicosTeam = DB::table('medicos_team')->where('obra_social_id', $obra_social_id)->get();
+                    $medicosTeamIds = [];
+                    foreach ($medicosTeam as $medicoTeam) {
+                        $medicosTeamIds[] = $medicoTeam->medicos_id;
+                    }
+                    $query->whereIn('id', $medicosTeamIds);
                 }
-                $query->whereIn('id', $medicosTeamIds);
             }
 	    }
 
