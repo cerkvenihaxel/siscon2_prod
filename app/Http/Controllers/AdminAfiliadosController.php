@@ -43,7 +43,7 @@
 
 			function getObraSocial(): int{
                 $myId = CRUDBooster::myId();
-                $obra_social_id = DB::table('cms_users')->where('id', $myId)->value('obra_social_id');
+                $obra_social_id = DB::table('teams')->where('user_id', $myId)->value('obra_social_id');
                 if($obra_social_id == null)
                     return 0;
                 else
@@ -264,7 +264,14 @@
 	    public function hook_query_index(&$query) {
 	        //Your code here
             $obra_social_id = getObraSocial();
-            //$query->where('obra_social_id', $obra_social_id);
+
+            if($obra_social_id){
+                $query->where('obra_social_id', $obra_social_id);
+            }
+            else{
+                $query->where('obra_social_id', 0);
+            }
+
 
 	    }
 
@@ -299,7 +306,13 @@
 	    */
 	    public function hook_after_add($id) {
 	        //Your code here
-
+            $obra_social_id = getObraSocial();
+            if($obra_social_id) {
+                DB::table('afiliados')->where('id', $id)->update(['obra_social_id' => getObraSocial()]);
+            }
+            else{
+                DB::table('afiliados')->where('id', $id)->update(['obra_social_id' => '']);
+            }
 	    }
 
 	    /*
