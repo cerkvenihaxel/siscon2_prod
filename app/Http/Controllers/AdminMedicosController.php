@@ -38,12 +38,18 @@
 			$this->col[] = ["label"=>"Número de Teléfono","name"=>"telefono"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
+            function getObraSocial(): int{
+                $myId = CRUDBooster::myId();
+                $obra_social_id = DB::table('cms_users')->where('id', $myId)->value('obra_social_id');
+                return $obra_social_id;
+            }
+
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Nombre','name'=>'nombremedico','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Dni','name'=>'dni','validation'=>'required','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Matricula','name'=>'matricula','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Especialidad','name'=>'especialidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Matricula','name'=>'matricula','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Especialidad','name'=>'especialidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Telefono','name'=>'telefono','validation'=>'required','width'=>'col-sm-9'];
 			# END FORM DO NOT REMOVE THIS LINE
 
@@ -239,6 +245,7 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
+
 
 	    }
 
