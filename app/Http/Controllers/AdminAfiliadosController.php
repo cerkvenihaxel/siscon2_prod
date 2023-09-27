@@ -265,13 +265,13 @@
 	        //Your code here
             $obra_social_id = getObraSocial();
 
-            if($obra_social_id){
-                $query->where('obra_social_id', $obra_social_id);
+            if(CRUDBooster::myPrivilegeId() != 1) {
+                if ($obra_social_id) {
+                    $query->where('obra_social_id', $obra_social_id);
+                } else {
+                    $query->where('obra_social_id', 0);
+                }
             }
-            else{
-                $query->where('obra_social_id', 0);
-            }
-
 
 	    }
 
