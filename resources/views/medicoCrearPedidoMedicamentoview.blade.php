@@ -3,6 +3,12 @@
 
 @section('content')
 
+    @php
+    $myID = CRUDBooster::myId();
+    $obra_social_id = DB::table('teams')->where('user_id', $myID)->value('obra_social_id');
+
+    @endphp
+
     <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -34,13 +40,26 @@
 
                 <form method="POST" action="{{ route('buscarAfiliadoPedido') }}">
                     @csrf
-
                     <div class="form-group">
                         <label for="select-obra-social">Obra social</label>
-                        <select class="form-control select2" id="select-obra-social" disabled="true">
-                            <option value="obra-social1">APOS</option>
-                            <option value="obra-social2">Incluir Salud</option>
-                            <option value="obra-social3">OSUNLaR</option>
+                        <select class="form-control select2" id="obra_social_id" name="obra_social_id">
+                            @if(\crocodicstudio\crudbooster\helpers\CRUDBooster::myPrivilegeId() != 1)
+                            @switch($obra_social_id)
+                                @case (1)
+                                    <option value="1">Incluir Salud</option>
+                                    @break
+                                @case (2)
+                                    <option value="2">FARMAPOS - Ministerio de Salud</option>
+                                    @break
+                                @case (3)
+                                    <option value="3">APOS</option>
+                                    @break
+                            @endswitch
+                            @else
+                            <option value="1">Incluir Salud</option>
+                            <option value="2">FARMAPOS - Ministerio de Salud</option>
+                            <option value="3">APOS</option>
+                                @endif
                         </select>
                     </div>
 
@@ -51,7 +70,7 @@
 
                     <div class="form-group">
                         <label for="select-patologia">Patologia</label>
-                        <select class="form-control" name="patologia">
+                        <select class="form-control" id="patologia" name="patologia">
                             <option value="0">Ver todas</option>
                             @foreach($patologias as $pato)
                                 <option value="{{ $pato->id }}">{{ $pato->nombre }}</option>

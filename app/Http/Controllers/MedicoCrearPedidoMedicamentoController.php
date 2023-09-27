@@ -39,16 +39,18 @@ class MedicoCrearPedidoMedicamentoController extends Controller
     public function buscarAfiliado(Request $request)
     {
         $search = $request->input('numeroAfiliado');
+        $searchObraSocial = $request->input('obra_social_id');
         $searchPatologia = $request->input('patologia');
 
         $patologias = DB::table('patologias')->get();
 
         if (strlen($search) < 10) {
-            $documento = Afiliados::where('documento', $search)->value('nroAfiliado');
+            $documento = Afiliados::where('documento', $search)->where('obra_social_id', $searchObraSocial)->value('nroAfiliado');
             $search = $documento;
         }
 
-        $solicitud = AfiliadosArticulos::where('nro_afiliado', $search);
+            $solicitud = AfiliadosArticulos::where('nro_afiliado', $search);
+
 
         if ($searchPatologia !== '0') {
             $solicitud = $solicitud->where('patologias', $searchPatologia);
@@ -56,8 +58,8 @@ class MedicoCrearPedidoMedicamentoController extends Controller
 
         $solicitud = $solicitud->get();
 
-        $nombre = Afiliados::where('nroAfiliado', $search)->value('apeynombres');
-        $fechaNacimiento = Afiliados::where('nroAfiliado', $search)->value('fecha_nacimiento');
+        $nombre = Afiliados::where('nroAfiliado', $search)->where('obra_social_id', $searchObraSocial)->value('apeynombres');
+        $fechaNacimiento = Afiliados::where('nroAfiliado', $search)->where('obra_social_id', $searchObraSocial)->value('fecha_nacimiento');
         $edad = null;
 
         if ($fechaNacimiento) {
@@ -65,11 +67,18 @@ class MedicoCrearPedidoMedicamentoController extends Controller
             $edad = $fechaNacimiento->diffInYears(Carbon::now());
         }
 
-        $localidad = Afiliados::where('nroAfiliado', $search)->value('localidad');
-        $telefono = Afiliados::where('nroAfiliado', $search)->value('telefonos');
-        $afiliado_id = Afiliados::where('nroAfiliado', $search)->value('id');
+        $localidad = Afiliados::where('nroAfiliado', $search)->where('obra_social_id', $searchObraSocial)->value('localidad');
+        $telefono = Afiliados::where('nroAfiliado', $search)->where('obra_social_id', $searchObraSocial)->value('telefonos');
+        $afiliado_id = Afiliados::where('nroAfiliado', $search)->where('obra_social_id', $searchObraSocial)->value('id');
 
-        $nroSolicitud = 'APOS-MED-' . date('dmHis');
+        $obraSocialSolicitud = '';
+        switch ($searchObraSocial){
+            case 1: $obraSocialSolicitud = 'ISJ-MED'; break;
+            case 2: $obraSocialSolicitud = 'FMS-MED'; break;
+            case 3: $obraSocialSolicitud = 'APOS-MED'; break;
+        }
+
+        $nroSolicitud = $obraSocialSolicitud . date('dmHis');
 
         $clinicas = Clinica::all();
         $medicos = Medico::orderBy('nombremedico', 'asc')->get();

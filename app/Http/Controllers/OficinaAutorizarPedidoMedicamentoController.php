@@ -21,11 +21,18 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
     {
         $privilegio = CRUDBooster::myPrivilegeId();
         $id = CRUDBooster::myId();
+        $obra_social_id = DB::table('teams')->where('user_id', $id)->value('obra_social_id');
         $solicitudes = PedidoMedicamento::with('detalles', 'afiliados', 'patologia', 'medicos', 'estadoSolicitud')->get();
+
+        if ($privilegio != 1) {
+            $ids = DB::table('afiliados')->where('obra_social_id', $obra_social_id)->pluck('id');
+            $solicitudes = $solicitudes->whereIn('afiliados_id', $ids);
+        }
+
         $stamp_userConvenio = null;
         $auditor = $privilegio == 40;
 
-        if ($privilegio == 41) {
+        if ($privilegio == 41 || $privilegio == 47) {
             $stamp_userConvenio = User::where('id', $id)->pluck('email')->first();
             $solicitudesPedido = OficinaAutorizar::where('stamp_user', $stamp_userConvenio)->pluck('nrosolicitud');
             $solicitudesAutorizadas = PedidoMedicamento::whereIn('nrosolicitud', $solicitudesPedido)->get();
