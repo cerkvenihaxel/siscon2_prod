@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
-	use Session;
+	use App\Models\User;
+    use Session;
 	use Request;
 	use DB;
 	use CRUDBooster;
@@ -37,18 +38,22 @@
 			$this->col[] = ["label"=>"NroAfiliado","name"=>"nroAfiliado"];
 			$this->col[] = ["label"=>"Sexo","name"=>"sexo"];
 			$this->col[] = ["label"=>"Telefonos","name"=>"telefonos"];
+			$this->col[] = ["label"=>"Obra Social_id","name"=>"obra_social_id","join"=>"obras_sociales,nombre"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
-            function getObraSocial(): int{
+			function getObraSocial(): int{
                 $myId = CRUDBooster::myId();
                 $obra_social_id = DB::table('cms_users')->where('id', $myId)->value('obra_social_id');
-                return $obra_social_id;
+                if($obra_social_id == null)
+                    return 0;
+                else
+                    return $obra_social_id;
             }
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Apeynombres','name'=>'apeynombres','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Documento','name'=>'documento','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+            $this->form[] = ['label'=>'Documento','name'=>'documento','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Fecha de nacimiento', 'name'=>'fecha_nacimiento', 'type'=>'date', 'width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Zona residencia', 'name'=>'zona_residencia', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Centro;Oeste;Este;Interior'];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|unique:afiliados','width'=>'col-sm-10','placeholder'=>'Please enter a valid email address'];
@@ -241,7 +246,6 @@
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
-
 	    }
 
 
@@ -255,7 +259,7 @@
 	    public function hook_query_index(&$query) {
 	        //Your code here
             $obra_social_id = getObraSocial();
-            $query->where('obra_social_id', $obra_social_id);
+            //$query->where('obra_social_id', $obra_social_id);
 
 	    }
 
