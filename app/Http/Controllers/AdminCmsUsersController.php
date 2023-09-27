@@ -35,7 +35,9 @@ class AdminCmsUsersController extends CBController {
 		$this->form[] = array("label"=>"Privilege","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name",'required'=>true);
 
         if(CRUDbooster::myPrivilegeId() == 1){
-            $this->form[] = array("label"=>"Obra social", "name"=>"obra_social_id", "type"=>"select", "datatable"=>"obras_sociales,nombre");
+            $columns = [];
+            $columns[] = ['label'=>'Obra Social','name'=>'obra_social_id','type'=>'select','datatable'=>'obras_sociales,nombre'];
+            $this->form[] = ['label'=>'Obras sociales', 'name'=>'teams', 'type'=>'child','table'=>'teams', 'foreign_key'=>'user_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
         }
 
         // $this->form[] = array("label"=>"Password","name"=>"password","type"=>"password","help"=>"Please leave empty if not change");
