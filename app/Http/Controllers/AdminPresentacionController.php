@@ -32,6 +32,16 @@
 /*  */
 			$url = $_GET['id']; // THIS VARIABLE GETS THE ID OF THE LIST
 
+            function adminPrivilegeId(){
+
+                $privilege = CRUDBooster::myPrivilegeId();
+                if($privilege == 1 || $privilege == 17 || $privilege == 33 || $privilege == 34 || $privilege == 35 || $privilege == 28 || $privilege = 97 || $privilege = 56){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+
 				function proveedorPrivilegeId(){
 
 					$privilege = CRUDBooster::myPrivilegeId();
@@ -113,29 +123,52 @@
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nombre Afiliado','name'=>'nombreAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNombre($url)];
-			$this->form[] = ['label'=>'Nro Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNroAfiliado($url)];
-			$this->form[] = ['label'=>'Nro Solicitud','name'=>'nroSolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNroSolicitud($url)];
-			$this->form[] = ['label'=> 'Especialidad', 'name' => 'grupo_articulos', 'type' =>'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'value' => getEspecialidad($url)];
-			$this->form[] = ['label'=>'Proveedor', 'name' => 'proveedor', 'type' => 'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'value'=> getProveedor($url)];
-			$this->form[] = ['label'=>'Material Entregado','name'=>'materialEntregado','type'=>'select2','select2_multiple'=>true,'validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'datatable'=>'articulos,des_articulo'];
-
-			$this->form[] = ['label'=>'Medico Prestador','name'=>'medicoPrestador','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getMedicoPrestador($url)];
-			$this->form[] = ['label'=>'Institucion','name'=>'institucion','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getInstitucion($url)];
+			$this->form[] = ['label'=>'Nombre Afiliado','name'=>'nombreAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNombre($url), 'readonly'=>adminPrivilegeId()];
+			$this->form[] = ['label'=>'Nro Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNroAfiliado($url), 'readonly'=>adminPrivilegeId()];
+			$this->form[] = ['label'=>'Nro Solicitud','name'=>'nroSolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getNroSolicitud($url), 'readonly'=>adminPrivilegeId()];
+			$this->form[] = ['label'=> 'Especialidad', 'name' => 'grupo_articulos', 'type' =>'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'value' => getEspecialidad($url), 'readonly'=>adminPrivilegeId()];
+			$this->form[] = ['label'=>'Proveedor', 'name' => 'proveedor', 'type' => 'text', 'validation' => 'required|min:0', 'width' => 'col-sm-10', 'value'=> getProveedor($url), 'readonly'=>proveedorPrivilegeId()];
+			//$this->form[] = ['label'=>'Material Entregado','name'=>'materialEntregado','type'=>'select2','select2_multiple'=>true,'validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'datatable'=>'articulos,des_articulo'];
+            $this->form[] = ['label'=>'Medico Prestador','name'=>'medicoPrestador','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getMedicoPrestador($url), 'readonly'=>adminPrivilegeId()];
+			$this->form[] = ['label'=>'Institucion','name'=>'institucion','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getInstitucion($url), 'readonly'=>adminPrivilegeId()];
 			$this->form[] = ['label'=>'Nro Remito','name'=>'nroRemito','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Nro Factura','name'=>'nroFactura','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Cantidad','name'=>'cantidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Cantidad','name'=>'cantidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Fecha Cirugia','name'=>'fechaCirugia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=> getFechaCirugia($url)];
 			$this->form[] = ['label'=>'Fecha Entrega','name'=>'fechaEntrega','type'=>'date','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Stickers','name'=>'stickers','type'=>'select','dataenum'=>'SI;NO','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Foja Quirurgica','name'=>'fojaQuirurgica','type'=>'select','dataenum'=>'SI;NO','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+
+
+            $columns[] = ['label'=>'Artículos','name'=>'articulos_id','type'=>'datamodal', 'datamodal_table'=>'articulos', 'datamodal_columns'=>'des_articulo','datamodal_size'=>'large','required'=>true];
+            $columns[] = ['label'=> 'Garantía (meses)', 'name'=>'garantia_id', 'type'=>'select','datatable'=>'garantia,nombre','validation'=>'required|string|min:5|max:5000','required'=>true];
+            $columns[] = ['label'=>'Procendencia', 'name'=>'procedencias_id', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-9', 'datatable'=>'procedencias,procedencia','required'=>true];
+            $columns[] =['label'=>'Sticker', 'name'=>'stickers', 'type'=>'text', 'validation'=>'required', 'width'=>'col-sm-10','required'=>true];
+            $columns[] = ['label'=> 'Cantidad', 'name'=>'cantidad', 'type'=>'number', 'validation'=>'required|gt:1', 'required'=>true, 'help'=>'Ingrese la cantidad de artículos, al finalizar presione ENTER'];
+            $columns[] = ['label'=>'Precio Unitario','name'=>'precio_unitario','type'=>'text','validation'=>'required | gt:1', 'required'=>true, 'help'=>'Ingrese el precio unitario del artículo, si utiliza centavos, utilice el punto (.) como separador decimal'];
+            // SUB TOTAL
+            $columns[] = ['label'=> 'Subtotal', 'name'=>'subtotal', 'type'=>'number', 'validation'=>'required|numeric|gt:0','required'=>true, 'formula'=>"[precio_unitario] * [cantidad]", 'readonly'=>adminPrivilegeId()];
+
+
+            $this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'presentacion_detail', 'type'=>'child','table'=>'presentacion_detail', 'foreign_key'=>'presentacion_id', 'columns'=>$columns, 'width'=>'col-sm-10'];
+
+
+
+
+
+            //$this->form[] = ['label'=>'Stickers','name'=>'stickers','type'=>'select','dataenum'=>'SI;NO','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Foja Quirurgica','name'=>'fojaQuirurgica','type'=>'select','dataenum'=>'SI;NO','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'MES DE PRESENTACION', 'name'=>'mes', 'type'=>'select', 'dataenum'=>'ENERO;FEBRERO;MARZO;ABRIL;MAYO;JUNIO;JULIO;AGOSTO;SEPTIEMBRE;OCTUBRE;NOVIEMBRE;DICIEMBRE', 'validation'=>'required', 'width'=>'col-sm-10'];
 			//$this->form[] = ['label'=> 'Procedencia', 'name'=>'procedencia', 'type'=>'select', 'dataenum'=>'NACIONAL;NTERNACIONAL', 'validation'=>'required', 'width'=>'col-sm-10'];
-			//$this->form[] = ['label'=> 'Coseguro', 'name'=>'coseguro', 'type'=>'select', 'dataenum'=>'AFILIADO NACIONAL (20%); AFILIADO INTERNACIONAL (60%); APOS NACIONAL (80%); APOS INTERNACIONAL (40%)', 'validation'=>'required', 'width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Precio Total','name'=>'precioTotal','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=> 'Coseguro', 'name'=>'coseguro', 'type'=>'select', 'dataenum'=>'AFILIADO NACIONAL (20%); AFILIADO INTERNACIONAL (60%); APOS NACIONAL (80%); APOS INTERNACIONAL (40%)', 'validation'=>'required', 'width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Precio Total','name'=>'precioTotal','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'readonly'=>adminPrivilegeId()];
 			# END FORM DO NOT REMOVE THIS LINE
 
-			# OLD START FORM
+            $this->form[] = ['label'=>'Archivo 1', 'name'=>'archivo','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+            $this->form[] = ['label'=>'Archivo 2', 'name'=>'archivo2','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+            $this->form[] = ['label'=>'Archivo 3', 'name'=>'archivo3','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+            $this->form[] = ['label'=>'Archivo 4', 'name'=>'archivo4','type'=>'upload', 'help'=>'Archivos soportados PDF JPEG DOCX'];
+
+
+            # OLD START FORM
 			//$this->form = [];
 			//$this->form[] = ["label"=>"Cantidad","name"=>"cantidad","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"FechaCirugia","name"=>"fechaCirugia","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
@@ -387,12 +420,12 @@
 	    public function hook_after_add($id) {
 	        //Your code here
 
-	DB::table('entrantes')->where('nrosolicitud', Request::input('nroSolicitud'))->update(['estado_solicitud_id'=>15]);
+        DB::table('entrantes')->where('nrosolicitud', Request::input('nroSolicitud'))->update(['estado_solicitud_id'=>15]);
 
-	$materialNumber = DB::table('presentacion')->where('id', $id)->value('materialEntregado');
-	$materialName = DB::table('articulos')->where('id', $materialNumber)->value('des_articulo');
+        $materialNumber = DB::table('presentacion')->where('id', $id)->value('materialEntregado');
+        $materialName = DB::table('articulos')->where('id', $materialNumber)->value('des_articulo');
 
-	DB::table('presentacion')->where('id', $id)->update(['materialEntregado'=> $materialName]);
+        DB::table('presentacion')->where('id', $id)->update(['materialEntregado'=> $materialName]);
 
 
 

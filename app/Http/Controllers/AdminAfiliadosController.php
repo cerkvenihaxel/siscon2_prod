@@ -39,6 +39,12 @@
 			$this->col[] = ["label"=>"Telefonos","name"=>"telefonos"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
+            function getObraSocial(): int{
+                $myId = CRUDBooster::myId();
+                $obra_social_id = DB::table('cms_users')->where('id', $myId)->value('obra_social_id');
+                return $obra_social_id;
+            }
+
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Apeynombres','name'=>'apeynombres','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
@@ -248,6 +254,8 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
+            $obra_social_id = getObraSocial();
+            $query->where('obra_social_id', $obra_social_id);
 
 	    }
 
