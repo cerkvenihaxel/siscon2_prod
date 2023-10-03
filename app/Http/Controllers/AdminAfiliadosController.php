@@ -55,11 +55,7 @@
 			$this->form[] = ['label'=>'Apeynombres','name'=>'apeynombres','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Documento','name'=>'documento','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Fecha de nacimiento', 'name'=>'fecha_nacimiento', 'type'=>'date', 'width'=>'col-sm-10'];
-
-            if(CRUDbooster::myPrivilegeId() == 1){
-                $this->form[] = array("label"=>"Obra social", "name"=>"obra_social_id", "type"=>"select", "datatable"=>"obras_sociales,nombre");
-            }
-
+            $this->form[] = array("label"=>"Obra social", "name"=>"obra_social_id", "type"=>"select", "datatable"=>"obras_sociales,nombre");
             $this->form[] = ['label'=>'Zona residencia', 'name'=>'zona_residencia', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Centro;Oeste;Este;Interior'];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|unique:afiliados','width'=>'col-sm-10','placeholder'=>'Please enter a valid email address'];
 			$this->form[] = ['label'=>'Localidad','name'=>'localidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
