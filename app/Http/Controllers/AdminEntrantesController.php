@@ -108,7 +108,7 @@
 
 			}
 
-            function getObraSocial(): int{
+            function getObraSocial(){
                 $myId = CRUDBooster::myId();
                 $obra_social_id = DB::table('cms_users')->where('id', $myId)->value('obra_social_id');
                 return $obra_social_id;
