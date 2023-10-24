@@ -120,7 +120,7 @@
 	        */
 	        $this->sub_module = array();
 
-		    $this->sub_module[] = ['label'=>'Autorizar', 'path'=>'autorizaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-square','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(adminPrivilegeId()) ? "0" : "1"];
+		    $this->sub_module[] = ['label'=>'Autorizar', 'path'=>'autorizaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'warning','button_icon'=>'fa fa-check-square','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones'];
 	        $this->sub_module[] = ['label'=>'Anular', 'path'=>'anulaciones/add/?id[]=[id]','foreign_key'=>'entrantes_id','button_color'=>'danger','button_icon'=>'fa fa-ban','parent_columns'=>'nrosolicitud,fecha_cirugia,medicos_id,observaciones', 'showIf'=>(adminPrivilegeId()) ? "0" : "1"];
 
 	        /*
@@ -293,6 +293,12 @@
 	    |
 	    */
 	    public function hook_query_index(&$query) {
+
+//		$privilege = CRUDBooster::myPrivilegeId();
+//
+//		if($privilege != 17 && $privilege != 1 && $privilege != 3 && $privilege !=37 && $privilege != 34  && $privilege != 35 && $privilege != 33){
+//		$query->where('adjudicatario',CRUDBooster::myName());
+//		}
 
 			/* $cotizacionesAdmin = DB::table('cotizaciones')->where('stamp_user', CRUDBooster::myName())->get();
 

@@ -496,6 +496,7 @@ class ProveedorConvenioOficina extends Controller
         $pedido->_origen_id_sucursal = $origen_id_sucursal;
         $pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
         $pedido->observaciones = $observaciones;
+        $pedido->nroAfiliado = '00000000010';
         //$pedido->nrosolicitud = $nroSolicitud;
         $pedido->save();
 

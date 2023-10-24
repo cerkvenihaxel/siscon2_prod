@@ -347,8 +347,7 @@
             searching: true,
             lengthChange: false,
             info: false,
-            order: [[ 0, "desc" ]]
-
+            
         });
 
         tablaCotizaciones = $('#tabla-solicitudes-cotizadas').DataTable({
@@ -357,8 +356,7 @@
             searching: true,
             lengthChange: false,
             info: false,
-            order: [[ 0, "desc" ]]
-
+           
         });
 
         tablaCanceladas = $('#tabla-solicitudes-anuladas').DataTable({
@@ -367,7 +365,6 @@
             searching: true,
             lengthChange: false,
             info: false,
-            order: [[ 0, "desc" ]]
 
 
         });

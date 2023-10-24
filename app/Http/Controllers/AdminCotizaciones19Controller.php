@@ -408,11 +408,12 @@
 	        $myEmail = DB::table('cms_users')->where('id',CRUDBooster::myId())->value('email');
 
 
-		if($privilege != 17 && $privilege != 1 && $privilege != 3 && $privilege !=37 && $privilege != 34  && $privilege != 35 && $privilege != 33){
+		if($privilege != 17 && $privilege != 1 && $privilege != 3 && $privilege !=37 && $privilege != 34  && $privilege != 35 && $privilege != 33 && $privilege != 50){
 		$query->where('proveedor',CRUDBooster::myName());
 		}
-		else if( $privilege == 37 || $privilege == 34 || $privilege == 35 || $privilege == 33){
+		else if( $privilege == 34 || $privilege == 35 || $privilege == 33){
 			$query->where('stamp_user', $myEmail);}
+
 	    }
 
 	    /*
