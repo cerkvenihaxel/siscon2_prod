@@ -45,6 +45,7 @@
 			$this->col[] = ["label"=>"Sufrió accidente", "name"=>"accidente"];
 			$this->col[] =["label"=>"Necesidad", "name"=>"necesidad","join"=>"necesidad,necesidad"];
 			$this-> col[] =["label"=>"Grupo articulos", "name"=>"grupo_articulos","join"=>"grupos,des_grupo"];
+            $this->col[] =["label"=>"Obra social", "name"=>"obra_social_id"];
 			$this->col[] = ["label"=>"Días transcurridos", "name"=>"(DATEDIFF(CURDATE(), created_at)) as dias_transcurridos"];
 			$this->col[] = ["label"=>"Fecha expiracion", "name"=>"fecha_expiracion"];
 //			$this->col[] = ["label"=> "Usuario Carga", "name"=>"userId"];
