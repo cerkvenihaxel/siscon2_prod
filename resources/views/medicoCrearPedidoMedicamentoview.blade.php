@@ -375,7 +375,11 @@
                                 <option value="Este">Este</option>
                                 <option value="Oeste">Oeste</option>
                                 <option value="Centro">Centro</option>
-                                <option value="Interior">Interior de la capital</option>
+				<option value="Chilecito">Chilecito</option>
+				<option value="Chamical">Chamical</option>
+				<option value="Villa Union">Villa unión</option>
+				<option value="Famatina">Famatina</option>
+                                
                         </select>
                     </div>
 

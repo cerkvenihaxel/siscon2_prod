@@ -59,6 +59,7 @@
             $this->form[] = ['label'=>'Zona residencia', 'name'=>'zona_residencia', 'type'=>'select', 'validation'=>'required', 'width'=>'col-sm-10', 'dataenum'=>'Norte;Sur;Centro;Oeste;Este;Interior'];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'email','validation'=>'required|min:1|max:255|email|unique:afiliados','width'=>'col-sm-10','placeholder'=>'Please enter a valid email address'];
 			$this->form[] = ['label'=>'Localidad','name'=>'localidad','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Domicilio','name'=>'domicilio','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'NroAfiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Sexo','name'=>'sexo','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Telefonos','name'=>'telefonos','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
