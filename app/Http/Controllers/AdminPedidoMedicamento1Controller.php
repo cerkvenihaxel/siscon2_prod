@@ -23,7 +23,7 @@
 			else {
 			$medicamentos = DB::table('afiliados_articulos')->where('nro_afiliado', $nroAfiliado)->where('patologias', $patologia)->get();
 			foreach($medicamentos as $medicamento){
-				$medicamento->articuloZafiro_id = DB::table('articuloszafiro')->where('id_articulo', $medicamento->id_articulo)->value('id');
+				$medicamento->articuloZafiro_id = DB::table('articulosZafiro')->where('id_articulo', $medicamento->id_articulo)->value('id');
 			}
 			return $medicamentos;
 			}

@@ -19,8 +19,8 @@
 			
 			$articuloZafiro = [];
 			foreach($pedido_medicamento_detail as $k => $pedido){
-				$articuloZafiro[$k] = DB::table('articuloszafiro')->where('id', $pedido->articuloZafiro_id)->get();
-				$id_articulo = DB::table('articuloszafiro')->where('id', $pedido->articuloZafiro_id)->value('id_articulo');
+				$articuloZafiro[$k] = DB::table('articulosZafiro')->where('id', $pedido->articuloZafiro_id)->get();
+				$id_articulo = DB::table('articulosZafiro')->where('id', $pedido->articuloZafiro_id)->value('id_articulo');
 				$articuloZafiro[$k]['cantidad'] = $pedido->cantidad;
 				
 				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
