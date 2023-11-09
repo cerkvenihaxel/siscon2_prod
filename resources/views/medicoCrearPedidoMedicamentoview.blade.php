@@ -146,7 +146,8 @@
                     <div class="col-md-6">
                         <button class="btn btn-info btn-sm" type="button" onclick="openCenteredWindow('{{ route('addNewPrecarga', ['patologias' => $soli->patologias, 'search' => $search]) }}', 750, 500)">Agregar medicación</button>
                         <button class="btn btn-warning btn-sm" type="button" onclick="location.reload()">Actualizar datos</button>
-                        <button class="btn btn-warning btn-sm" type="button" id="crearReceta">Crear receta</button>
+                        <a href="/admin/pedido_medicamento_1/add?nroAfiliado={{$search}}&patologia={{$solicitud[0]->patologias}}">
+                        <button class="btn btn-warning btn-sm" type="button">Crear receta</button></a>
                         {{-- <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#crearPedidoModal">Crear receta</button> --}}
                     </div>
                     @endif
