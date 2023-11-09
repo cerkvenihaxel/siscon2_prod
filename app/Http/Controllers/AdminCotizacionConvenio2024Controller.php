@@ -4,64 +4,48 @@
 	use Request;
 	use DB;
 	use CRUDBooster;
-	use App\Models\AfiliadosArticulos;
-	
 
-	class AdminPedidoMedicamento2024Controller extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminCotizacionConvenio2024Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
-		function nroAfiliado(){
-			$nroAfiliado = $_GET['nroAfiliado'];
-			return $nroAfiliado;
+		function getDatos(){
+			$pedido_medicamento_id = $_GET['id'];
+			$pedido = DB::table('pedido_medicamento')->where('id', $pedido_medicamento_id)->get();
+			
+			return $pedido;
 		}
 
 		function getMedicamentos(){
-			$nroAfiliado = $_GET['nroAfiliado'];
-			$patologia = $_GET['patologia'];
-			if (empty($nroAfiliado) || empty($patologia)){
-				return [];
-			}
-			else {
-			$medicamentos = DB::table('afiliados_articulos')->where('nro_afiliado', $nroAfiliado)->where('patologias', $patologia)->get();
-			foreach($medicamentos as $medicamento){
-				$medicamento->articuloZafiro_id = DB::table('articuloszafiro')->where('id_articulo', $medicamento->id_articulo)->value('id');
-			}
-			return $medicamentos;
-			}
-		}
+			$pedido_medicamento_detail = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $_GET['id'])->get();
+			
+			$articuloZafiro = [];
+			foreach($pedido_medicamento_detail as $k => $pedido){
+				$articuloZafiro[$k] = DB::table('articuloszafiro')->where('id', $pedido->articuloZafiro_id)->get();
+				$id_articulo = DB::table('articuloszafiro')->where('id', $pedido->articuloZafiro_id)->value('id_articulo');
+				$articuloZafiro[$k]['cantidad'] = $pedido->cantidad;
+				
+				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
+					$articuloZafiro[$k]['banda_descuento'] = '';
+				
+				}
+				else{
+					$articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento');
+				}
 
-		function afiliadoID(){
-			$nroAfiliado = $_GET['nroAfiliado'];
-			$afiliado = DB::table('afiliados')->where('nroAfiliado', $nroAfiliado)->value('id');
-			return $afiliado;
-		}
+				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio')))
+					$articuloZafiro[$k]['laboratorio'] = '';
+				else
+					$articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio');
 
-		
-	    
-		
-		public function cbInit() {
-
-			function adminPrivilegeId()
-            {
-                $privilege = CRUDBooster::myPrivilegeId();
-                if ($privilege == 1 || $privilege == 17 || $privilege == 5) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-			$afiliado = $this->nroAfiliado();
-			$edad = '';
-			if(!empty(DB::table('afiliados')->where('nroAfiliado', $afiliado)->value('fecha_nacimiento'))){
-				$edad = date_diff(date_create(DB::table('afiliados')->where('nroAfiliado', $afiliado)->value('fecha_nacimiento')), date_create('today'))->y;
-			}
-			$medicamento = json_encode($this->getMedicamentos());
-			$patologia = $_GET['patologia'];
-
-			if(empty($patologia)){
-				$patologia = '';
 			}
 			
+
+			return $articuloZafiro;
+		}
+
+	    public function cbInit() {
+
+			$pedido_medicamento = $this->getDatos();
+			$medicamento = $this->getMedicamentos();
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
@@ -79,61 +63,60 @@
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "pedido_medicamento";
+			$this->table = "cotizacion_convenio";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-            $this->col[] = ["label" => "Fecha de carga", "name" => "created_at"];
-            $this->col[] = ["label" => "Nombre y apellido afiliado", "name" => "afiliados_id", "join" => "afiliados,apeynombres"];
-            $this->col[] = ["label" => "Nro Afiliado", "name" => "nroAfiliado"];
-            $this->col[] = ["label" => "Clinica ", "name" => "clinicas_id", "join" => "clinicas,nombre"];
-            $this->col[] = ["label" => "Número de solicitud", "name" => "nrosolicitud"];
-            $this->col[] = ["label" => "Médico Solicitante", "name" => "medicos_id", "join" => "medicos,nombremedico"];
-            $this->col[] = ["label" => "Estado solicitud", "name" => "estado_solicitud_id", "join" => "estado_solicitud,estado"];
-            $this->col[] = ["label" => "Patología", "name" => "patologia", "join" => "patologias,nombre"];
-            $this->col[] = ["label" => "Obra social", "name" => "obra_social"];
+			$this->col[] = ["label"=>"Fecha de creación","name"=>"created_at"];
+			$this->col[] = ["label"=>"Nombre Afiliado","name"=>"nombreyapellido"];
+			$this->col[] = ["label"=>"Nro Afiliado","name"=>"nroAfiliado"];
+			$this->col[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud"];
+			$this->col[] = ["label"=>"Estado solicitud", "name"=>"estado_solicitud_id", "join"=>"estado_solicitud,estado"];
+			$this->col[] = ["label"=>"Estado pedido", "name"=>"estado_pedido_id", "join"=>"estado_pedido,estado"];
+			$this->col[] = ["label"=>"Número pedido", "name"=>"id_pedido"];
+			$this->col[] = ["label"=>"Nro remito" , "name"=>"nro_remito"];
+			$this->col[] = ["label"=>"Punto retiro", "name"=>"punto_retiro_id", "join"=>"punto_retiro,nombre"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
+			$nombreyapellido = DB::table('afiliados')->where('nroAfiliado', $pedido_medicamento[0]->nroAfiliado)->value('apeynombres');
+			$documento = DB::table('afiliados')->where('nroAfiliado', $pedido_medicamento[0]->nroAfiliado)->value('documento');
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-            $this->form[] = ['label' => 'Nombre y Apellido Afiliado', 'name' => 'afiliados_id', 'type' => 'datamodal', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datamodal_table' => 'afiliados', 'datamodal_columns' => 'apeynombres,nroAfiliado,documento,sexo,localidad', 'datamodal_select_to' => 'nroAfiliado:nroAfiliado,obra_social:obra_social', 'datamodal_size' => 'large', 'value' => $this->afiliadoID()];
-            $this->form[] = ['label' => 'Nro de Afiliado', 'name' => 'nroAfiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->nroAfiliado()];
-			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=> $edad];
-            $this->form[] = ['label' => 'Número de Solicitud', 'name' => 'nrosolicitud', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true, 'readonly' => 'true', 'value' => 'APOS-MED-' . date('Ydm'). '-' . rand(0, 9999)];
-            $this->form[] = ['label' => 'Institución', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'required' => true];
-            $this->form[] = ['label' => 'Médico Solicitante', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'required' => true, 'value' => $IDMEDICO];
-			$this->form[] = ['label'=>'Tel Medico','name'=>'tel_medico','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Elegir zona de retiro','name'=>'zona_residencia','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum' => 'Norte;Sur;Este;Oeste;Centro;Chamical;Chilecito;Famatina;Villa Unión'];
-			$this->form[] = ['label'=>'Provincia','name'=>'provincia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value' => 'La Rioja'];
-			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Email Afiliado','name'=>'email','type'=>'email','validation'=>'min:1|max:255|email|unique:pedido_medicamento','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
-            $this->form[] = ['label' => 'Fecha Receta', 'name' => 'fecha_receta', 'type' => 'date', 'validation' => 'required|date', 'width' => 'col-sm-10', 'value' => date('Y-m-d')];
-			$this->form[] = ['label'=>'Receta prolongada','name'=>'postdatada','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10' , 'datatable' => 'postdatada,cantidad'];
-			$this->form[] = ['label' => 'Estado Solicitud', 'name' => 'estado_solicitud_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'datatable' => 'estado_solicitud,estado', 'value' => 8, 'disabled' => adminPrivilegeId()];
-			$this->form[] = ['label' => 'Discapacidad', 'name' => 'discapacidad', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'required' => true, 'dataenum' => 'Si;No'];
-			$this->form[] = ['label'=>'Patologia','name'=>'patologia','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'datatable' => 'patologias,nombre', 'value'=> $patologia];
-			$this->form[] = ['label'=>'Obra Social','name'=>'obra_social','type'=>'hidden', 'value'=> 'APOS'];
+			$this->form[] = ['label'=>'Nombreyapellido','name'=>'nombreyapellido','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$nombreyapellido];
+			$this->form[] = ['label'=>'Documento','name'=>'documento','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$documento];
+			$this->form[] = ['label'=>'NroAfiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->nroAfiliado];
+			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->edad];
+			$this->form[] = ['label'=>'Nrosolicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->nrosolicitud];
+			$this->form[] = ['label'=>'Clinicas Id','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>$pedido_medicamento[0]->clinicas_id];
+			$this->form[] = ['label'=>'Medicos Id','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>$pedido_medicamento[0]->medicos_id];
+			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->tel_afiliado];
+			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->zona_residencia];
+			$this->form[] = ['label'=>'Punto Retiro','name'=>'punto_retiro_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'punto_retiro,nombre'];
 			
 			$columns = [];
-			$columns[] = ['label'=>'Medicamento','name'=>'articuloZafiro_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados_articulos','datamodal_columns'=>'des_articulo,presentacion','datamodal_size'=>'large'];
-			$columns[] = ['label'=>'Cantidad','name'=>'cantidad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Presentacion','name'=>'presentacion', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Cantidad', 'name'=>'cantidad', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Descuento', 'name'=>'descuento', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Total' , 'name'=>'total', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
 
-			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'pedido_medicamento_detail', 'type'=>'child','table'=>'pedido_medicamento_detail', 'foreign_key'=>'pedido_medicamento_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
-            $this->form[] = ['label' => 'Observaciones', 'name' => 'observaciones', 'type' => 'textarea', 'validation' => 'min:1|max:255', 'width' => 'col-sm-10'];
-			$this->form[] = ['label'=>'Diagnostico','name'=>'diagnostico','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Detalles de la solicitud','name'=>'cotizacion_convenio_detail','type'=>'child','columns'=>$columns,'table'=>'cotizacion_convenio_detail','foreign_key'=>'cotizacion_convenio_id', 'required' => true];
 			
-
-
 			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo3','name'=>'archivo3','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo4','name'=>'archivo4','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Custom Field','name'=>'custom_field','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ["label"=>"Afiliados Id","name"=>"afiliados_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"afiliados,id"];
+			//$this->form[] = ["label"=>"NumeroID","name"=>"numeroID","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
+			//$this->form[] = ["label"=>"Fecha Carga","name"=>"fecha_carga","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Nombreyapellido","name"=>"nombreyapellido","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Documento","name"=>"documento","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"NroAfiliado","name"=>"nroAfiliado","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Edad","name"=>"edad","type"=>"number","required"=>TRUE,"validation"=>"required|integer|min:0"];
 			//$this->form[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
@@ -141,12 +124,16 @@
 			//$this->form[] = ["label"=>"Medicos Id","name"=>"medicos_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"medicos,id"];
 			//$this->form[] = ["label"=>"Zona Residencia","name"=>"zona_residencia","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Tel Afiliado","name"=>"tel_afiliado","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Email","name"=>"email","type"=>"email","required"=>TRUE,"validation"=>"required|min:1|max:255|email|unique:pedido_medicamento","placeholder"=>"Introduce una dirección de correo electrónico válida"];
+			//$this->form[] = ["label"=>"Email","name"=>"email","type"=>"email","required"=>TRUE,"validation"=>"required|min:1|max:255|email|unique:cotizacion_convenio","placeholder"=>"Introduce una dirección de correo electrónico válida"];
 			//$this->form[] = ["label"=>"Fecha Receta","name"=>"fecha_receta","type"=>"date","required"=>TRUE,"validation"=>"required|date"];
 			//$this->form[] = ["label"=>"Postdatada","name"=>"postdatada","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Fecha Vencimiento","name"=>"fecha_vencimiento","type"=>"date","required"=>TRUE,"validation"=>"required|date"];
+			//$this->form[] = ["label"=>"Fecha Entrega","name"=>"fecha_entrega","type"=>"date","required"=>TRUE,"validation"=>"required|date"];
 			//$this->form[] = ["label"=>"Estado Solicitud Id","name"=>"estado_solicitud_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"estado_solicitud,id"];
+			//$this->form[] = ["label"=>"Estado Pedido Id","name"=>"estado_pedido_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"estado_pedido,id"];
+			//$this->form[] = ["label"=>"Punto Retiro Id","name"=>"punto_retiro_id","type"=>"select2","required"=>TRUE,"validation"=>"required|integer|min:0","datatable"=>"punto_retiro,id"];
 			//$this->form[] = ["label"=>"Tel Medico","name"=>"tel_medico","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Proveedor","name"=>"proveedor","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Stamp User","name"=>"stamp_user","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Discapacidad","name"=>"discapacidad","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Observaciones","name"=>"observaciones","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
@@ -154,13 +141,14 @@
 			//$this->form[] = ["label"=>"Archivo2","name"=>"archivo2","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Archivo3","name"=>"archivo3","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			//$this->form[] = ["label"=>"Archivo4","name"=>"archivo4","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Obra Social","name"=>"obra_social","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Provincia","name"=>"provincia","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Patologia","name"=>"patologia","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Diagnostico","name"=>"diagnostico","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Ant Postdatada","name"=>"ant_postdatada","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Ant Est Sol","name"=>"ant_est_sol","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
-			//$this->form[] = ["label"=>"Renovaciones","name"=>"renovaciones","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Direccion Retiro","name"=>"direccion_retiro","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Zona Retiro","name"=>"zona_retiro","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Localidad Retiro","name"=>"localidad_retiro","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Tel Retiro","name"=>"tel_retiro","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Custom Field","name"=>"custom_field","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Pedido","name"=>"id_pedido","type"=>"select2","required"=>TRUE,"validation"=>"required|min:1|max:255","datatable"=>"pedido,id"];
+			//$this->form[] = ["label"=>"Nro Factura","name"=>"nro_factura","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
+			//$this->form[] = ["label"=>"Nro Remito","name"=>"nro_remito","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			# OLD END FORM
 
 			/* 
@@ -176,7 +164,6 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-			$this->sub_module[] = ['label'=>'Enviar pedido', 'path'=>'cotizacion_convenio2024/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart'];
 
 
 	        /* 
@@ -191,8 +178,6 @@
 	        | 
 	        */
 	        $this->addaction = array();
-			$this->addaction[] = ['label'=>'Autorizar','url'=>CRUDBooster::mainpath('set-status/4/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 8", 'confirmation'=>true];
-			$this->addaction[] = ['label'=>'Rechazar','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8", 'confirmation'=>true];
 
 
 	        /* 
@@ -263,16 +248,19 @@
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
-			$this->script_js = "
+	        $this->script_js = "
 
-		
+	
 			$(document).ready(function () {
 				console.log('EJECUTANDO');
-				var medicamentos = " . $medicamento . ";
-
+				var medicamentos = " . json_encode($medicamento) . ";
 				console.log(medicamentos);
+
 				let table = document.getElementById('table-detallesdelasolicitud');
-				var rowCount = table.rows.length; // Obtén el número de filas en la tabla
+
+				while (table.rows.length > 0) {
+					table.deleteRow(0);
+				}
 
 				if (medicamentos.length > 1) {
 					// Si hay más de una fila de medicamentos, oculta la fila con la clase 'trNull'
@@ -290,24 +278,62 @@
 			
 					// Add the td elements for each column in the row
 					var td1 = document.createElement('td');
-					td1.className = 'articuloZafiro_id';
+					td1.className = 'presentacion';
 					var label = document.createElement('span');
 					label.className = 'td-label';
-					label.textContent = medicamento.des_articulo;
+					label.textContent = medicamento[0].presentacion_completa;
 					var input1 = document.createElement('input');
 					input1.type = 'hidden';
-					input1.name = 'detallesdelasolicitud-articuloZafiro_id[]';
-					input1.value = medicamento.articuloZafiro_id;
+					input1.name = 'detallesdelasolicitud-presentacion[]';
+					input1.value = medicamento[0].presentacion_completa;
 			
 					var td2 = document.createElement('td');
-					td2.className = 'cantidad';
-					td2.textContent = medicamento.cantidad;
+					td2.className = 'laboratorio';
+					td2.textContent = medicamento.laboratorio;
 					var input2 = document.createElement('input');
 					input2.type = 'hidden';
 					input2.name = 'detallesdelasolicitud-cantidad[]';
-					input2.value = medicamento.cantidad;
-			
+					input2.value = medicamento.laboratorio;
+
 					var td3 = document.createElement('td');
+					td3.className = 'precio';
+					td3.textContent = medicamento[0].pcio_vta_siva.toFixed(2).replace(',', '.');
+					var input3 = document.createElement('input');
+					input3.type = 'hidden';
+					input3.name = 'detallesdelasolicitud-precio[]';
+					input3.value = medicamento[0].pcio_vta_siva.toFixed(2).replace(',', '.');
+
+					var td4 = document.createElement('td');
+					td4.className = 'cantidad';
+					td4.textContent = medicamento.cantidad;
+					var input4 = document.createElement('input');
+					input4.type = 'hidden';
+					input4.name = 'detallesdelasolicitud-cantidad[]';
+					input4.value = medicamento.cantidad;
+
+					var td5 = document.createElement('td');
+					td5.className = 'descuento';
+					td5.textContent = medicamento.banda_descuento;
+					var input5 = document.createElement('input');
+					input5.type = 'hidden';
+					input5.name = 'detallesdelasolicitud-descuento[]';
+					input5.value = medicamento.banda_descuento;
+
+					//CALCULO DEL TOTAL 
+					var total = 0;
+					total = (medicamento[0].pcio_vta_siva * medicamento.cantidad) - (medicamento[0].pcio_vta_siva * medicamento.cantidad * medicamento.banda_descuento / 100);
+					total = total.toFixed(2).replace(',', '.');
+
+					var td6 = document.createElement('td');
+					td6.className = 'total';
+					td6.textContent = total;
+					var input6 = document.createElement('input');
+					input6.type = 'hidden';
+					input6.name = 'detallesdelasolicitud-total[]';
+					input6.value = total;
+			
+			
+					var td7 = document.createElement('td');
 					var editLink = document.createElement('a');
 					editLink.href = '#panel-form-detallesdelasolicitud';
 					editLink.onclick = function () { editRowdetallesdelasolicitud(this); };
@@ -327,14 +353,23 @@
 					td1.appendChild(label);
 					td1.appendChild(input1);
 					td2.appendChild(input2);
-					td3.appendChild(editLink);
-					td3.appendChild(document.createTextNode(' '));
-					td3.appendChild(deleteLink);
+					td3.appendChild(input3);
+					td4.appendChild(input4);
+					td5.appendChild(input5);
+					td6.appendChild(input6);
+					td7.appendChild(editLink);
+					td7.appendChild(document.createTextNode(' '));
+					td7.appendChild(deleteLink);
 			
 					// Append the td elements to the new row
 					row.appendChild(td1);
 					row.appendChild(td2);
 					row.appendChild(td3);
+					row.appendChild(td4);
+					row.appendChild(td5);
+					row.appendChild(td6);
+					row.appendChild(td7);
+
 				}
 			});
 		";
@@ -511,18 +546,6 @@
 
 	    }
 
-
-		public function getSetStatus($status,$id) {
-			DB::table('pedido_medicamento')->where('id',$id)->update(['estado_solicitud_id'=> $status]);
-			//This will redirect back and gives a message
-
-			if($status == 4){
-				CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue autorizada con éxito!","info");
-			}
-			if($status == 5){
-				CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue anulada con éxito!","info");
-			}
-		 }
 
 
 	    //By the way, you can still create your own method in here... :) 

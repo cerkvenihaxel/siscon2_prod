@@ -599,8 +599,6 @@
 			$id = DB::table('cms_users')->where('name',$medicoId)->value('id');
 			$config['id_cms_users'] = [$id];
 
-
-
 			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"La solicitud fue auditada con éxito!","info");
 		 }
 
