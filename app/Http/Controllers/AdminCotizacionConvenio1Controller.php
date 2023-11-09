@@ -5,7 +5,7 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminCotizacionConvenio2024Controller extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminCotizacionConvenio1Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
 		function getDatos(){
 			$pedido_medicamento_id = $_GET['id'];

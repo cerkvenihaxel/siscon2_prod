@@ -7,7 +7,7 @@
 	use App\Models\AfiliadosArticulos;
 	
 
-	class AdminPedidoMedicamento2024Controller extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminPedidoMedicamento1Controller extends \crocodicstudio\crudbooster\controllers\CBController {
 
 		function nroAfiliado(){
 			$nroAfiliado = $_GET['nroAfiliado'];

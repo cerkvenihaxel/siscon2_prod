@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
     crearRecetaButton.addEventListener('click', function () {
         const searchValue = "{{$search}}"; // Asegúrate de que $search tenga el valor que necesitas
 
-        const url = `/admin/pedido_medicamento2024/add?nroAfiliado=${searchValue}`;
+        const url = `/admin/pedido_medicamento_1/add?nroAfiliado=${searchValue}`;
 
         window.location.href = url;
     });
@@ -616,7 +616,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var selectedValue = {{$solicitud[0]->patologias}}
 
         // Construir la URL con los parámetros
-        var url = "/admin/pedido_medicamento2024/add?nroAfiliado=" + nroAfiliado + "&patologia=" + selectedValue;
+        var url = "/admin/pedido_medicamento_1/add?nroAfiliado=" + nroAfiliado + "&patologia=" + selectedValue;
 
         // Redirigir a la nueva URL
         window.location.href = url;
