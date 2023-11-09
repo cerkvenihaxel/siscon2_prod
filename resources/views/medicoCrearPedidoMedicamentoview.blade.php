@@ -6,7 +6,7 @@
     @php
     $myID = CRUDBooster::myId();
     $obra_social_id = DB::table('teams')->where('user_id', $myID)->value('obra_social_id');
-
+    $searchPatologia = null;
     @endphp
 
     <!DOCTYPE html>
@@ -74,6 +74,7 @@
                             <option value="0">Ver todas</option>
                             @foreach($patologias as $pato)
                                 <option value="{{ $pato->id }}">{{ $pato->nombre }}</option>
+                                <?php  ?>
                             @endforeach
 
                         </select>
@@ -141,14 +142,12 @@
                     @endforeach
                     </tbody>
                 </table>
-
-
                 <div class="row">
-
                     <div class="col-md-6">
                         <button class="btn btn-info btn-sm" type="button" onclick="openCenteredWindow('{{ route('addNewPrecarga', ['patologias' => $soli->patologias, 'search' => $search]) }}', 750, 500)">Agregar medicación</button>
                         <button class="btn btn-warning btn-sm" type="button" onclick="location.reload()">Actualizar datos</button>
-                        <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#crearPedidoModal">Crear receta</button>
+                        <button class="btn btn-warning btn-sm" type="button" id="crearReceta">Crear receta</button>
+                        {{-- <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#crearPedidoModal">Crear receta</button> --}}
                     </div>
                     @endif
 
@@ -431,6 +430,20 @@
 </div>
 @endif
 <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const crearRecetaButton = document.getElementById('crearReceta');
+
+    crearRecetaButton.addEventListener('click', function () {
+        const searchValue = "{{$search}}"; // Asegúrate de que $search tenga el valor que necesitas
+
+        const url = `/admin/pedido_medicamento2024/add?nroAfiliado=${searchValue}`;
+
+        window.location.href = url;
+    });
+});
+
+
     var tablaSolicitudes;
 
     $(document).ready(function() {
@@ -593,6 +606,22 @@
 </style>
 
 
+<script>
+
+ 
+
+    document.getElementById("crearReceta").onclick = function() {
+        console.log('PATOLOGIA ENVIADA')
+        var nroAfiliado = {{$search}};  // Cambia estos valores según tus necesidades
+        var selectedValue = {{$solicitud[0]->patologias}}
+
+        // Construir la URL con los parámetros
+        var url = "/admin/pedido_medicamento2024/add?nroAfiliado=" + nroAfiliado + "&patologia=" + selectedValue;
+
+        // Redirigir a la nueva URL
+        window.location.href = url;
+    };
+    </script>
 
 </body>
 </html>
