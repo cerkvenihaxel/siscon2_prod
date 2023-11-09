@@ -614,7 +614,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('PATOLOGIA ENVIADA')
         var nroAfiliado = {{$search}};  // Cambia estos valores según tus necesidades
         var selectedValue = {{$solicitud[0]->patologias}}
-
+	console.log(selectedValue);
         // Construir la URL con los parámetros
         var url = "/admin/pedido_medicamento_1/add?nroAfiliado=" + nroAfiliado + "&patologia=" + selectedValue;
 
