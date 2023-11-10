@@ -293,10 +293,6 @@
 			$(document).ready(function () {
 				var medicamentos = " . json_encode($medicamento) . ";
 
-				
-				
-				if(medicamentos){
-
 				let table = document.getElementById('table-detallesdelasolicitud');
 
 				while (table.rows.length > 0) {
@@ -310,7 +306,7 @@
 					// Si no, muestra la fila con la clase 'trNull'
 					$('.trNull').show();
 				}
-
+				
 				for (var i = 0; i < medicamentos.length; i++) {
 					let medicamento = medicamentos[i];
 			
@@ -384,7 +380,7 @@
 					editLink.appendChild(editIcon);
 			
 					var deleteLink = document.createElement('a');
-					//deleteLink.href = 'javascript:void(0);';
+					deleteLink.href = '#;';
 					deleteLink.onclick = function () { deleteRowdetallesdelasolicitud(this); };
 					deleteLink.className = 'btn btn-danger btn-xs';
 					var deleteIcon = document.createElement('i');
@@ -411,7 +407,7 @@
 					row.appendChild(td6);
 					row.appendChild(td7);
 
-				}}
+				}
 			});
 		";
 
