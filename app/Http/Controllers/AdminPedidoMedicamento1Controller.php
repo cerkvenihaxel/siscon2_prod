@@ -175,8 +175,10 @@
 			| @parent_columns = Sparate with comma, e.g : name,created_at
 	        | 
 	        */
+
+		$PRIVILEGIO = CRUDBooster::myPrivilegeId();
 	        $this->sub_module = array();
-			$this->sub_module[] = ['label'=>'Enviar pedido', 'path'=>'cotizacion_convenio2024/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart'];
+			$this->sub_module[] = ['label'=>'Enviar pedido', 'path'=>'cotizacion_convenio_1/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart', 'showIf'=> $PRIVILEGIO == 1];
 
 
 	        /* 
