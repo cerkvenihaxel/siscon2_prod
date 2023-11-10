@@ -38,7 +38,6 @@
 		public function cbInit() {
 
 			
-
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
 			$this->limit = "20";
@@ -57,6 +56,7 @@
 			$this->button_export = true;
 			$this->table = "pedido_medicamento";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
+
 			function adminPrivilegeId()
             {
                 $privilege = CRUDBooster::myPrivilegeId();
@@ -79,8 +79,18 @@
 
 			function permisoAuditorAutorizar(){
 				$privilegio = CRUDBooster::myPrivilegeId();
-				if ($privilegio == 1 || $privilegio == 40 || $privilegio == 41 || $privilegio == 38){
+				if ($privilegio == 1 || $privilegio == 38){
 					return "[estado_solicitud_id] == 8";
+				}
+				else {
+					return false;
+				}
+			}
+
+			function permisoProveedorProcesar(){
+				$privilegio = CRUDBooster::myPrivilegeId();
+				if ($privilegio == 1 || $privilegio == 38 || $privilegio == 39){
+					return "[estado_solicitud_id] == 4";
 				}
 				else {
 					return false;
@@ -199,7 +209,7 @@
 	        */
 
 	        $this->sub_module = array();
-			$this->sub_module[] = ['label'=>'Procesar pedido', 'path'=>'cotizacion_convenio_1/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart', 'showIf'=>proveedorConvenio() && "[estado_solicitud_id] == 4"];
+			$this->sub_module[] = ['label'=>'Procesar pedido', 'path'=>'cotizacion_convenio_1/add/?id=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart', 'showIf'=>permisoProveedorProcesar()];
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -293,8 +303,6 @@
 	        |
 	        */
 			$this->script_js = "
-
-		
 			$(document).ready(function () {
 				var medicamentos = " . $medicamento . ";
 
@@ -427,6 +435,7 @@
 	        
 	        
 	    }
+		
 
 
 	    /*
@@ -538,7 +547,6 @@
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
-
 	    }
 
 

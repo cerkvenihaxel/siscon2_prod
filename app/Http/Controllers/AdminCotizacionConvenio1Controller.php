@@ -25,8 +25,16 @@
 			
 			$articuloZafiro = [];
 			foreach($pedido_medicamento_detail as $k => $pedido){
+
 				$articuloZafiro[$k] = DB::table('articulosZafiro')->where('id', $pedido->articuloZafiro_id)->get();
-				$id_articulo = DB::table('articulosZafiro')->where('id', $pedido->articuloZafiro_id)->value('id_articulo');
+				$id_articulo = DB::table('articuloszafiro')->where('id', $pedido->articuloZafiro_id)->value('id_articulo');
+				
+				if($id_articulo == null ){
+					$articuloZafiro[$k] = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->get();
+					$id_articulo = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->value('id_articulo');
+				}
+
+
 				$articuloZafiro[$k]['cantidad'] = $pedido->cantidad;
 				
 				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
@@ -133,10 +141,10 @@
 			$columns[] = ['label'=>'Articulo','name'=>'articuloZafiro_id','type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'readonly'=>'true'];
 			$columns[] = ['label'=>'Presentacion','name'=>'presentacion', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'number','validation'=>'required|min:0','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Cantidad', 'name'=>'cantidad', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$columns[] = ['label'=>'Descuento', 'name'=>'descuento', 'type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$columns[] = ['label'=>'Total' , 'name'=>'total', 'type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Descuento', 'name'=>'descuento', 'type'=>'number','validation'=>'required|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Total' , 'name'=>'total', 'type'=>'number','validation'=>'required|min:0','width'=>'col-sm-10', 'disabled'=>'true'];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud','name'=>'cotizacion_convenio_detail','type'=>'child','columns'=>$columns,'table'=>'cotizacion_convenio_detail','foreign_key'=>'cotizacion_convenio_id', 'required' => true];
 			
@@ -295,6 +303,29 @@
 	        */
 	        $this->script_js = "
 
+			// Obtener los campos relevantes
+			var precioInput = document.getElementById('detallesdelasolicitudprecio');
+			var cantidadInput = document.getElementById('detallesdelasolicitudcantidad');
+			var descuentoInput = document.getElementById('detallesdelasolicituddescuento');
+			var totalInput = document.getElementById('detallesdelasolicitudtotal');
+		
+			// Agregar event listeners para detectar cambios en los campos
+			precioInput.addEventListener('input', calcularTotal);
+			cantidadInput.addEventListener('input', calcularTotal);
+			descuentoInput.addEventListener('input', calcularTotal);
+		
+			function calcularTotal() {
+				// Obtener los valores de precio, cantidad y descuento
+				var precio = parseFloat(precioInput.value) || 0;
+				var cantidad = parseFloat(cantidadInput.value) || 0;
+				var descuento = parseFloat(descuentoInput.value) || 0;
+		
+				// Calcular el total
+				var total = (precio * cantidad) - (precio * cantidad * (descuento / 100));
+		
+				// Mostrar el total en el campo correspondiente
+				totalInput.value = total.toFixed(2);
+			}
 	
 			$(document).ready(function () {
 				var medicamentos = " . json_encode($medicamento) . ";
@@ -516,7 +547,6 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-	            
 	    }
 
 	    /*
@@ -551,7 +581,7 @@
 	    public function hook_after_add($id) {        
 	        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
 			PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
-			//$this->enviarPedidoSingular($id);
+			$this->enviarPedidoSingular($id);
 	    }
 
 	    /* 
@@ -605,11 +635,12 @@
 
 		public function enviarPedidoSingular($id){
 
+			$numero = $this->generatePedidoNumber();
+			DB::table('cotizacion_convenio')->where('id', $id)->update(['id_pedido' => $numero]);
 			DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
 			$nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
 			$observaciones = CotizacionConvenio::where('id', $id)->value('observaciones');
 			$nroAfiliado = CotizacionConvenio::where('id', $id)->value('nroAfiliado');
-	
 			$id_solicitud = $id;
 			$created_at = date('Y-m-d H:i:s');
 			$updated_at = date('Y-m-d H:i:s');
@@ -627,7 +658,7 @@
 			foreach ($linpedidos as $key => $linpedido) {
 	
 				$articuloID = $linpedido->articuloZafiro_id;
-				$numeroArticulo =  DB::table('articulosZafiro')->where('id_articulo', $articuloID)->value('id_articulo');
+				$numeroArticulo =  DB::table('articulosZafiro')->where('id', $articuloID)->value('id_articulo');
 				$lin_pedidos[] = [
 					'created_at' => $fecha_pedido,
 					'updated_at' => $fecha_pedido,
