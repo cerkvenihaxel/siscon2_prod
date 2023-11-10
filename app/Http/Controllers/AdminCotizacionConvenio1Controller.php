@@ -293,6 +293,10 @@
 			$(document).ready(function () {
 				var medicamentos = " . json_encode($medicamento) . ";
 
+				
+				
+				if(medicamentos){
+
 				let table = document.getElementById('table-detallesdelasolicitud');
 
 				while (table.rows.length > 0) {
@@ -306,7 +310,7 @@
 					// Si no, muestra la fila con la clase 'trNull'
 					$('.trNull').show();
 				}
-				
+
 				for (var i = 0; i < medicamentos.length; i++) {
 					let medicamento = medicamentos[i];
 			
@@ -407,7 +411,7 @@
 					row.appendChild(td6);
 					row.appendChild(td7);
 
-				}
+				}}
 			});
 		";
 
