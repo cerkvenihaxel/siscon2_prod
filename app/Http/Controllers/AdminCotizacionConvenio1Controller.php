@@ -194,7 +194,7 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-
+			$this->sub_module[] = ['label'=>'Imprimir pedido', 'path'=>'generarPDF_convenio/[id]','foreign_key'=>'cotizacion_convenio_id','button_color'=>'warning','button_icon'=>'fas fa-print'];
 
 	        /* 
 	        | ---------------------------------------------------------------------- 

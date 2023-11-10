@@ -199,7 +199,7 @@
 	        */
 
 	        $this->sub_module = array();
-			$this->sub_module[] = ['label'=>'Procesar pedido', 'path'=>'cotizacion_convenio_1/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart', 'showIf'=>proveedorConvenio()];
+			$this->sub_module[] = ['label'=>'Procesar pedido', 'path'=>'cotizacion_convenio_1/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart', 'showIf'=>proveedorConvenio() && "[estado_solicitud_id] == 4"];
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
