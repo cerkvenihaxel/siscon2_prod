@@ -37,6 +37,26 @@
 
 		public function cbInit() {
 
+			
+
+			# START CONFIGURATION DO NOT REMOVE THIS LINE
+			$this->title_field = "id";
+			$this->limit = "20";
+			$this->orderby = "id,desc";
+			$this->global_privilege = false;
+			$this->button_table_action = true;
+			$this->button_bulk_action = true;
+			$this->button_action_style = "button_icon";
+			$this->button_add = true;
+			$this->button_edit = true;
+			$this->button_delete = true;
+			$this->button_detail = true;
+			$this->button_show = true;
+			$this->button_filter = true;
+			$this->button_import = false;
+			$this->button_export = true;
+			$this->table = "pedido_medicamento";
+			# END CONFIGURATION DO NOT REMOVE THIS LINE
 			function adminPrivilegeId()
             {
                 $privilege = CRUDBooster::myPrivilegeId();
@@ -80,26 +100,6 @@
 			}
 			$myEmail = DB::table('cms_users')->where('id', CRUDBooster::myId())->value('email');
 			
-
-			# START CONFIGURATION DO NOT REMOVE THIS LINE
-			$this->title_field = "id";
-			$this->limit = "20";
-			$this->orderby = "id,desc";
-			$this->global_privilege = false;
-			$this->button_table_action = true;
-			$this->button_bulk_action = true;
-			$this->button_action_style = "button_icon";
-			$this->button_add = true;
-			$this->button_edit = true;
-			$this->button_delete = true;
-			$this->button_detail = true;
-			$this->button_show = true;
-			$this->button_filter = true;
-			$this->button_import = false;
-			$this->button_export = false;
-			$this->table = "pedido_medicamento";
-			# END CONFIGURATION DO NOT REMOVE THIS LINE
-
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
             $this->col[] = ["label" => "Fecha de carga", "name" => "created_at"];

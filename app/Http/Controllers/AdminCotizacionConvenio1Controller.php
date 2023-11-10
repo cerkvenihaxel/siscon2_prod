@@ -60,10 +60,7 @@
 
 	    public function cbInit() {
 
-			$pedido_medicamento = $this->getDatos();
-			$medicamento = $this->getMedicamentos();
-			$myEmail = DB::table('cms_users')->where('id', CRUDBooster::myId())->value('email');
-
+			
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
 			$this->limit = "20";
@@ -79,7 +76,7 @@
 			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
-			$this->button_export = CRUDBooster::myId() == 1 ? true : false;
+			$this->button_export = true;
 			$this->table = "cotizacion_convenio";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 			# START COLUMNS DO NOT REMOVE THIS LINE
@@ -94,6 +91,9 @@
 			$this->col[] = ["label"=>"Nro remito" , "name"=>"nro_remito"];
 			$this->col[] = ["label"=>"Punto retiro", "name"=>"punto_retiro_id", "join"=>"punto_retiro,nombre"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
+			$pedido_medicamento = $this->getDatos();
+			$medicamento = $this->getMedicamentos();
+			$myEmail = DB::table('cms_users')->where('id', CRUDBooster::myId())->value('email');
 
 			$nombreyapellido = DB::table('afiliados')->where('nroAfiliado', $pedido_medicamento[0]->nroAfiliado)->value('apeynombres');
 			$documento = DB::table('afiliados')->where('id', $pedido_medicamento[0]->afiliados_id)->value('documento');
