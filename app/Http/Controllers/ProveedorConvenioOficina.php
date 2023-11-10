@@ -175,7 +175,6 @@ class ProveedorConvenioOficina extends Controller
 
 
     public function enviarPedidoSingular($id){
-
         $numero = $this->generatePedidoNumber();
         DB::table('cotizacion_convenio')->where('id', $id)->update(['id_pedido' => $numero]);
         DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);

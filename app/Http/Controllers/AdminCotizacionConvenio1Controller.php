@@ -2,6 +2,10 @@
     
 	use App\Models\PedidoC;
 	use App\Models\PedidoMedicamento;
+	use App\Models\CotizacionConvenio;
+	use App\Models\CotizacionConvenioDetail;
+	use App\Models\ArticulosZafiro;
+	use App\Models\LinPedido;
 	use Session;
 	use Request;
 	use DB;
@@ -126,6 +130,7 @@
 
 
 			$columns = [];
+
 			$columns[] = ['label'=>'Presentacion','name'=>'presentacion', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
@@ -225,6 +230,7 @@
 	        */
 	        $this->button_selected = array();
 
+
 	                
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -292,7 +298,7 @@
 	
 			$(document).ready(function () {
 				var medicamentos = " . json_encode($medicamento) . ";
-
+				console.log(medicamentos);
 				let table = document.getElementById('table-detallesdelasolicitud');
 
 				if(table){
@@ -486,7 +492,6 @@
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
-	            
 	    }
 
 
@@ -534,6 +539,7 @@
 	    public function hook_after_add($id) {        
 	        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
 			PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+			//$this->enviarPedidoSingular($id);
 	    }
 
 	    /* 
@@ -584,6 +590,97 @@
 	        //Your code here
 
 	    }
+
+		public function enviarPedidoSingular($id){
+
+			DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
+			$nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
+			$observaciones = CotizacionConvenio::where('id', $id)->value('observaciones');
+			$nroAfiliado = CotizacionConvenio::where('id', $id)->value('nroAfiliado');
+	
+			$id_solicitud = $id;
+			$created_at = date('Y-m-d H:i:s');
+			$updated_at = date('Y-m-d H:i:s');
+			$id_empresa = 2;
+			$id_pedido = $numero;
+			$fecha_pedido = date('Y-m-d H:i:s');
+			$origen_id_sucursal = 99;
+			$id_punto = DB::table('cotizacion_convenio')->where('id', $id_solicitud)->value('punto_retiro_id');
+			$id_cliente = DB::table('punto_retiro')->where('id', $id_punto)->value('id_cliente');
+	
+			$linpedidos = DB::table('cotizacion_convenio_detail')->where('cotizacion_convenio_id', $id_solicitud)->get();
+	
+			$lin_pedidos = [];
+	
+			foreach ($linpedidos as $key => $linpedido) {
+	
+				$articuloID = $linpedido->articuloZafiro_id;
+				$numeroArticulo =  DB::table('articulosZafiro')->where('id_articulo', $articuloID)->value('id_articulo');
+				$lin_pedidos[] = [
+					'created_at' => $fecha_pedido,
+					'updated_at' => $fecha_pedido,
+					'id_pedido' => $id_pedido,
+					'item' => $key+1,
+					'id_articulo' => $numeroArticulo,
+					'cantidad' => $linpedido->cantidad,
+					'des_articulo' => DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('des_articulo'),
+					'presentacion' => DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('presentacion'),
+					'pcio_vta_unisiva' => $linpedido->precio,
+					'pcio_iva_comsiva' => $linpedido->total,
+				];
+			}
+	
+			$objeto = [
+				[
+					"id" => 1,
+					"created_at" => $created_at,
+					"updated_at" => $created_at,
+					"id_empresa" => $id_empresa,
+					"id_pedido" => $id_pedido,
+					"estado_pedido" => "EM",
+					"fecha_pedido" => $fecha_pedido,
+					"_origen_id_sucursal" => $origen_id_sucursal,
+					"id_cliente" => $id_cliente,
+					"lin_pedido" => $lin_pedidos
+	
+				]
+			];
+	
+	
+			$pedido = new PedidoC();
+			$pedido->created_at = $created_at;
+			$pedido->updated_at = $updated_at;
+			$pedido->id_empresa = $id_empresa;
+			$pedido->id_pedido = $id_pedido;
+			$pedido->fecha_pedido = $fecha_pedido;
+			$pedido->estado_pedido = 'EM'; // Estado "EM" = "Enviado a Mostrador
+			$pedido->_origen_id_sucursal = $origen_id_sucursal;
+			$pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
+			$pedido->observaciones = $observaciones;
+			$pedido->nrosolicitud = $nroSolicitud;
+			$pedido->nroAfiliado = $nroAfiliado;
+			$pedido->save();
+	
+	// Insertar en la tabla lin_pedido
+			foreach ($objeto[0]['lin_pedido'] as $linpedido) {
+				$linPedido = new LinPedido();
+				$linPedido->created_at = $linpedido['created_at'];
+				$linPedido->updated_at = $linpedido['updated_at'];
+				$linPedido->id_pedido = $linpedido['id_pedido'];
+				$linPedido->item = $linpedido['item'];
+				$linPedido->id_articulo = $linpedido['id_articulo'];
+				$linPedido->cantidad = $linpedido['cantidad'];
+				$linPedido->des_articulo = $linpedido['des_articulo'];
+				$linPedido->presentacion = $linpedido['presentacion'];
+				$linPedido->pcio_vta_uni_siva = $linpedido['pcio_vta_unisiva'];
+				$linPedido->pcio_com_uni_siva = $linpedido['pcio_iva_comsiva'];
+				$linPedido->save();
+			}
+	
+	
+			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"El pedido fue cargado con éxito!","success");
+	
+		}
 
 
 

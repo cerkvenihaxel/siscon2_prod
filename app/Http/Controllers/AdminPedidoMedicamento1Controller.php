@@ -216,7 +216,6 @@
 			$this->addaction[] = ['label'=>'Autorizar','url'=>CRUDBooster::mainpath('set-status/4/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>permisoAuditorAutorizar(), 'confirmation'=>true];
 			$this->addaction[] = ['label'=>'Rechazar','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>permisoAuditorAutorizar(), 'confirmation'=>true];
 
-
 	        /* 
 	        | ---------------------------------------------------------------------- 
 	        | Add More Button Selected
@@ -228,6 +227,9 @@
 	        | 
 	        */
 	        $this->button_selected = array();
+			if(proveedorConvenio()){
+			$this->button_selected[] = ['label'=>'Generar pedido masivo','icon'=>'fa fa-check','name'=>'pedido_masivo'];
+			}
 
 	                
 	        /* 
@@ -437,6 +439,9 @@
 	    */
 	    public function actionButtonSelected($id_selected,$button_name) {
 	        //Your code here
+			if ($button_name == 'pedido_masivo') {
+				$this->generarPedidoMasivo($id_selected);
+			}
 	            
 	    }
 
@@ -450,7 +455,6 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-	            
 	    }
 
 	    /*
@@ -550,6 +554,10 @@
 			}
 		 }
 
+		public function generarPedidoMasivo($id_selected) {
+		
+
+		}
 
 	    //By the way, you can still create your own method in here... :) 
 
