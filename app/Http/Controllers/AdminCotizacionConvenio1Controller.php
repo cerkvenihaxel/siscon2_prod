@@ -291,9 +291,7 @@
 
 	
 			$(document).ready(function () {
-				console.log('EJECUTANDO');
 				var medicamentos = " . json_encode($medicamento) . ";
-				console.log(medicamentos);
 
 				let table = document.getElementById('table-detallesdelasolicitud');
 
@@ -382,7 +380,7 @@
 					editLink.appendChild(editIcon);
 			
 					var deleteLink = document.createElement('a');
-					deleteLink.href = 'javascript:void(0);';
+					//deleteLink.href = 'javascript:void(0);';
 					deleteLink.onclick = function () { deleteRowdetallesdelasolicitud(this); };
 					deleteLink.className = 'btn btn-danger btn-xs';
 					var deleteIcon = document.createElement('i');
