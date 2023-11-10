@@ -427,7 +427,7 @@ for (var i = 0; i < medicamentos.length; i++) {
     editLink.appendChild(editIcon);
 
     var deleteLink = document.createElement('a');
-    deleteLink.href = 'javascript:void(0)';
+    deleteLink.href = '';
     deleteLink.onclick = function () { deleteRowdetallesdelasolicitud(this); };
     deleteLink.className = 'btn btn-danger btn-xs';
     var deleteIcon = document.createElement('i');
