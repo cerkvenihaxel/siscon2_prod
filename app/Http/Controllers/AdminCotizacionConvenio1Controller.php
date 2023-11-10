@@ -207,7 +207,7 @@
 	        | 
 	        */
 	        $this->addaction = array();
-			$this->addaction[] = ['label'=>'Imprimir pedido', 'url'=>'/generarPDF_convenio/[id]','button_color'=>'warning','button_icon'=>'fa fa-print'];
+			$this->addaction[] = ['label'=>'Imprimir pedido', 'url'=>'/generarPDF_convenio/[id]','button_color'=>'warning','button_icon'=>'fa fa-print', 'target'=>'_blank'];
 
 
 
