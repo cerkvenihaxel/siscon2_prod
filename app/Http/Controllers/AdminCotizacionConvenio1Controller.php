@@ -404,6 +404,8 @@
 					deleteIcon.className = 'fa fa-trash';
 					deleteLink.appendChild(deleteIcon);
 			
+					// Append the td elements to the new row
+					td0.appendChild(input0);
 					td1.appendChild(label);
 					td1.appendChild(input1);
 					td2.appendChild(input2);
@@ -416,6 +418,7 @@
 					td7.appendChild(deleteLink);
 			
 					// Append the td elements to the new row
+					row.appendChild(td0);
 					row.appendChild(td1);
 					row.appendChild(td2);
 					row.appendChild(td3);
