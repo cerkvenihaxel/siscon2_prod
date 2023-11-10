@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
     
 	use App\Models\PedidoC;
+	use App\Models\PedidoMedicamento;
 	use Session;
 	use Request;
 	use DB;
@@ -381,7 +382,7 @@
 					editLink.appendChild(editIcon);
 			
 					var deleteLink = document.createElement('a');
-					deleteLink.href = '';
+					deleteLink.href = 'javascript:void(0);';
 					deleteLink.onclick = function () { deleteRowdetallesdelasolicitud(this); };
 					deleteLink.className = 'btn btn-danger btn-xs';
 					var deleteIcon = document.createElement('i');
@@ -531,8 +532,8 @@
 	    | 
 	    */
 	    public function hook_after_add($id) {        
-	        //Your code here
-
+	        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
+			PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
 	    }
 
 	    /* 
