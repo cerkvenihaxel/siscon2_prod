@@ -295,9 +295,11 @@
 
 				let table = document.getElementById('table-detallesdelasolicitud');
 
+				if(table){
+
 				while (table.rows.length > 0) {
 					table.deleteRow(0);
-				}
+				}}
 
 				if (medicamentos.length > 1) {
 					// Si hay más de una fila de medicamentos, oculta la fila con la clase 'trNull'

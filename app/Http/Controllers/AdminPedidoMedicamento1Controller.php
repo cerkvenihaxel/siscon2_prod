@@ -297,7 +297,7 @@
 				var medicamentos = " . $medicamento . ";
 
 				let table = document.getElementById('table-detallesdelasolicitud');
-				var rowCount = table.rows.length; // Obtén el número de filas en la tabla
+				//var rowCount = table.rows.length; // Obtén el número de filas en la tabla
 
 				if (medicamentos.length > 1) {
 					// Si hay más de una fila de medicamentos, oculta la fila con la clase 'trNull'
