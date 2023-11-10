@@ -133,10 +133,10 @@
 			$columns[] = ['label'=>'Articulo','name'=>'articuloZafiro_id','type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'readonly'=>'true'];
 			$columns[] = ['label'=>'Presentacion','name'=>'presentacion', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Cantidad', 'name'=>'cantidad', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$columns[] = ['label'=>'Descuento', 'name'=>'descuento', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
-			$columns[] = ['label'=>'Total' , 'name'=>'total', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Descuento', 'name'=>'descuento', 'type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$columns[] = ['label'=>'Total' , 'name'=>'total', 'type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud','name'=>'cotizacion_convenio_detail','type'=>'child','columns'=>$columns,'table'=>'cotizacion_convenio_detail','foreign_key'=>'cotizacion_convenio_id', 'required' => true];
 			
