@@ -130,7 +130,7 @@
 
 
 			$columns = [];
-
+			$columns[] = ['label'=>'Articulo','name'=>'articuloZafiro_id','type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'readonly'=>'true'];
 			$columns[] = ['label'=>'Presentacion','name'=>'presentacion', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
@@ -320,6 +320,15 @@
 			
 					// Create a new row
 					let row = table.insertRow();
+
+					var td0 = document.createElement('td');
+					td0.className = 'articuloZafiro_id';
+					td0.textContent = medicamento[0].id;
+					var input0 = document.createElement('input');
+					input0.type = 'hidden';
+					input0.name = 'detallesdelasolicitud-articuloZafiro_id[]';
+					input0.value = medicamento[0].id;
+
 			
 					// Add the td elements for each column in the row
 					var td1 = document.createElement('td');
