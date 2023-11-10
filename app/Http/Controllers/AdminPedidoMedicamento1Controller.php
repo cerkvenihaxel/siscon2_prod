@@ -35,9 +35,6 @@
 			return $afiliado;
 		}
 
-		
-	    
-		
 		public function cbInit() {
 
 			function adminPrivilegeId()
@@ -50,6 +47,26 @@
                 }
             }
 
+			function proveedorConvenio(){
+				$privilegio = CRUDBooster::myPrivilegeId();
+				if ($privilegio == 1 || $privilegio == 38 ){
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+
+			function permisoAuditorAutorizar(){
+				$privilegio = CRUDBooster::myPrivilegeId();
+				if ($privilegio == 1 || $privilegio == 40 || $privilegio == 41 || $privilegio == 38){
+					return "[estado_solicitud_id] == 8";
+				}
+				else {
+					return false;
+				}
+			}
+
 			$afiliado = $this->nroAfiliado();
 			$edad = '';
 			if(!empty(DB::table('afiliados')->where('nroAfiliado', $afiliado)->value('fecha_nacimiento'))){
@@ -61,6 +78,7 @@
 			if(empty($patologia)){
 				$patologia = '';
 			}
+			$myEmail = DB::table('cms_users')->where('id', CRUDBooster::myId())->value('email');
 			
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
@@ -93,6 +111,7 @@
             $this->col[] = ["label" => "Estado solicitud", "name" => "estado_solicitud_id", "join" => "estado_solicitud,estado"];
             $this->col[] = ["label" => "Patología", "name" => "patologia", "join" => "patologias,nombre"];
             $this->col[] = ["label" => "Obra social", "name" => "obra_social"];
+			$this->col[] = ["label"=> "Zona de retiro", "name"=> "zona_residencia"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
@@ -107,14 +126,19 @@
 			$this->form[] = ['label'=>'Elegir zona de retiro','name'=>'zona_residencia','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum' => 'Norte;Sur;Este;Oeste;Centro;Chamical;Chilecito;Famatina;Villa Unión'];
 			$this->form[] = ['label'=>'Provincia','name'=>'provincia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value' => 'La Rioja'];
 			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Email Afiliado','name'=>'email','type'=>'email','validation'=>'min:1|max:255|email|unique:pedido_medicamento','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
+			$this->form[] = ['label'=>'Email Afiliado','name'=>'email','type'=>'email','validation'=>'min:1|max:255|email','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
             $this->form[] = ['label' => 'Fecha Receta', 'name' => 'fecha_receta', 'type' => 'date', 'validation' => 'required|date', 'width' => 'col-sm-10', 'value' => date('Y-m-d')];
 			$this->form[] = ['label'=>'Receta prolongada','name'=>'postdatada','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10' , 'datatable' => 'postdatada,cantidad'];
 			$this->form[] = ['label' => 'Estado Solicitud', 'name' => 'estado_solicitud_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'datatable' => 'estado_solicitud,estado', 'value' => 8, 'disabled' => adminPrivilegeId()];
 			$this->form[] = ['label' => 'Discapacidad', 'name' => 'discapacidad', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'required' => true, 'dataenum' => 'Si;No'];
 			$this->form[] = ['label'=>'Patologia','name'=>'patologia','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'datatable' => 'patologias,nombre', 'value'=> $patologia];
+			
+			//VER ESTO PARA FUTURAS OBRAS SOCIALES.
 			$this->form[] = ['label'=>'Obra Social','name'=>'obra_social','type'=>'hidden', 'value'=> 'APOS'];
 			
+			//HIDDEN 
+			$this->form[] = ['label' =>'Stamp user', 'name'=>'stamp_user','type'=>'hidden', 'value'=>$myEmail];
+
 			$columns = [];
 			$columns[] = ['label'=>'Medicamento','name'=>'articuloZafiro_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'afiliados_articulos','datamodal_columns'=>'des_articulo,presentacion','datamodal_size'=>'large'];
 			$columns[] = ['label'=>'Cantidad','name'=>'cantidad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
@@ -123,8 +147,6 @@
             $this->form[] = ['label' => 'Observaciones', 'name' => 'observaciones', 'type' => 'textarea', 'validation' => 'min:1|max:255', 'width' => 'col-sm-10'];
 			$this->form[] = ['label'=>'Diagnostico','name'=>'diagnostico','type'=>'textarea','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			
-
-
 			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo3','name'=>'archivo3','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
@@ -176,10 +198,8 @@
 	        | 
 	        */
 
-		$PRIVILEGIO = CRUDBooster::myPrivilegeId();
 	        $this->sub_module = array();
-			$this->sub_module[] = ['label'=>'Enviar pedido', 'path'=>'cotizacion_convenio_1/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart', 'showIf'=> $PRIVILEGIO == 1];
-
+			$this->sub_module[] = ['label'=>'Procesar pedido', 'path'=>'cotizacion_convenio_1/add/?id[]=[id]','foreign_key'=>'pedido_medicamento_id','button_color'=>'success','button_icon'=>'fa fa-shopping-cart', 'showIf'=>proveedorConvenio()];
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
@@ -193,8 +213,8 @@
 	        | 
 	        */
 	        $this->addaction = array();
-			$this->addaction[] = ['label'=>'Autorizar','url'=>CRUDBooster::mainpath('set-status/4/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>"[estado_solicitud_id] == 8", 'confirmation'=>true];
-			$this->addaction[] = ['label'=>'Rechazar','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>"[estado_solicitud_id] == 8", 'confirmation'=>true];
+			$this->addaction[] = ['label'=>'Autorizar','url'=>CRUDBooster::mainpath('set-status/4/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>permisoAuditorAutorizar(), 'confirmation'=>true];
+			$this->addaction[] = ['label'=>'Rechazar','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>permisoAuditorAutorizar(), 'confirmation'=>true];
 
 
 	        /* 
@@ -254,7 +274,12 @@
 	        |
 	        */
 	        $this->index_statistic = array();
-
+			$this->index_statistic[] = ['label'=>'Total de pedidos', 'count'=>DB::table('pedido_medicamento')->count(), 'icon'=>'fa fa-inbox', 'color'=>'green'];
+			$this->index_statistic[] = ['label'=>'Artritis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 1)->count(), 'color'=>'red'];
+			$this->index_statistic[] = ['label'=>'Diabetes', 'count'=>DB::table('pedido_medicamento')->where('patologia', 2)->count(),  'color'=>'blue'];
+			$this->index_statistic[] = ['label'=>'Fibrosis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 3)->count(),  'color'=>'red'];
+			$this->index_statistic[] = ['label'=>'Hemodiálisis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 7)->count(),  'color'=>'red'];
+			$this->index_statistic[] = ['label'=>'Oncología', 'count'=>DB::table('pedido_medicamento')->where('patologia', 9)->count(),  'color'=>'blue'];
 
 
 	        /*
@@ -460,7 +485,8 @@
 	    | 
 	    */
 	    public function hook_after_add($id) {        
-	        //Your code here
+	    
+		
 
 	    }
 

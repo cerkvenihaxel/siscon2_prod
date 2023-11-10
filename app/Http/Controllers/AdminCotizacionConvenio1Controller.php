@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
-
+    
+	use App\Models\PedidoC;
 	use Session;
 	use Request;
 	use DB;
@@ -42,10 +43,25 @@
 			return $articuloZafiro;
 		}
 
+		private function generatePedidoNumber()
+        {
+            $lastPedido = PedidoC::latest()->first();
+
+            if ($lastPedido) {
+                $lastNumber = substr($lastPedido->id_pedido, 7); // Suponiendo que el número de pedido siempre comienza con "PC-"
+                $newNumber = str_pad($lastNumber + 1, 8, '0', STR_PAD_LEFT); // Incrementa el número y rellena con ceros a la izquierda
+            } else {
+                $newNumber = '00000001'; // Si no hay pedidos anteriores, comienza desde el número 1
+            }
+
+            return 'PE0090-' . $newNumber;
+        }
+
 	    public function cbInit() {
 
 			$pedido_medicamento = $this->getDatos();
 			$medicamento = $this->getMedicamentos();
+			$myEmail = DB::table('cms_users')->where('id', CRUDBooster::myId())->value('email');
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
@@ -62,10 +78,9 @@
 			$this->button_show = true;
 			$this->button_filter = true;
 			$this->button_import = false;
-			$this->button_export = false;
+			$this->button_export = CRUDBooster::myId() == 1 ? true : false;
 			$this->table = "cotizacion_convenio";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
-
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
 			$this->col[] = ["label"=>"Fecha de creación","name"=>"created_at"];
@@ -80,20 +95,35 @@
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			$nombreyapellido = DB::table('afiliados')->where('nroAfiliado', $pedido_medicamento[0]->nroAfiliado)->value('apeynombres');
-			$documento = DB::table('afiliados')->where('nroAfiliado', $pedido_medicamento[0]->nroAfiliado)->value('documento');
+			$documento = DB::table('afiliados')->where('id', $pedido_medicamento[0]->afiliados_id)->value('documento');
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Nombreyapellido','name'=>'nombreyapellido','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$nombreyapellido];
-			$this->form[] = ['label'=>'Documento','name'=>'documento','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$documento];
-			$this->form[] = ['label'=>'NroAfiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->nroAfiliado];
+			$this->form[] = ['label'=>'Nombre y apellido','name'=>'nombreyapellido','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$nombreyapellido];
+			$this->form[] = ['label'=>'Documento','name'=>'documento','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10','value'=>$documento];
+			$this->form[] = ['label'=>'Nro Afiliado','name'=>'nroAfiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->nroAfiliado];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->edad];
-			$this->form[] = ['label'=>'Nrosolicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->nrosolicitud];
+			$this->form[] = ['label'=>'Nro solicitud','name'=>'nrosolicitud','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->nrosolicitud];
 			$this->form[] = ['label'=>'Clinicas Id','name'=>'clinicas_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'clinicas,nombre', 'value'=>$pedido_medicamento[0]->clinicas_id];
 			$this->form[] = ['label'=>'Medicos Id','name'=>'medicos_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'medicos,nombremedico', 'value'=>$pedido_medicamento[0]->medicos_id];
-			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->tel_afiliado];
+			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->tel_afiliado];
 			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->zona_residencia];
 			$this->form[] = ['label'=>'Punto Retiro','name'=>'punto_retiro_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'punto_retiro,nombre'];
 			
+			//HIDDEN 
+			$this->form[] = ['label'=>'Tel Medico','name'=>'tel_medico','type'=>'hidden','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->tel_medico];
+			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'hidden','value'=>$pedido_medicamento[0]->email];
+			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'hidden','value'=>$pedido_medicamento[0]->fecha_receta];
+			$this->form[] = ['label'=>'Postdatada','name'=>'postdatada','type'=>'hidden','value'=>$pedido_medicamento[0]->postdatada];
+			$this->form[] = ['label'=>'Estado solicitud', 'name'=>'estado_solicitud_id', 'type'=>'hidden', 'value'=>11];
+//			$this->form[] = ['label'=>'Estado pedido', 'name'=>'estado_pedido_id', 'type'=>'hidden', 'value'=>3];
+			$this->form[] = ['label'=>'Proveedor', 'name'=>'proveedor', 'type'=>'hidden', 'value'=>'Global Médica'];
+			$this->form[] = ['label'=>'Stamp User', 'name'=>'stamp_user', 'type'=>'hidden', 'value'=>$myEmail];
+			$this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'hidden', 'value'=>$pedido_medicamento[0]->discapacidad];
+			$this->form[] = ['label'=>'Pedido ID', 'name'=>'id_pedido', 'type'=>'hidden', 'value'=>$this->generatePedidoNumber()];
+			
+			//END HIDDEN FORMS
+
+
 			$columns = [];
 			$columns[] = ['label'=>'Presentacion','name'=>'presentacion', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
@@ -237,6 +267,12 @@
 	        |
 	        */
 	        $this->index_statistic = array();
+			$this->index_statistic[] = ['label'=>'Total de pedidos', 'count'=>DB::table('pedido_medicamento')->count(), 'icon'=>'fa fa-inbox', 'color'=>'green'];
+			$this->index_statistic[] = ['label'=>'Artritis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 1)->count(), 'color'=>'red'];
+			$this->index_statistic[] = ['label'=>'Diabetes', 'count'=>DB::table('pedido_medicamento')->where('patologia', 2)->count(),  'color'=>'blue'];
+			$this->index_statistic[] = ['label'=>'Fibrosis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 3)->count(),  'color'=>'red'];
+			$this->index_statistic[] = ['label'=>'Hemodiálisis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 7)->count(),  'color'=>'red'];
+			$this->index_statistic[] = ['label'=>'Oncología', 'count'=>DB::table('pedido_medicamento')->where('patologia', 9)->count(),  'color'=>'blue'];
 
 
 
