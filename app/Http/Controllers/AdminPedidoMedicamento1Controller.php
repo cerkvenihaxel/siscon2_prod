@@ -342,7 +342,7 @@
 					editLink.appendChild(editIcon);
 			
 					var deleteLink = document.createElement('a');
-					deleteLink.href = '#;';
+					deleteLink.href = '#';
 					deleteLink.onclick = function () { deleteRowdetallesdelasolicitud(this); };
 					deleteLink.className = 'btn btn-danger btn-xs';
 					var deleteIcon = document.createElement('i');
