@@ -29,6 +29,7 @@ class ReporteProveedoresExport implements FromCollection, WithHeadings
         // Define los nombres de las columnas aquí
         return [
             'Proveedor',
+            'Año',
             'Mes',
             'Cotizadas',
             'Adjudicadas',

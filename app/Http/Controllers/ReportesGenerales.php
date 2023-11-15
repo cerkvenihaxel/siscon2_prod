@@ -32,22 +32,24 @@ $resultados = DB::connection($connection)->table(
         (
     SELECT "cotizaciones" AS tabla, created_at, proveedor AS sub_proveedor
     FROM cotizaciones
-    WHERE YEAR(created_at) = 2023 AND MONTH(created_at) BETWEEN 1 AND 12
+    WHERE YEAR(created_at) BETWEEN 2023 AND 2026 AND MONTH(created_at) BETWEEN 1 AND 12
     UNION ALL
-    SELECT "adjudicaciones" AS tabla, created_at, adjudicatario AS sub_proveedor
-    FROM adjudicaciones
-	WHERE YEAR(created_at) = 2023 AND MONTH(created_at) BETWEEN 1 AND 12
+    SELECT "adjudicaciones" AS tabla, ad.created_at, ad.adjudicatario AS sub_proveedor
+    FROM adjudicaciones ad
+	WHERE YEAR(ad.created_at) BETWEEN 2023 AND 2026 AND MONTH(ad.created_at) BETWEEN 1 AND 12
     UNION ALL
-    SELECT "presentacion" AS tabla, created_at, proveedor AS sub_proveedor
-    FROM presentacion
-    WHERE YEAR(created_at) = 2023 AND MONTH(created_at) BETWEEN 1 AND 12
+    SELECT "autorizaciones" AS tabla, au.created_at, au.autorizado AS sub_proveedor
+    FROM autorizaciones au
+    WHERE YEAR(au.created_at) BETWEEN 2023 AND 2026 AND MONTH(au.created_at) BETWEEN 1 AND 12
 ) AS subconsulta'))
     ->selectRaw('
-            CASE
+    CASE 
 		WHEN sub_proveedor IN ("Angiocor") THEN "ANGIOCOR"
 		WHEN sub_proveedor IN ("Artro", "ARTRO S.A") THEN "ARTRO S.A"
+		WHEN sub_proveedor IN ("Amplitone") THEN "AMPLITONE"
         WHEN sub_proveedor IN ("Aved") THEN "AVED"
         WHEN sub_proveedor IN ("BERNAT.", "Ortopedia Bernat", "ORTOPEDIA BERNAT.", "BERNAT") THEN "ORTOPEDIA BERNAT"
+		WHEN sub_proveedor IN ("Biolap") THEN "BIOLAP"
         WHEN sub_proveedor IN ("Biolatina") THEN "BIOLATINA"
         WHEN sub_proveedor IN ("Bionor") THEN "BIONOR"
         WHEN sub_proveedor IN ("CARDIO -PACK","CardioPack") THEN "CARDIO-PACK"
@@ -57,7 +59,7 @@ $resultados = DB::connection($connection)->table(
 		WHEN sub_proveedor IN ("CHIAVASSA.") THEN "ORTOPEDIA CHIAVASSA"
 		WHEN sub_proveedor IN ("CONSELGI WIDEX") THEN "WIDEX"
 		-- DEBENE SA se cargó bien
-		WHEN sub_proveedor IN ("DECADE.") THEN "DECADE"
+		WHEN sub_proveedor IN ("DECADE.", "Decade") THEN "DECADE"
 		WHEN sub_proveedor IN ("DOCTOR PIE.","DR PIE","DR PIE.","PROPIEDAD DR PIE.") THEN "DOCTOR PIE"
 		-- DrGLOBAL MEDICA quedó en rojo en el excel de sol, hay que borrarlo?
 		-- ELVIRA se cargó bien
@@ -67,9 +69,9 @@ $resultados = DB::connection($connection)->table(
 		-- FORUM se cargó bien
 		WHEN sub_proveedor IN ("Global Medica","Global Medica  S.A.","Global Medica S.A","Global Medica S.A.","GLOBAL MEDICA.","GLOBAL MEDICAL","GM","GM SA","GMSA") THEN "GLOBAL MEDICA S.A."
 		-- GMR S.A. ? lo dejé así
-		WHEN sub_proveedor IN ("GD.BIO","GS  BIO.","GS BIO","GS BIO.","GS-BIO","GS.BIO","GSBIO") THEN "GS-BIO"
-		WHEN sub_proveedor IN ("GMR S.A.") THEN "GMRS"
-		WHEN sub_proveedor IN ("IGMA.") THEN "IGMA"
+		WHEN sub_proveedor IN ("GD.BIO","GS  BIO.","GS BIO","GS BIO.","GS-BIO","GS.BIO","GSBIO","Gsbio") THEN "GS-BIO"
+		WHEN sub_proveedor IN ("GM","GM SA","GMR S.A.","GMSA") THEN "GMRS"
+		WHEN sub_proveedor IN ("IGMA.", "Igma") THEN "IGMA"
 		WHEN sub_proveedor IN ("IM Salud") THEN "IM SALUD"
 		-- IMECO se cargó bien
 		WHEN sub_proveedor IN ("IMPLACOR.", "Implacor") THEN "IMPLACOR"
@@ -81,24 +83,25 @@ $resultados = DB::connection($connection)->table(
 		WHEN sub_proveedor IN ("Mat Medical") THEN "MAT MEDICAL"
 		-- MC MEDICAL se cargó bien
 		WHEN sub_proveedor IN ("Medcare") THEN "MED CARE"
-		WHEN sub_proveedor IN ("Medel") THEN "MED-EL"
+		WHEN sub_proveedor IN ("Medel","MEDEL") THEN "MED-EL"
 		WHEN sub_proveedor IN ("Medical Implants") THEN "MEDICAL IMPLANTS"
 		WHEN sub_proveedor IN ("Medical Milenium") THEN "MEDICAL MILENIUM"
 		WHEN sub_proveedor IN ("Medical Supplies") THEN "MEDICAL SUPPLIES"
-		WHEN sub_proveedor IN ("Medical Team") THEN "MEDICAL TEAM"
+		WHEN sub_proveedor IN ("Medical Team", "Medical Team SIN S") THEN "MEDICAL TEAM"
 		WHEN sub_proveedor IN ("MEDKIT") THEN "MEDKIT SRL"
 		WHEN sub_proveedor IN ("Medpro") THEN "MEDPRO"
 		WHEN sub_proveedor IN ("Miguel Angel", "ORT. MIGUEL ANGEL","Ortopedia Miguel Angel") THEN "ORTOPEDIA MIGUEL ANGEL"
-		-- MT? qué hacer? se deja como está o se elimina?
+		-- MT? qué hacer? se deja como está o se elimina? 
+		WHEN sub_proveedor IN ("Mobility") THEN "MOBILITY"
 		WHEN sub_proveedor IN ("Nexo") THEN "NEXO"
 		WHEN sub_proveedor IN ("North Medical") THEN "NORTH MEDICAL"
-		WHEN sub_proveedor IN ("Nova","Nova Soluciones Quirúrgicas", "Nova Soluciones") THEN "NOVA SOLUCIONES"
+		WHEN sub_proveedor IN ("Nova","Nova Soluciones Quirúrgicas","Nova Soluciones Quirurgicas", "Nova Soluciones Quirugicas", "Nova Soluciones") THEN "NOVA SOLUCIONES" 
 		WHEN sub_proveedor IN ("Nowa", "Nowa Portesis", "Nowa Protesis", "Nowa Protesis", "Nowakowski Maria Clara") THEN "NOWA"
 		-- OLYMPIA está bien cargado
 		WHEN sub_proveedor IN ("Omicron") THEN "OMICRON"
 		WHEN sub_proveedor IN ("Ortopedia Mayo") THEN "ORTOPEDIA MAYO"
 		WHEN sub_proveedor IN ("Ortopedia Rapalar", "RAPALAR") THEN "ORTOPEDIA RAPALAR"
-		WHEN sub_proveedor IN ("Santa Lucia", "SANTA LUCIA.", "SANTA LUCIA") THEN "ORTOPEDIA SANTA LUCIA"
+		WHEN sub_proveedor IN ("Santa Lucia", "SANTA LUCIA.", "SANTA LUCIA", "Sta Lucia") THEN "ORTOPEDIA SANTA LUCIA"
 		WHEN sub_proveedor IN ("OSTEORIESTRA.", "Osteoriestra") THEN "OSTEORIESTRA"
 		-- PFM? qué es?
 		WHEN sub_proveedor IN ("PROMEDICAL.") THEN "PROMEDICAL"
@@ -120,6 +123,7 @@ $resultados = DB::connection($connection)->table(
 		WHEN sub_proveedor IN ("Valmi") THEN "VALMI"
         ELSE sub_proveedor
     END AS Proveedor,
+	YEAR(subconsulta.created_at) AS Año,
     CASE
     	WHEN MONTH(subconsulta.created_at) = 1 THEN "Enero"
 		WHEN MONTH(subconsulta.created_at) = 2 THEN "Febrero"
@@ -137,8 +141,8 @@ $resultados = DB::connection($connection)->table(
     END AS Mes,
     COUNT(CASE WHEN subconsulta.tabla = "cotizaciones" THEN 1 END) AS Cotizadas,
     COUNT(CASE WHEN subconsulta.tabla = "adjudicaciones" THEN 1 END) AS Adjudicadas,
-    COUNT(CASE WHEN subconsulta.tabla = "presentacion" THEN 1 END) AS Finalizadas
-    ')->groupBy('Proveedor', 'Mes')->orderBy('Proveedor', 'asc')->get();
+    COUNT(CASE WHEN subconsulta.tabla = "autorizaciones" THEN 1 END) AS Finalizadas
+    ')->groupByRaw('Año, Proveedor, Mes')->orderByRaw('Proveedor, Mes, Año')->get();
 
         return \Maatwebsite\Excel\Facades\Excel::download(new ReporteProveedoresExport($resultados), 'ReporteProveedorestado_solicitud.xlsx');
     }
