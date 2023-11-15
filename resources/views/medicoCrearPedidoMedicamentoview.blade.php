@@ -46,7 +46,7 @@
                             @if(\crocodicstudio\crudbooster\helpers\CRUDBooster::myPrivilegeId() != 1)
                             @switch($obra_social_id)
                                 @case (1)
-                                    <option value="1">Incluir Salud</option>
+                                    <option value="1">Incluir Salud SJ</option>
                                     @break
                                 @case (2)
                                     <option value="2">FARMAPOS - Ministerio de Salud</option>
@@ -54,6 +54,15 @@
                                 @case (3)
                                     <option value="3">APOS</option>
                                     @break
+                                @case(4)
+                                <option value="4">Hospital E. Vera Barros</option>
+                                @break
+                                    @case(5)
+                                        <option value="5">Hospital de la Madre y el Niño</option>
+                                        @break
+                                    @case(5)
+                                        <option value="12">Incluir LR</option>
+                                        @break
                             @endswitch
                             @else
                             <option value="1">Incluir Salud</option>
@@ -148,7 +157,7 @@
                         <button class="btn btn-warning btn-sm" type="button" onclick="location.reload()">Actualizar datos</button>
                        {{-- <a href="/admin/pedido_medicamento_1/add?nroAfiliado={{$search}}&patologia={{$solicitud[0]->patologias}}">
                         <button class="btn btn-warning btn-sm" type="button">Crear receta</button></a>--}}
-                        <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#crearPedidoModal">Crear receta</button> 
+                        <button class="btn btn-success btn-sm" type="button" data-toggle="modal" data-target="#crearPedidoModal">Crear receta</button>
                     </div>
                     @endif
 
@@ -379,7 +388,7 @@
 				<option value="Chamical">Chamical</option>
 				<option value="Villa Union">Villa unión</option>
 				<option value="Famatina">Famatina</option>
-                                
+
                         </select>
                     </div>
 
@@ -609,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <script>
 
- 
+
 
     document.getElementById("crearReceta").onclick = function() {
         console.log('PATOLOGIA ENVIADA')
