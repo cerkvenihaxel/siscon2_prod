@@ -72,7 +72,8 @@
         <tr>
             <th>Item</th>
             <th>Descripción</th>
-            <th>Cantidad</th>
+            <th>Cantidad entregada</th>
+            <th>Cantidad pendiente</th>
             <!-- Agrega aquí más columnas según los datos que desees mostrar de $detalles -->
         </tr>
         </thead>
@@ -82,7 +83,8 @@
                 <td>{{ $key +1 }}</td>
                 <td> {{ $detalle->presentacion }}</td>
                 <td>{{ $detalle->cantidad_entregada }}</td>
-              
+                <td>{{ $detalle->cantidad_pendiente }}</td>
+
                 <!-- Agrega aquí más celdas según los datos que desees mostrar de $detalles -->
             </tr>
         @endforeach
