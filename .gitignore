@@ -13,3 +13,6 @@ yarn-error.log
 /.idea
 /.vscode
 .env
+/public/css/app.css
+/public/mix-manifest.json
+/storage/debugbar/.gitignore
