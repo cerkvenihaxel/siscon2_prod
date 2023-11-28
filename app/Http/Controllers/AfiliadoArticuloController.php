@@ -173,6 +173,7 @@ class AfiliadoArticuloController extends Controller
             $articuloAfiliado->des_articulo = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('des_articulo');
             $articuloAfiliado->presentacion = ArticulosZafiro::where('id_articulo', $fila['id_articulo'])->value('presentacion');
             $articuloAfiliado->patologias = $fila['patologias'];
+            $articuloAfiliado->obra_social_id = $fila['obra_social_id'];
             $articuloAfiliado->proveedores_convenio_id = $fila['proveedor'];
             $articuloAfiliado->cantidad = $fila['cantidad'];
 

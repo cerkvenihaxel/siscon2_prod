@@ -1,5 +1,5 @@
 <?php namespace App\Http\Controllers;
-    
+
 	use App\Models\PedidoC;
 	use App\Models\PedidoMedicamento;
 	use App\Models\CotizacionConvenio;
@@ -16,19 +16,29 @@
 		function getDatos(){
 			$pedido_medicamento_id = $_GET['id'];
 			$pedido = DB::table('pedido_medicamento')->where('id', $pedido_medicamento_id)->get();
-			
+
 			return $pedido;
 		}
 
+        function countSolicitudes($i){
+            $total = DB::table('cotizacion_convenio')->where('estado_solicitud_id', $i)->count();
+            return $total;
+        }
+
+        function countSolicitudesTotal(){
+            $total = DB::table('cotizacion_convenio')->count();
+            return $total;
+        }
+
 		function getMedicamentos(){
 			$pedido_medicamento_detail = DB::table('pedido_medicamento_detail')->where('pedido_medicamento_id', $_GET['id'])->get();
-			
+
 			$articuloZafiro = [];
 			foreach($pedido_medicamento_detail as $k => $pedido){
 
 				$articuloZafiro[$k] = DB::table('articulosZafiro')->where('id', $pedido->articuloZafiro_id)->get();
 				$id_articulo = DB::table('articulosZafiro')->where('id', $pedido->articuloZafiro_id)->value('id_articulo');
-				
+
 				if($id_articulo == null ){
 					$articuloZafiro[$k] = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->get();
 					$id_articulo = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->value('id_articulo');
@@ -36,10 +46,10 @@
 
 
 				$articuloZafiro[$k]['cantidad'] = $pedido->cantidad;
-				
+
 				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
 					$articuloZafiro[$k]['banda_descuento'] = '';
-				
+
 				}
 				else{
 					$articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento');
@@ -51,10 +61,47 @@
 					$articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio');
 
 			}
-			
+
 
 			return $articuloZafiro;
 		}
+
+        function getState($q){
+            if($q == 'ENTRANTE'){
+                return 1;
+            }
+            if($q == 'APROBADA'){
+                return 8;
+            }
+            if($q == 'AUTORIZADA'){
+                return 4;
+            }
+            if($q == 'PROCESADO'){
+                return [11];
+            }
+            if($q == 'ENTREGADO'){
+                return [13];
+            }
+            if($q == 'RECHAZADO'){
+                return [10, 14];
+            }
+            if($q == 'PENDIENTE'){
+                return [17];
+            }
+            else{
+                return 0;
+            }
+        }
+
+        function returnState($value){
+            if ($value != 0) {
+                return "<h4 style='text-align: left; padding-left: 1rem;'> Solicitudes : ". $_GET['q'] ."   - Cantidad de resultados: " . DB::table('cotizacion_convenio')->whereIn('estado_solicitud_id', $this->getState($_GET['q']))->count() . "</h4>";
+            }
+            else {
+                return  "<h4 style='text-align: left; padding-left: 1rem;'> Solicitudes : VER TODAS   - Cantidad de resultados: " . DB::table('cotizacion_convenio')->count() . "</h4>";
+
+            }
+        }
 
 		private function generatePedidoNumber()
         {
@@ -72,7 +119,7 @@
 
 	    public function cbInit() {
 
-			
+
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
 			$this->title_field = "id";
 			$this->limit = "20";
@@ -121,8 +168,8 @@
 			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->tel_afiliado];
 			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->zona_residencia];
 			$this->form[] = ['label'=>'Punto Retiro','name'=>'punto_retiro_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'punto_retiro,nombre'];
-			
-			//HIDDEN 
+
+			//HIDDEN
 			$this->form[] = ['label'=>'Tel Medico','name'=>'tel_medico','type'=>'hidden','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$pedido_medicamento[0]->tel_medico];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'hidden','value'=>$pedido_medicamento[0]->email];
 			$this->form[] = ['label'=>'Fecha Receta','name'=>'fecha_receta','type'=>'hidden','value'=>$pedido_medicamento[0]->fecha_receta];
@@ -133,7 +180,7 @@
 			$this->form[] = ['label'=>'Stamp User', 'name'=>'stamp_user', 'type'=>'hidden', 'value'=>$myEmail];
 			$this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'hidden', 'value'=>$pedido_medicamento[0]->discapacidad];
 			$this->form[] = ['label'=>'Pedido ID', 'name'=>'id_pedido', 'type'=>'hidden', 'value'=>$this->generatePedidoNumber()];
-			
+
 			//END HIDDEN FORMS
 
 
@@ -147,7 +194,7 @@
 			$columns[] = ['label'=>'Total' , 'name'=>'total', 'type'=>'number','validation'=>'required|min:0','width'=>'col-sm-10', 'disabled'=>'true'];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud','name'=>'cotizacion_convenio_detail','type'=>'child','columns'=>$columns,'table'=>'cotizacion_convenio_detail','foreign_key'=>'cotizacion_convenio_id', 'required' => true];
-			
+
 			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo3','name'=>'archivo3','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
@@ -195,30 +242,30 @@
 			//$this->form[] = ["label"=>"Nro Remito","name"=>"nro_remito","type"=>"text","required"=>TRUE,"validation"=>"required|min:1|max:255"];
 			# OLD END FORM
 
-			/* 
-	        | ---------------------------------------------------------------------- 
+			/*
+	        | ----------------------------------------------------------------------
 	        | Sub Module
-	        | ----------------------------------------------------------------------     
-			| @label          = Label of action 
+	        | ----------------------------------------------------------------------
+			| @label          = Label of action
 			| @path           = Path of sub module
 			| @foreign_key 	  = foreign key of sub table/module
 			| @button_color   = Bootstrap Class (primary,success,warning,danger)
-			| @button_icon    = Font Awesome Class  
+			| @button_icon    = Font Awesome Class
 			| @parent_columns = Sparate with comma, e.g : name,created_at
-	        | 
+	        |
 	        */
 	        $this->sub_module = array();
 
-	        /* 
-	        | ---------------------------------------------------------------------- 
+	        /*
+	        | ----------------------------------------------------------------------
 	        | Add More Action Button / Menu
-	        | ----------------------------------------------------------------------     
-	        | @label       = Label of action 
+	        | ----------------------------------------------------------------------
+	        | @label       = Label of action
 	        | @url         = Target URL, you can use field alias. e.g : [id], [name], [title], etc
 	        | @icon        = Font awesome class icon. e.g : fa fa-bars
-	        | @color 	   = Default is primary. (primary, warning, succecss, info)     
+	        | @color 	   = Default is primary. (primary, warning, succecss, info)
 	        | @showIf 	   = If condition when action show. Use field alias. e.g : [id] == 1
-	        | 
+	        |
 	        */
 	        $this->addaction = array();
 			$this->addaction[] = ['label'=>'Imprimir pedido', 'url'=>'/generarPDF_convenio/[id]','button_color'=>'warning','button_icon'=>'fa fa-print', 'target'=>'_blank'];
@@ -226,61 +273,61 @@
 
 
 
-	        /* 
-	        | ---------------------------------------------------------------------- 
+	        /*
+	        | ----------------------------------------------------------------------
 	        | Add More Button Selected
-	        | ----------------------------------------------------------------------     
-	        | @label       = Label of action 
+	        | ----------------------------------------------------------------------
+	        | @label       = Label of action
 	        | @icon 	   = Icon from fontawesome
-	        | @name 	   = Name of button 
-	        | Then about the action, you should code at actionButtonSelected method 
-	        | 
+	        | @name 	   = Name of button
+	        | Then about the action, you should code at actionButtonSelected method
+	        |
 	        */
 	        $this->button_selected = array();
 
 
-	                
-	        /* 
-	        | ---------------------------------------------------------------------- 
+
+	        /*
+	        | ----------------------------------------------------------------------
 	        | Add alert message to this module at overheader
-	        | ----------------------------------------------------------------------     
-	        | @message = Text of message 
-	        | @type    = warning,success,danger,info        
-	        | 
+	        | ----------------------------------------------------------------------
+	        | @message = Text of message
+	        | @type    = warning,success,danger,info
+	        |
 	        */
 	        $this->alert        = array();
-	                
 
-	        
-	        /* 
-	        | ---------------------------------------------------------------------- 
-	        | Add more button to header button 
-	        | ----------------------------------------------------------------------     
-	        | @label = Name of button 
+
+
+	        /*
+	        | ----------------------------------------------------------------------
+	        | Add more button to header button
+	        | ----------------------------------------------------------------------
+	        | @label = Name of button
 	        | @url   = URL Target
 	        | @icon  = Icon from Awesome.
-	        | 
+	        |
 	        */
 	        $this->index_button = array();
 
 
 
-	        /* 
-	        | ---------------------------------------------------------------------- 
-	        | Customize Table Row Color
-	        | ----------------------------------------------------------------------     
-	        | @condition = If condition. You may use field alias. E.g : [id] == 1
-	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.        
-	        | 
-	        */
-	        $this->table_row_color = array();     	          
-
-	        
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | You may use this bellow array to add statistic at dashboard 
-	        | ---------------------------------------------------------------------- 
-	        | @label, @count, @icon, @color 
+	        | ----------------------------------------------------------------------
+	        | Customize Table Row Color
+	        | ----------------------------------------------------------------------
+	        | @condition = If condition. You may use field alias. E.g : [id] == 1
+	        | @color = Default is none. You can use bootstrap success,info,warning,danger,primary.
+	        |
+	        */
+	        $this->table_row_color = array();
+
+
+	        /*
+	        | ----------------------------------------------------------------------
+	        | You may use this bellow array to add statistic at dashboard
+	        | ----------------------------------------------------------------------
+	        | @label, @count, @icon, @color
 	        |
 	        */
 	        $this->index_statistic = array();
@@ -294,10 +341,10 @@
 
 
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Add javascript at body 
-	        | ---------------------------------------------------------------------- 
-	        | javascript code in the variable 
+	        | ----------------------------------------------------------------------
+	        | Add javascript at body
+	        | ----------------------------------------------------------------------
+	        | javascript code in the variable
 	        | $this->script_js = "function() { ... }";
 	        |
 	        */
@@ -308,25 +355,25 @@
 			var cantidadInput = document.getElementById('detallesdelasolicitudcantidad');
 			var descuentoInput = document.getElementById('detallesdelasolicituddescuento');
 			var totalInput = document.getElementById('detallesdelasolicitudtotal');
-		
+
 			// Agregar event listeners para detectar cambios en los campos
 			precioInput.addEventListener('input', calcularTotal);
 			cantidadInput.addEventListener('input', calcularTotal);
 			descuentoInput.addEventListener('input', calcularTotal);
-		
+
 			function calcularTotal() {
 				// Obtener los valores de precio, cantidad y descuento
 				var precio = parseFloat(precioInput.value) || 0;
 				var cantidad = parseFloat(cantidadInput.value) || 0;
 				var descuento = parseFloat(descuentoInput.value) || 0;
-		
+
 				// Calcular el total
 				var total = (precio * cantidad) - (precio * cantidad * (descuento / 100));
-		
+
 				// Mostrar el total en el campo correspondiente
 				totalInput.value = total.toFixed(2);
 			}
-	
+
 			$(document).ready(function () {
 				var medicamentos = " . json_encode($medicamento) . ";
 				console.log(medicamentos);
@@ -345,10 +392,10 @@
 					// Si no, muestra la fila con la clase 'trNull'
 					$('.trNull').show();
 				}
-				
+
 				for (var i = 0; i < medicamentos.length; i++) {
 					let medicamento = medicamentos[i];
-			
+
 					// Create a new row
 					let row = table.insertRow();
 
@@ -360,7 +407,7 @@
 					input0.name = 'detallesdelasolicitud-articuloZafiro_id[]';
 					input0.value = medicamento[0].id;
 
-			
+
 					// Add the td elements for each column in the row
 					var td1 = document.createElement('td');
 					td1.className = 'presentacion';
@@ -371,7 +418,7 @@
 					input1.type = 'hidden';
 					input1.name = 'detallesdelasolicitud-presentacion[]';
 					input1.value = medicamento[0].presentacion_completa;
-			
+
 					var td2 = document.createElement('td');
 					td2.className = 'laboratorio';
 					td2.textContent = medicamento.laboratorio;
@@ -404,7 +451,7 @@
 					input5.name = 'detallesdelasolicitud-descuento[]';
 					input5.value = medicamento.banda_descuento;
 
-					//CALCULO DEL TOTAL 
+					//CALCULO DEL TOTAL
 					var total = 0;
 					total = (medicamento[0].pcio_vta_siva * medicamento.cantidad) - (medicamento[0].pcio_vta_siva * medicamento.cantidad * medicamento.banda_descuento / 100);
 					total = total.toFixed(2).replace(',', '.');
@@ -416,8 +463,8 @@
 					input6.type = 'hidden';
 					input6.name = 'detallesdelasolicitud-total[]';
 					input6.value = total;
-			
-			
+
+
 					var td7 = document.createElement('td');
 					var editLink = document.createElement('a');
 					editLink.href = '#panel-form-detallesdelasolicitud';
@@ -426,7 +473,7 @@
 					var editIcon = document.createElement('i');
 					editIcon.className = 'fa fa-pencil';
 					editLink.appendChild(editIcon);
-			
+
 					var deleteLink = document.createElement('a');
 					deleteLink.href = '#;';
 					deleteLink.onclick = function () { deleteRowdetallesdelasolicitud(this); };
@@ -434,7 +481,7 @@
 					var deleteIcon = document.createElement('i');
 					deleteIcon.className = 'fa fa-trash';
 					deleteLink.appendChild(deleteIcon);
-			
+
 					// Append the td elements to the new row
 					td0.appendChild(input0);
 					td1.appendChild(label);
@@ -447,7 +494,7 @@
 					td7.appendChild(editLink);
 					td7.appendChild(document.createTextNode(' '));
 					td7.appendChild(deleteLink);
-			
+
 					// Append the td elements to the new row
 					row.appendChild(td0);
 					row.appendChild(td1);
@@ -464,71 +511,94 @@
 
 
             /*
-	        | ---------------------------------------------------------------------- 
-	        | Include HTML Code before index table 
-	        | ---------------------------------------------------------------------- 
+	        | ----------------------------------------------------------------------
+	        | Include HTML Code before index table
+	        | ----------------------------------------------------------------------
 	        | html code to display it before index table
 	        | $this->pre_index_html = "<p>test</p>";
 	        |
 	        */
-	        $this->pre_index_html = null;
-	        
-	        
-	        
+            $this->pre_index_html = null;
+            $this->pre_index_html = "<div class='row'>
+            <div class='col-md-12'>
+            <div class='panel panel-default'>
+            <div class='panel-heading'>
+            <div class='panel-title'><i class='fa fa-search'></i> Filtros rápidos</div>
+            </div>
+            <div class='panel-body'>
+            <div class='row'>
+            <div class='col-md-12'>
+            <div class='fc-button-group'>
+            <button type='button' class='btn' style='background-color: lightcoral !important; color: white !important;' onclick='window.location.href = \"?q=\"'>VER TODAS (".$this->countSolicitudesTotal() .")</button>
+            <button type='button' class='btn' style='background-color: #0d6aad !important; color: white !important;' onclick='window.location.href = \"?q=PROCESADO\"'>Procesada (". $this->countSolicitudes(11) .")</button>
+            <button type='button' class='btn' style='background-color: green !important; color: white !important;' onclick='window.location.href = \"?q=ENTREGADO\"'>Entregada(". $this->countSolicitudes(13) .")</button>
+            <button type='button' class='btn' style='background-color: gold !important;' onclick='window.location.href = \"?q=PENDIENTE\"'>Pendiente(". $this->countSolicitudes(17) .")</button>
+            <button type='button' class='btn' style='background-color: red !important; color: white !important;' onclick='window.location.href = \"?q=RECHAZADO\"'>Rechazadas (". $this->countSolicitudes(14) .")</button>
+            <hr>
+            </div>
+            </div>
+            </div>
+           <div class='row'>
+           ". $this->returnState($this->getState($_GET['q'])) ."
+           </div>
+            ";
+
+
+
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Include HTML Code after index table 
-	        | ---------------------------------------------------------------------- 
+	        | ----------------------------------------------------------------------
+	        | Include HTML Code after index table
+	        | ----------------------------------------------------------------------
 	        | html code to display it after index table
 	        | $this->post_index_html = "<p>test</p>";
 	        |
 	        */
 	        $this->post_index_html = null;
-	        
-	        
-	        
+
+
+
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Include Javascript File 
-	        | ---------------------------------------------------------------------- 
-	        | URL of your javascript each array 
+	        | ----------------------------------------------------------------------
+	        | Include Javascript File
+	        | ----------------------------------------------------------------------
+	        | URL of your javascript each array
 	        | $this->load_js[] = asset("myfile.js");
 	        |
 	        */
 	        $this->load_js = array();
-	        
-	        
-	        
+
+
+
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Add css style at body 
-	        | ---------------------------------------------------------------------- 
-	        | css code in the variable 
+	        | ----------------------------------------------------------------------
+	        | Add css style at body
+	        | ----------------------------------------------------------------------
+	        | css code in the variable
 	        | $this->style_css = ".style{....}";
 	        |
 	        */
 	        $this->style_css = NULL;
-	        
-	        
-	        
+
+
+
 	        /*
-	        | ---------------------------------------------------------------------- 
-	        | Include css File 
-	        | ---------------------------------------------------------------------- 
-	        | URL of your css each array 
+	        | ----------------------------------------------------------------------
+	        | Include css File
+	        | ----------------------------------------------------------------------
+	        | URL of your css each array
 	        | $this->load_css[] = asset("myfile.css");
 	        |
 	        */
 	        $this->load_css = array();
-	        
-	        
+
+
 	    }
 
 
 	    /*
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
 	    | Hook for button selected
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
 	    | @id_selected = the id selected
 	    | @button_name = the name of button
 	    |
@@ -539,10 +609,10 @@
 
 
 	    /*
-	    | ---------------------------------------------------------------------- 
-	    | Hook for manipulate query of index result 
-	    | ---------------------------------------------------------------------- 
-	    | @query = current sql query 
+	    | ----------------------------------------------------------------------
+	    | Hook for manipulate query of index result
+	    | ----------------------------------------------------------------------
+	    | @query = current sql query
 	    |
 	    */
 	    public function hook_query_index(&$query) {
@@ -550,83 +620,83 @@
 	    }
 
 	    /*
-	    | ---------------------------------------------------------------------- 
-	    | Hook for manipulate row of index table html 
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
+	    | Hook for manipulate row of index table html
+	    | ----------------------------------------------------------------------
 	    |
-	    */    
-	    public function hook_row_index($column_index,&$column_value) {	        
+	    */
+	    public function hook_row_index($column_index,&$column_value) {
 	    	//Your code here
 	    }
 
 	    /*
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
 	    | Hook for manipulate data input before add data is execute
-	    | ---------------------------------------------------------------------- 
+	    | ----------------------------------------------------------------------
 	    | @arr
 	    |
 	    */
-	    public function hook_before_add(&$postdata) {        
+	    public function hook_before_add(&$postdata) {
 	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
-	    | Hook for execute command after add public static function called 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
+	    | Hook for execute command after add public static function called
+	    | ----------------------------------------------------------------------
 	    | @id = last insert id
-	    | 
+	    |
 	    */
-	    public function hook_after_add($id) {        
+	    public function hook_after_add($id) {
 	        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
 			PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
 			$this->enviarPedidoSingular($id);
-	    }
+        }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
 	    | Hook for manipulate data input before update data is execute
-	    | ---------------------------------------------------------------------- 
-	    | @postdata = input post data 
-	    | @id       = current id 
-	    | 
+	    | ----------------------------------------------------------------------
+	    | @postdata = input post data
+	    | @id       = current id
+	    |
 	    */
-	    public function hook_before_edit(&$postdata,$id) {        
+	    public function hook_before_edit(&$postdata,$id) {
 	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
 	    | Hook for execute command after edit public static function called
-	    | ----------------------------------------------------------------------     
-	    | @id       = current id 
-	    | 
+	    | ----------------------------------------------------------------------
+	    | @id       = current id
+	    |
 	    */
 	    public function hook_after_edit($id) {
-	        //Your code here 
+	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
 	    | Hook for execute command before delete public static function called
-	    | ----------------------------------------------------------------------     
-	    | @id       = current id 
-	    | 
+	    | ----------------------------------------------------------------------
+	    | @id       = current id
+	    |
 	    */
 	    public function hook_before_delete($id) {
 	        //Your code here
 
 	    }
 
-	    /* 
-	    | ---------------------------------------------------------------------- 
+	    /*
+	    | ----------------------------------------------------------------------
 	    | Hook for execute command after delete public static function called
-	    | ----------------------------------------------------------------------     
-	    | @id       = current id 
-	    | 
+	    | ----------------------------------------------------------------------
+	    | @id       = current id
+	    |
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
@@ -650,13 +720,13 @@
 			$origen_id_sucursal = 99;
 			$id_punto = DB::table('cotizacion_convenio')->where('id', $id_solicitud)->value('punto_retiro_id');
 			$id_cliente = DB::table('punto_retiro')->where('id', $id_punto)->value('id_cliente');
-	
+
 			$linpedidos = DB::table('cotizacion_convenio_detail')->where('cotizacion_convenio_id', $id_solicitud)->get();
-	
+
 			$lin_pedidos = [];
-	
+
 			foreach ($linpedidos as $key => $linpedido) {
-	
+
 				$articuloID = $linpedido->articuloZafiro_id;
 				$numeroArticulo =  DB::table('articulosZafiro')->where('id', $articuloID)->value('id_articulo');
 				$lin_pedidos[] = [
@@ -672,7 +742,7 @@
 					'pcio_iva_comsiva' => $linpedido->total,
 				];
 			}
-	
+
 			$objeto = [
 				[
 					"id" => 1,
@@ -685,11 +755,11 @@
 					"_origen_id_sucursal" => $origen_id_sucursal,
 					"id_cliente" => $id_cliente,
 					"lin_pedido" => $lin_pedidos
-	
+
 				]
 			];
-	
-	
+
+
 			$pedido = new PedidoC();
 			$pedido->created_at = $created_at;
 			$pedido->updated_at = $updated_at;
@@ -703,7 +773,7 @@
 			$pedido->nrosolicitud = $nroSolicitud;
 			$pedido->nroAfiliado = $nroAfiliado;
 			$pedido->save();
-	
+
 	// Insertar en la tabla lin_pedido
 			foreach ($objeto[0]['lin_pedido'] as $linpedido) {
 				$linPedido = new LinPedido();
@@ -719,15 +789,15 @@
 				$linPedido->pcio_com_uni_siva = $linpedido['pcio_iva_comsiva'];
 				$linPedido->save();
 			}
-	
-	
-			CRUDBooster::redirect($_SERVER['HTTP_REFERER'],"El pedido fue cargado con éxito!","success");
-	
+
+
+			redirect('/admin/cotizacion_convenio_1')->with('message', 'Pedido generado correctamente');
+
 		}
 
 
 
-	    //By the way, you can still create your own method in here... :) 
+	    //By the way, you can still create your own method in here... :)
 
 
 	}

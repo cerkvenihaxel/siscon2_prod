@@ -2,6 +2,7 @@
     $patologiasTable = DB::table('patologias')->get();
     $patologias = $_GET['patologias'];
     $search = $_GET['search'];
+    $obraSocial = DB::table('obras_sociales')->get();
 
     $proveedores = DB::table('proveedores_convenio')->get();
  @endphp
@@ -65,9 +66,10 @@
                 var patologia = $('#patologia').val();
                 var proveedor = $('#proveedor').val();
                 var cantidad = $('#cantidad').val();
+                var obra_social_id = $('#obra_social_id').val();
 
                 // Validar que se hayan seleccionado todos los campos
-                if (afiliado === '' || articulo === '' || patologia === '' || cantidad === '') {
+                if (afiliado === '' || articulo === '' || patologia === '' || cantidad === '' || proveedor === '' || obra_social_id === '') {
                     alert('Por favor, complete todos los campos.');
                     return;
                 }
@@ -78,7 +80,8 @@
                     id_articulo: articulo,
                     patologias: patologia,
                     proveedor: proveedor,
-                    cantidad: cantidad
+                    cantidad: cantidad,
+                    obra_social_id: obra_social_id
                 };
 
                 // Agregar la fila al arreglo de filas
@@ -97,6 +100,7 @@
                 $('#patologia').val('');
                 $('#proveedor').val('');
                 $('#cantidad').val('');
+                $('#obra_social_id').val('');
             }
 
             // Función para actualizar la tabla con las filas agregadas
@@ -214,6 +218,15 @@
             </div>
 
             <div class="form-group">
+                <label for="obra_social_id">Obra Social:</label>
+                <select id="obra_social_id" class="form-control">
+                    <option value="">Seleccionar Obra Social</option>
+                    @foreach($obraSocial as $os)
+                        <option value="{{$os->id}}" {{ isset($obraSocial) && $obraSocial == $os->id ? 'selected' : '' }}>{{$os->nombre}}</option>
+                    @endforeach
+                </select>                </div>
+
+            <div class="form-group">
                 <label for="proveedor">Proveedor asignado:</label>
                 <select id="proveedor" class="form-control">
                     @foreach($proveedores as $proveedor)
@@ -245,7 +258,7 @@
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-secondary" onclick='window.close()'>Cerrar</button>
             <button type="submit" class="btn btn-success" id="btnAgregar">Agregar</button>
         </div>
 
