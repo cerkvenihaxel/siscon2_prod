@@ -44,7 +44,8 @@
                         <label for="select-obra-social">Obra social</label>
                         <select class="form-control select2" id="obra_social_id" name="obra_social_id">
                             @if(\crocodicstudio\crudbooster\helpers\CRUDBooster::myPrivilegeId() != 1)
-                            @switch($obra_social_id)
+                    
+			@switch($obra_social_id)
                                 @case (1)
                                     <option value="1">Incluir Salud SJ</option>
                                     @break
@@ -63,8 +64,8 @@
                                     @case(5)
                                         <option value="12">Incluir LR</option>
                                         @break
-                            @endswitch
-                            @else
+                            @endswitch 
+@else
                             <option value="1">Incluir Salud</option>
                             <option value="2">FARMAPOS - Ministerio de Salud</option>
                             <option value="3">APOS</option>
