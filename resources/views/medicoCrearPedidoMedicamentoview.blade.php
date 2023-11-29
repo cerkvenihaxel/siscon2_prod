@@ -43,33 +43,12 @@
                     <div class="form-group">
                         <label for="select-obra-social">Obra social</label>
                         <select class="form-control select2" id="obra_social_id" name="obra_social_id">
-                            @if(\crocodicstudio\crudbooster\helpers\CRUDBooster::myPrivilegeId() != 1)
-                    
-			@switch($obra_social_id)
-                                @case (1)
                                     <option value="1">Incluir Salud SJ</option>
-                                    @break
-                                @case (2)
                                     <option value="2">FARMAPOS - Ministerio de Salud</option>
-                                    @break
-                                @case (3)
                                     <option value="3">APOS</option>
-                                    @break
-                                @case(4)
-                                <option value="4">Hospital E. Vera Barros</option>
-                                @break
-                                    @case(5)
-                                        <option value="5">Hospital de la Madre y el Niño</option>
-                                        @break
-                                    @case(5)
-                                        <option value="12">Incluir LR</option>
-                                        @break
-                            @endswitch 
-@else
-                            <option value="1">Incluir Salud</option>
-                            <option value="2">FARMAPOS - Ministerio de Salud</option>
-                            <option value="3">APOS</option>
-                                @endif
+                                    <option value="4">Hospital E. Vera Barros</option>
+                                    <option value="5">Hospital de la Madre y el Niño</option>
+                                    <option value="12">Incluir LR</option>
                         </select>
                     </div>
 
