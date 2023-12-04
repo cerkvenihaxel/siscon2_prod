@@ -557,7 +557,7 @@
 	    public function hook_query_index(&$query) {
             $privilege = CRUDBooster::myPrivilegeId();
             $stamp_user = DB::table('cms_users')->where('id', CRUDBooster::myId())->value('email');
-            if ($privilege != 1 || $privilege != 38 || $privilege != 39 || $privilege != 40) {
+            if ($privilege !== 1 || $privilege !== 38 || $privilege !== 39 || $privilege !== 40) {
                 $query->where('stamp_user', $stamp_user);
             }
 	    }
