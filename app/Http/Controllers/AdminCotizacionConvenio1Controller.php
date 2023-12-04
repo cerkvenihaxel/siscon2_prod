@@ -424,7 +424,7 @@
 					td2.textContent = medicamento.laboratorio;
 					var input2 = document.createElement('input');
 					input2.type = 'hidden';
-					input2.name = 'detallesdelasolicitud-cantidad[]';
+					input2.name = 'detallesdelasolicitud-laboratorio[]';
 					input2.value = medicamento.laboratorio;
 
 					var td3 = document.createElement('td');
