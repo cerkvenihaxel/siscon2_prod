@@ -212,7 +212,7 @@
 			$this->form[] = ['label' =>'Stamp user', 'name'=>'stamp_user','type'=>'hidden', 'value'=>$myEmail];
 
 			$columns = [];
-			$columns[] = ['label'=>'Medicamento','name'=>'articuloZafiro_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'articulosZafiro','datamodal_columns'=>'presentacion_completa,id_articulo','datamodal_size'=>'large'];
+			$columns[] = ['label'=>'Medicamento','name'=>'articuloZafiro_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'articulosZafiro','datamodal_columns_alias'=>'Presentación,ID ARTÍCULO ZAFIRO','datamodal_columns'=>'presentacion_completa,id_articulo','datamodal_size'=>'large'];
 			$columns[] = ['label'=>'Cantidad','name'=>'cantidad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud', 'name'=>'pedido_medicamento_detail', 'type'=>'child','table'=>'pedido_medicamento_detail', 'foreign_key'=>'pedido_medicamento_id', 'columns'=>$columns, 'width'=>'col-sm-10','required'=>true];
