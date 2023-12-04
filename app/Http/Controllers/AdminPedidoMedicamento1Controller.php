@@ -18,7 +18,17 @@
         return $total;
         }
 
-        function countSolicitudesTotal(){
+       function permisoAuditorAutorizar(){
+				$privilegio = CRUDBooster::myPrivilegeId();
+				if ($privilegio == 1 || $privilegio == 38 || $privilegio == 40 || $privilegio == 41){
+					return "[estado_solicitud_id] == 8";
+				}
+				else {
+					return "false";
+				}
+			}
+
+	 function countSolicitudesTotal(){
             $total = DB::table('pedido_medicamento')->count();
             return $total;
         }
@@ -122,7 +132,7 @@
 					return false;
 				}
 			}
-
+/*
 			function permisoAuditorAutorizar(){
 				$privilegio = CRUDBooster::myPrivilegeId();
 				if ($privilegio == 1 || $privilegio == 38){
@@ -133,9 +143,13 @@
 				}
 			}
 
+*/
+
 			function permisoProveedorProcesar(){
 				$privilegio = CRUDBooster::myPrivilegeId();
-				if ($privilegio == 1 || $privilegio == 38 || $privilegio == 39){
+//				if ($privilegio == 1 || $privilegio == 38 || $privilegio == 39){
+
+				if ($privilegio == 1 || $privilegio == 38 || $privilegio == 39 || $privilegio == 40 || $privilegio = 41){
 					return "[estado_solicitud_id] == 4";
 				}
 				else {
@@ -179,7 +193,7 @@
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=> $edad];
             $this->form[] = ['label' => 'Número de Solicitud', 'name' => 'nrosolicitud', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true, 'readonly' => 'true', 'value' => 'APOS-MED-' . date('Ydm'). '-' . rand(0, 9999)];
             $this->form[] = ['label' => 'Institución', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'required' => true];
-            $this->form[] = ['label' => 'Médico Solicitante', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'required' => true, 'value' => $IDMEDICO];
+            $this->form[] = ['label' => 'Médico Solicitante', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'required' => true];
 			$this->form[] = ['label'=>'Tel Medico','name'=>'tel_medico','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Elegir zona de retiro','name'=>'zona_residencia','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum' => 'Norte;Sur;Este;Oeste;Centro;Chamical;Chilecito;Famatina;Villa Unión'];
 			$this->form[] = ['label'=>'Provincia','name'=>'provincia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value' => 'La Rioja'];
@@ -271,8 +285,8 @@
 	        |
 	        */
 	        $this->addaction = array();
-			$this->addaction[] = ['label'=>'Autorizar','url'=>CRUDBooster::mainpath('set-status/4/[id]'),'icon'=>'fa fa-check','color'=>'success','showIf'=>permisoAuditorAutorizar(), 'confirmation'=>true];
-			$this->addaction[] = ['label'=>'Rechazar','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','color'=>'danger','showIf'=>permisoAuditorAutorizar(), 'confirmation'=>true];
+			$this->addaction[] = ['label'=>'Autorizar','url'=>CRUDBooster::mainpath('set-status/4/[id]'),'icon'=>'fa fa-check','showIf'=>$this->permisoAuditorAutorizar() ,'color'=>'success', 'confirmation'=>true];
+			$this->addaction[] = ['label'=>'Rechazar','url'=>CRUDBooster::mainpath('set-status/5/[id]'),'icon'=>'fa fa-check','showIf'=>$this->permisoAuditorAutorizar(),'color'=>'danger', 'confirmation'=>true];
 
 	        /*
 	        | ----------------------------------------------------------------------

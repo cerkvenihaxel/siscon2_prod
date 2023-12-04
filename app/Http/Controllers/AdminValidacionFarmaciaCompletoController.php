@@ -7,53 +7,6 @@
 
 	class AdminValidacionFarmaciaCompletoController extends \crocodicstudio\crudbooster\controllers\CBController {
 
-
-        function countSolicitudes($i){
-            $total = DB::table('cotizacion_convenio')->where('estado_solicitud_id', $i)->count();
-            return $total;
-        }
-
-        function countSolicitudesTotal(){
-            $total = DB::table('cotizacion_convenio')->count();
-            return $total;
-        }
-
-        function getState($q){
-            if($q == 'ENTRANTE'){
-                return 1;
-            }
-            if($q == 'APROBADA'){
-                return 8;
-            }
-            if($q == 'AUTORIZADA'){
-                return 4;
-            }
-            if($q == 'PROCESADO'){
-                return [11];
-            }
-            if($q == 'ENTREGADO'){
-                return [13];
-            }
-            if($q == 'RECHAZADO'){
-                return [10, 14];
-            }
-            if($q == 'PENDIENTE'){
-                return [17];
-            }
-            else{
-                return 0;
-            }
-        }
-
-        function returnState($value){
-            if ($value != 0) {
-                return "<h4 style='text-align: left; padding-left: 1rem;'> Solicitudes : ". $_GET['q'] ."   - Cantidad de resultados: " . DB::table('cotizacion_convenio')->whereIn('estado_solicitud_id', $this->getState($_GET['q']))->count() . "</h4>";
-            }
-            else {
-                return  "<h4 style='text-align: left; padding-left: 1rem;'> Solicitudes : VER TODAS   - Cantidad de resultados: " . DB::table('cotizacion_convenio')->count() . "</h4>";
-
-            }
-        }
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
@@ -78,6 +31,7 @@
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
 			$this->col[] = ["label"=>"Fecha Carga","name"=>"created_at"];
+			$this->col[] = ["label"=>"Actualizado en ", "name"=>"updated_at"];
 			$this->col[] = ["label"=>"Nombre y apellido","name"=>"nombreyapellido"];
 			$this->col[] = ["label"=>"NroAfiliado","name"=>"nroAfiliado"];
 			$this->col[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud"];
@@ -182,9 +136,9 @@
 	        |
 	        */
 	        $this->addaction = array();
-            $this->addaction[] = ['label'=>'Imprimir acuse de recibo', 'url'=>'/generarPDF_farmacia/[id]','color'=>'warning','icon'=>'fa fa-check-square', 'target'=>'_blank', 'showIf'=>'[estado_solicitud_id] == 13'];
+            $this->addaction[] = ['label'=>'Imprimir acuse de recibo', 'url'=>'/generarPDF_farmacia/[id]','color'=>'warning','icon'=>'fa fa-check-square', 'target'=>'_blank', 'showIf'=>'[estado_solicitud_id] == 11'];
 	        $this->addaction[] = ['label'=>'Validar', 'url'=>'/admin/validacion_farmacia_completo/edit/[id]','color'=>'success','icon'=>'fa fa-check-square', 'target'=>'_blank', 'parent_columns'=>'estado_solicitud_id', 'showIf'=>'[estado_solicitud_id] != 13'];
-            $this->addaction[] = ['label'=>'Imprimir pedido', 'url'=>'/printPDF_convenio/[id]','color'=>'warning','icon'=>'fa fa-check-square', 'target'=>'_blank', 'showIf'=>'[estado_solicitud_id] == 11'];
+            $this->addaction[] = ['label'=>'Imprimir pedido', 'url'=>'/printPDF_convenio/[id]','color'=>'warning','icon'=>'fa fa-check-square', 'target'=>'_blank', 'showIf'=>'[estado_solicitud_id] == 13'];
             /*
 	        | ----------------------------------------------------------------------
 	        | Add More Button Selected
@@ -281,30 +235,8 @@
 	        | $this->pre_index_html = "<p>test</p>";
 	        |
 	        */
-            $this->pre_index_html = null;
-            $this->pre_index_html = "<div class='row '>
-            <div class='col-md-12'>
-            <div class='panel panel-default'>
-            <div class='panel-heading'>
-            <div class='panel-title'><i class='fa fa-search'></i> Filtros rápidos</div>
-            </div>
-            <div class='panel-body'>
-            <div class='row'>
-            <div class='col-md-12'>
-            <div class='fc-button-group'>
-            <button type='button' class='btn' style='background-color: lightcoral !important; color: white !important;' onclick='window.location.href = \"?q=\"'>VER TODAS (".$this->countSolicitudesTotal() .")</button>
-            <button type='button' class='btn' style='background-color: #0d6aad !important; color: white !important;' onclick='window.location.href = \"?q=PROCESADO\"'>Por Validar (". $this->countSolicitudes(11) .")</button>
-            <button type='button' class='btn' style='background-color: green !important; color: white !important;' onclick='window.location.href = \"?q=ENTREGADO\"'>Validadas | Entregadas (". $this->countSolicitudes(13) .")</button>
-            <button type='button' class='btn' style='background-color: gold !important;' onclick='window.location.href = \"?q=PENDIENTE\"'>Pendiente(". $this->countSolicitudes(17) .")</button>
-            <button type='button' class='btn' style='background-color: red !important; color: white !important;' onclick='window.location.href = \"?q=RECHAZADO\"'>Rechazadas (". $this->countSolicitudes(14) .")</button>
-            <hr>
-            </div>
-            </div>
-            </div>
-           <div class='row'>
-           ". $this->returnState($this->getState($_GET['q'])) ."
-           </div>
-            ";
+	        $this->pre_index_html = null;
+
 
 
 	        /*
