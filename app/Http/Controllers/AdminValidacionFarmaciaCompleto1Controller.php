@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
-	use Session;
+	use App\Models\PedidoMedicamento;
+    use Session;
 	use Request;
 	use DB;
 	use CRUDBooster;
@@ -448,13 +449,15 @@
 	    */
 	    public function hook_after_edit($id) {
 	        //Your code here
+            $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
+            $estadoSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('estado_solicitud_id');
+
             if(DB::table('cotizacion_convenio_detail')->where('cotizacion_convenio_id', $id)->where('cantidad_pendiente', '>', 0)->count() > 0) {
                 DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_solicitud_id' => 17, 'estado_pedido_id' => 7]);
             }
             else {
                 DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_solicitud_id' => 13, 'estado_pedido_id' => 1]);
             }
-
             $validacion = DB::table('cotizacion_convenio')->where('id', $id)->get();
             DB::table('validaciones_farmacias')->insert([
                 'cotizacion_convenio_id' => $id,
@@ -465,6 +468,8 @@
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
+
+            PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => $estadoSolicitud]);
 	    }
 
 	    /*
