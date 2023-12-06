@@ -596,6 +596,7 @@
 	    */
 	    public function hook_after_add($id) {
 
+            DB::table('pedido_medicamento')->where('id',$id)->update(['estado_solicitud_id'=> 8]);
 
 
 	    }
