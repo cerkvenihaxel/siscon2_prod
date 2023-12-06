@@ -598,7 +598,6 @@
 
             DB::table('pedido_medicamento')->where('id',$id)->update(['estado_solicitud_id'=> 8]);
 
-
 	    }
 
 	    /*
