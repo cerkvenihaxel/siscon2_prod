@@ -206,7 +206,7 @@
                 $this->form[] = ['label' => 'Estado Solicitud', 'name' => 'estado_solicitud_id', 'type' => 'select', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'datatable' => 'estado_solicitud,estado', 'value' => 8];
             }
             else{
-                $this->form[] = ['label' => 'Estado Solicitud', 'name' => 'estado_solicitud_id', 'type' => 'hidden', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'required' => true, 'datatable' => 'estado_solicitud,estado', 'value' => 8];
+                $this->form[] = ['label' => 'Estado Solicitud', 'name' => 'estado_solicitud_id', 'type' => 'hidden', 'value' => 8];
             }
 
             $this->form[] = ['label' => 'Discapacidad', 'name' => 'discapacidad', 'type' => 'select', 'validation' => 'required', 'width' => 'col-sm-10', 'required' => true, 'dataenum' => 'Si;No'];
