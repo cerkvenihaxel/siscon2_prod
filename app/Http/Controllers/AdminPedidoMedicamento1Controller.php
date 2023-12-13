@@ -356,13 +356,18 @@
 	        |
 	        */
 	        $this->index_statistic = array();
-			$this->index_statistic[] = ['label'=>'Total de pedidos', 'count'=>DB::table('pedido_medicamento')->count(), 'icon'=>'fa fa-inbox', 'color'=>'green'];
-			$this->index_statistic[] = ['label'=>'Artritis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 1)->count(), 'color'=>'red'];
-			$this->index_statistic[] = ['label'=>'Diabetes', 'count'=>DB::table('pedido_medicamento')->where('patologia', 2)->count(),  'color'=>'blue'];
-			$this->index_statistic[] = ['label'=>'Fibrosis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 3)->count(),  'color'=>'red'];
-			$this->index_statistic[] = ['label'=>'Hemodiálisis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 7)->count(),  'color'=>'red'];
-			$this->index_statistic[] = ['label'=>'Oncología', 'count'=>DB::table('pedido_medicamento')->where('patologia', 9)->count(),  'color'=>'blue'];
-
+            $this->index_statistic[] = ['label'=>'Total de pedidos', 'count'=>DB::table('pedido_medicamento')->count(), 'icon'=>'fa fa-inbox', 'color'=>'green'];
+            $this->index_statistic[] = ['label'=>'Artritis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 1)->count(), 'color'=>'red'];
+            $this->index_statistic[] = ['label'=>'Diabetes', 'count'=>DB::table('pedido_medicamento')->where('patologia', 2)->count(),  'color'=>'blue'];
+            $this->index_statistic[] = ['label'=>'Fibrosis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 3)->count(),  'color'=>'red'];
+            $this->index_statistic[] = ['label'=>'13119', 'count'=>DB::table('pedido_medicamento')->where('patologia', 6)->count(),  'color'=>'yellow'];
+            $this->index_statistic[] = ['label'=>'Hemodiálisis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 7)->count(),  'color'=>'red'];
+            $this->index_statistic[] = ['label'=>'Oncología', 'count'=>DB::table('pedido_medicamento')->where('patologia', 9)->count(),  'color'=>'blue'];
+            $this->index_statistic[] = ['label'=>'Otras patologías', 'count'=>DB::table('pedido_medicamento')->where('patologia', 10)->count(),  'color'=>'yellow'];
+            $this->index_statistic[] = ['label'=>'Esclerosis', 'count'=>DB::table('pedido_medicamento')->where('patologia', 11)->count(),  'color'=>'yellow'];
+            $this->index_statistic[] = ['label'=>'Transplantados', 'count'=>DB::table('pedido_medicamento')->where('patologia', 12)->count(),  'color'=>'yellow'];
+            $this->index_statistic[] = ['label'=>'Internación domiciliaria', 'count'=>DB::table('pedido_medicamento')->where('patologia', 13)->count(),  'color'=>'yellow'];
+            $this->index_statistic[] = ['label'=>'COB Especial', 'count'=>DB::table('pedido_medicamento')->where('patologia', 14)->count(),  'color'=>'yellow'];
 
 	        /*
 	        | ----------------------------------------------------------------------

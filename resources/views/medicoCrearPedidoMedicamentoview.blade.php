@@ -62,10 +62,8 @@
                         <select class="form-control" id="patologia" name="patologia">
                             <option value="0">Ver todas</option>
                             @foreach($patologias as $pato)
-                                <option value="{{ $pato->id }}">{{ $pato->nombre }}</option>
-                                <?php  ?>
+                                <option value={{ $pato->id }}>{{ $pato->nombre }}</option>
                             @endforeach
-
                         </select>
                     </div>
 

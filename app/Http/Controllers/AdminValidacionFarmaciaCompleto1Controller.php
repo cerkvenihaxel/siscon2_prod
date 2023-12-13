@@ -320,7 +320,6 @@
 	        $this->post_index_html = null;
 
 
-
 	        /*
 	        | ----------------------------------------------------------------------
 	        | Include Javascript File
@@ -330,8 +329,6 @@
 	        |
 	        */
 	        $this->load_js = array();
-
-
 
 	        /*
 	        | ----------------------------------------------------------------------
@@ -343,8 +340,6 @@
 	        */
 	        $this->style_css = NULL;
 
-
-
 	        /*
 	        | ----------------------------------------------------------------------
 	        | Include css File
@@ -355,10 +350,7 @@
 	        */
 	        $this->load_css = array();
 
-
 	    }
-
-
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for button selected
@@ -371,8 +363,6 @@
 	        //Your code here
 
 	    }
-
-
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for manipulate query of index result
@@ -381,17 +371,14 @@
 	    |
 	    */
 	    public function hook_query_index(&$query) {
-	        //Your code here
             $privilegio = CRUDBooster::myPrivilegeId();
             $user = DB::table('cms_users')->where('id',CRUDBooster::myId())->value('name');
             $punto_retiro = DB::table('punto_retiro')->where('nombre',$user)->value('id');
-
             if($privilegio == 45){
                 //$query->where('estado_solicitud_id', 11);
                 //$query->where('estado_pedido_id', 5);
                 $query->where('punto_retiro_id', $punto_retiro);
             }
-
 	    }
 
 	    /*
