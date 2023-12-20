@@ -107,7 +107,7 @@
 			$this->col[] = ["label"=>"Número Solicitud","name"=>"nroSolicitud"];
 			$this->col[] = ["label"=>"Especialidad", "name"=>"grupo_articulos"];
 			$this->col[] = ["label"=>"Proveedor","name"=>"proveedor"];
-			$this->col[] = ["label"=>"Material Entregado","name"=>"materialEntregado"];
+			//$this->col[] = ["label"=>"Material Entregado","name"=>"materialEntregado"];
 			$this->col[] = ["label"=>"Médico Prestador","name"=>"medicoPrestador"];
 			$this->col[] = ["label"=>"Institucion","name"=>"institucion"];
 			$this->col[] = ["label"=>"Nro Remito","name"=>"nroRemito"];
@@ -423,10 +423,10 @@
 
         DB::table('entrantes')->where('nrosolicitud', Request::input('nroSolicitud'))->update(['estado_solicitud_id'=>15]);
 
-        $materialNumber = DB::table('presentacion')->where('id', $id)->value('materialEntregado');
-        $materialName = DB::table('articulos')->where('id', $materialNumber)->value('des_articulo');
+        //$materialNumber = DB::table('presentacion')->where('id', $id)->value('materialEntregado');
+        //$materialName = DB::table('articulos')->where('id', $materialNumber)->value('des_articulo');
 
-        DB::table('presentacion')->where('id', $id)->update(['materialEntregado'=> $materialName]);
+        //DB::table('presentacion')->where('id', $id)->update(['materialEntregado'=> $materialName]);
 
 
 
