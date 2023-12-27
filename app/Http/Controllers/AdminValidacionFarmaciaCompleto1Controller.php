@@ -184,7 +184,7 @@
 	        |
 	        */
 	        $this->addaction = array();
-            $this->addaction[] = ['label'=>'Imprimir acuse de recibo', 'url'=>'/generarPDF_farmacia/[id]','color'=>'warning','icon'=>'fa fa-check-square', 'target'=>'_blank', 'showIf'=>'[estado_solicitud_id] == 13'];
+            $this->addaction[] = ['label'=>'Imprimir acuse de recibo', 'url'=>'/generarPDF_farmacia/[id]','color'=>'warning','icon'=>'fa fa-check-square', 'target'=>'_blank', 'showIf'=>'[estado_solicitud_id] == 13 || [estado_solicitud_id] == 17'];
 	        $this->addaction[] = ['label'=>'Validar', 'url'=>'/admin/validacion_farmacia_completo/edit/[id]','color'=>'success','icon'=>'fa fa-check-square', 'target'=>'_blank', 'parent_columns'=>'estado_solicitud_id', 'showIf'=>'[estado_solicitud_id] != 13'];
             $this->addaction[] = ['label'=>'Imprimir pedido', 'url'=>'/printPDF_convenio/[id]','color'=>'warning','icon'=>'fa fa-check-square', 'target'=>'_blank', 'showIf'=>'[estado_solicitud_id] == 11'];
             /*
