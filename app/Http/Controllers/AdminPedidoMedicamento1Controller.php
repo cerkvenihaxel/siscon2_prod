@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
-	use Session;
+	use Illuminate\Support\Facades\Cache;
+    use Illuminate\Support\Facades\Redirect;
+    use Session;
 	use Request;
 	use DB;
 	use CRUDBooster;
@@ -306,9 +308,9 @@
 	        |
 	        */
 	        $this->button_selected = array();
-			if(proveedorConvenio()){
+
 			$this->button_selected[] = ['label'=>'Generar pedido masivo','icon'=>'fa fa-check','name'=>'pedido_masivo'];
-			}
+
 
 
 	        /*
@@ -540,8 +542,6 @@
 
 	    }
 
-
-
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for button selected
@@ -666,10 +666,10 @@
 			}
 		 }
 
-		public function generarPedidoMasivo($id_selected) {
-
-
-		}
+        public function generarPedidoMasivo($id_selected) {
+            Cache::put('ids_cache_key', $id_selected, now()->addMinutes(20)); // Puedes ajustar el tiempo de expiración según tus necesidades
+            return CRUDBooster::redirect('/admin/pedido_masivo/add', "Ahora podrá generar un pedido masivo", "success");
+        }
 
 	    //By the way, you can still create your own method in here... :)
 
