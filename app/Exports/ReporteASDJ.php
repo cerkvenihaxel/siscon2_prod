@@ -29,6 +29,7 @@ class ReporteASDJ implements FromCollection, WithHeadings
         return [
             'Proveedor',
             'Fecha de carga',
+            'Año',
             'Mes de carga',
             'Nombre',
             'Clínica',

@@ -104,8 +104,8 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
         </div>
 
             <div class="row">
@@ -114,8 +114,36 @@
                         <div class="card-body bg-white">
                             <h5 class="card-title text-bold">Informe Adjudicadas-Anuladas-Sin Adjudicar</h5>
                             <p class="card-text">Descargar informe con todas las solicitudes restantes</p>
-                            <a href="{{route('reportes_generales.adj-an-sinadj')}}" class="btn btn-success">
-                                Descargar excel</a>
+                            <div class="formulario">
+                                <form method="POST">
+                                    @csrf
+                                    <div class="col-6">
+                                        <div class="fechas">
+                                            <label>Seleccione el intervalo de fechas </label>
+                                            <input class="datepicker" type="text" name="daterange" />
+                                        </div>
+                                    </div>
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $('input[name="daterange"]').daterangepicker({
+                                                locale: {
+                                                    format: 'YYYY-MM-DD',
+                                                    separator: " - ",
+                                                    applyLabel: "Aplicar",
+                                                    cancelLabel: "Cancelar",
+                                                    fromLabel: "Desde",
+                                                    toLabel: "Hasta",
+                                                    customRangeLabel: "Personalizado",
+                                                    daysOfWeek: ["Do","Lu","Ma","Mi","Ju","Vi","Sa"],
+                                                    monthNames: ["Enero", "Febrero","Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"                                                ],
+                                                },
+                                            });
+                                        });
+                                    </script>
+                                    <input type="submit" formaction="{{route('reportes_generales.adj-an-sinadj')}}" class="btn btn-success"
+                                        id="inputForm" value = "Descargar excel">
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,7 +152,36 @@
                         <div class="card-body">
                             <h5 class="card-title text-bold">Informe solicitudes sin cotizar</h5>
                             <p class="card-text">Descargar informe solicitudes sin cotizar</p>
-                            <a href="{{route('reportes_generales.sin-cotizar')}}" class="btn btn-success">Descargar excel</a>
+                            <div class="formulario">
+                                <form method="POST">
+                                    @csrf
+                                    <div class="col-6">
+                                        <div class="fechas">
+                                            <label>Seleccione el intervalo de fechas </label>
+                                            <input class="datepicker" type="text" name="daterange" />
+                                        </div>
+                                    </div>
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $('input[name="daterange"]').daterangepicker({
+                                                locale: {
+                                                    format: 'YYYY-MM-DD',
+                                                    separator: " - ",
+                                                    applyLabel: "Aplicar",
+                                                    cancelLabel: "Cancelar",
+                                                    fromLabel: "Desde",
+                                                    toLabel: "Hasta",
+                                                    customRangeLabel: "Personalizado",
+                                                    daysOfWeek: ["Do","Lu","Ma","Mi","Ju","Vi","Sa"],
+                                                    monthNames: ["Enero", "Febrero","Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"                                                ],
+                                                },
+                                            });
+                                        });
+                                    </script>
+                                    <input type="submit" formaction="{{route('reportes_generales.sin-cotizar')}}" class="btn btn-success"
+                                        id="inputForm" value = "Descargar excel">
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -136,8 +193,37 @@
                         <div class="card-body bg-white">
                             <h5 class="card-title text-bold">Informe por especialidad</h5>
                             <p class="card-text">Descargar informe con todas especialidades</p>
-                            <a href="{{route('reportes_generales.especialidad')}}" class="btn btn-success">
-                                Descargar excel</a>
+                            
+                            <div class="formulario">
+                                <form method="POST">
+                                    @csrf
+                                    <div class="col-6">
+                                        <div class="fechas">
+                                            <label>Seleccione el intervalo de fechas </label>
+                                            <input class="datepicker" type="text" name="daterange" />
+                                        </div>
+                                    </div>
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $('input[name="daterange"]').daterangepicker({
+                                                locale: {
+                                                    format: 'YYYY-MM-DD',
+                                                    separator: " - ",
+                                                    applyLabel: "Aplicar",
+                                                    cancelLabel: "Cancelar",
+                                                    fromLabel: "Desde",
+                                                    toLabel: "Hasta",
+                                                    customRangeLabel: "Personalizado",
+                                                    daysOfWeek: ["Do","Lu","Ma","Mi","Ju","Vi","Sa"],
+                                                    monthNames: ["Enero", "Febrero","Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"                                                ],
+                                                },
+                                            });
+                                        });
+                                    </script>
+                                    <input type="submit" formaction="{{route('reportes_generales.especialidad')}}" class="btn btn-success"
+                                        id="inputForm" value = "Descargar excel">
+                                </form>
+                            </div>                            
                         </div>
                     </div>
                 </div>
@@ -146,19 +232,82 @@
                         <div class="card-body">
                             <h5 class="card-title text-bold">Informe por mes</h5>
                             <p class="card-text">Descargar informe solicitudes entrantes por mes</p>
-                            <a href="{{route('reportes_generales.mes')}}" class="btn btn-success">Descargar excel</a>
+                            <div class="formulario">
+                                <form method="POST">
+                                    @csrf
+                                    <div class="col-6">
+                                        <div class="fechas">
+                                            <label>Seleccione el intervalo de fechas </label>
+                                            <input class="datepicker" type="text" name="daterange" />
+                                        </div>
+                                    </div>
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $('input[name="daterange"]').daterangepicker({
+                                                locale: {
+                                                    format: 'YYYY-MM-DD',
+                                                    separator: " - ",
+                                                    applyLabel: "Aplicar",
+                                                    cancelLabel: "Cancelar",
+                                                    fromLabel: "Desde",
+                                                    toLabel: "Hasta",
+                                                    customRangeLabel: "Personalizado",
+                                                    daysOfWeek: ["Do","Lu","Ma","Mi","Ju","Vi","Sa"],
+                                                    monthNames: ["Enero", "Febrero","Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"                                                ],
+                                                },
+                                            });
+                                        });
+                                    </script>
+                                    <input type="submit" formaction="{{route('reportes_generales.mes')}}" class="btn btn-success"
+                                        id="inputForm" value = "Descargar excel">
+                                </form>
+                            </div>  
+                          
+                            {{-- <a href="{{route('reportes_generales.mes')}}"class="btn btn-success">Descargar excel</a> --}}
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-sm-6 bg-white">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title text-bold">Informe por médicos</h5>
                             <p class="card-text">Descargar informe de cada médico diferenciado por meses.</p>
-                            <a href="{{route('reportes_generales.medicos')}}" class="btn btn-success">Descargar excel</a>
+                           
+                            <div class="formulario">
+                                <form method="POST">
+                                    @csrf
+                                    <div class="col-6">
+                                        <div class="fechas">
+                                            <label>Seleccione el intervalo de fechas </label>
+                                            <input class="datepicker" type="text" name="daterange" />
+                                        </div>
+                                    </div>
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $('input[name="daterange"]').daterangepicker({
+                                                locale: {
+                                                    format: 'YYYY-MM-DD',
+                                                    separator: " - ",
+                                                    applyLabel: "Aplicar",
+                                                    cancelLabel: "Cancelar",
+                                                    fromLabel: "Desde",
+                                                    toLabel: "Hasta",
+                                                    customRangeLabel: "Personalizado",
+                                                    daysOfWeek: ["Do","Lu","Ma","Mi","Ju","Vi","Sa"],
+                                                    monthNames: ["Enero", "Febrero","Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"                                                ],
+                                                },
+                                            });
+                                        });
+                                    </script>
+                                    <input type="submit" formaction="{{route('reportes_generales.medicos')}}" class="btn btn-success"
+                                        id="inputForm" value = "Descargar excel">
+                                </form>
+                            </div>  
+                           
+                            {{-- <a href="{{route('reportes_generales.medicos')}}" class="btn btn-success">Descargar excel</a> --}}
                         </div>
                     </div>
                 </div>

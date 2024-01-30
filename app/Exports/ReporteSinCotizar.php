@@ -28,6 +28,7 @@ class ReporteSinCotizar implements FromCollection, WithHeadings
     {
         return [
             'Fecha de carga',
+            'Año',
             'Mes de carga',
             'N° de solicitud',
             'Nombre',

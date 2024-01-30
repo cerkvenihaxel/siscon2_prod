@@ -28,6 +28,7 @@ class ReporteMes implements FromCollection, WithHeadings
     {
         return [
             'Fecha de carga',
+            'Año',
             'Mes de carga',
             'Nombre',
             'N° de afiliado',
