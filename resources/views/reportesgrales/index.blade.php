@@ -26,6 +26,46 @@
 
 
         <div class="row">
+
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body bg-white">
+                        <h5 class="card-title text-bold">Informe de Solicitudes Cargadas</h5>
+                        <p class="card-text">Medicamentos cargados divididos por patologías</p>
+                        <div class="formulario">
+                            <form method="POST">
+                                @csrf
+                                <div class="col-6">
+                                    <div class="fechas">
+                                        <label>Seleccione el intervalo de fechas </label>
+                                        <input class="datepicker" type="text" name="daterange" />
+                                    </div>
+                                </div>
+                                <script type="text/javascript">
+                                    $(function () {
+                                        $('input[name="daterange"]').daterangepicker({
+                                            locale: {
+                                                format: 'YYYY-MM-DD',
+                                                separator: " - ",
+                                                applyLabel: "Aplicar",
+                                                cancelLabel: "Cancelar",
+                                                fromLabel: "Desde",
+                                                toLabel: "Hasta",
+                                                customRangeLabel: "Personalizado",
+                                                daysOfWeek: ["Do","Lu","Ma","Mi","Ju","Vi","Sa"],
+                                                monthNames: ["Enero", "Febrero","Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"                                                ],
+                                            },
+                                        });
+                                    });
+                                </script>
+                                <input type="submit" formaction="{{route('reportes_generales.medicamentos')}}" class="btn btn-success"
+                                    id="inputForm" value = "Descargar excel">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body bg-white">
@@ -64,15 +104,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 bg-white">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-bold">Informe por médicos</h5>
-                        <p class="card-text">Descargar informe de cada médico diferenciado por meses.</p>
-                        <a href="{{route('reportes_generales.medicos')}}" class="btn btn-success">Descargar excel</a>
-                    </div>
-                </div>
-            </div>
+            
+            
         </div>
 
             <div class="row">
@@ -118,7 +151,18 @@
                     </div>
                 </div>
             </div>
-
+            
+            <div class="row">
+                <div class="col-sm-6 bg-white">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-bold">Informe por médicos</h5>
+                            <p class="card-text">Descargar informe de cada médico diferenciado por meses.</p>
+                            <a href="{{route('reportes_generales.medicos')}}" class="btn btn-success">Descargar excel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             <style>

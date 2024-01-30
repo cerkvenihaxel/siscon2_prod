@@ -8,21 +8,19 @@ use App\Exports\ReporteMedicosExport;
 use App\Exports\ReporteMes;
 use App\Exports\ReporteProveedoresExport;
 use App\Exports\ReporteSinCotizar;
+use App\Exports\ReporteMedicamentosExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Excel;
 use Carbon\Carbon;
 
 
-class ReportesGenerales extends Controller
-{
-
+class ReportesGenerales extends Controller{
     public function index(){
         return view('reportesgrales.index');
     }
 
     public function reporteProveedoresExcel(Request $request){
-
 		//recibo las fechas, desde el método HTTP POST tomado del formulario:
 		$dateRange = $request->input('daterange');
 		list($start_date, $end_date) = explode(' - ', $dateRange);
@@ -32,7 +30,7 @@ class ReportesGenerales extends Controller
 		// Configura la conexión a la base de datos en el archivo .env o en el archivo de configuración de Laravel (config/database.php)
 		$connection = config('database.default'); // Esto asumirá la conexión predeterminada definida en config/database.php
 
-// Realiza la consulta utilizando Eloquent
+		// Realiza la consulta utilizando Eloquent
 		$resultados = DB::connection($connection)->table(
 			DB::raw('
 			(
@@ -151,11 +149,44 @@ class ReportesGenerales extends Controller
 				COUNT(CASE WHEN subconsulta.tabla = "autorizaciones" THEN 1 END) AS Finalizadas
 			')->groupByRaw('Año, Proveedor, Mes')->orderByRaw('Proveedor, Mes, Año')->get();
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new ReporteProveedoresExport($resultados), 'ReporteProveedorestado_solicitud.xlsx');
+		// dd($resultados);
+		return \Maatwebsite\Excel\Facades\Excel::download(new ReporteProveedoresExport($resultados), 'ReporteProveedorestado_solicitud.xlsx');
     }
 
-    public function reporteMedicosExcel()
-    {
+
+    public function reporteMedicamentosExcel(Request $request){
+		//recibo las fechas, desde el método HTTP POST tomado del formulario:
+		$dateRange = $request->input('daterange');
+		list($start_date, $end_date) = explode(' - ', $dateRange);
+		$start_date = Carbon::createFromFormat('Y-m-d', $start_date)->toDateString();
+		$end_date = Carbon::createFromFormat('Y-m-d', $end_date)->toDateString();
+
+		// Configura la conexión a la base de datos en el archivo .env o en el archivo de configuración de Laravel (config/database.php)
+		$connection = config('database.default'); // Esto asumirá la conexión predeterminada definida en config/database.php
+
+		// Realiza la consulta utilizando Eloquent
+		$resultados = DB::table('pedido_medicamento', 'pm')->selectRaw('
+			patologias.nombre, afiliados.apeynombres, afiliados.documento, pm.nroAfiliado, 
+			articulosZafiro.presentacion_completa, pedido_medicamento_detail.cantidad, 
+			cotizacion_convenio.zona_residencia, pm.created_at,pm.nrosolicitud
+		')
+			->leftJoin('afiliados','pm.nroAfiliado','=','afiliados.nroAfiliado')
+			->leftJoin('pedido_medicamento_detail','pm.id','=','pedido_medicamento_id')
+			->leftJoin('articulosZafiro','pedido_medicamento_detail.articuloZafiro_id','=','articulosZafiro.id')
+			->leftJoin('cotizacion_convenio','pm.nrosolicitud','=','cotizacion_convenio.nrosolicitud')
+			->leftJoin('patologias','pm.patologia','=','patologias.id')
+			->whereBetween('pm.created_at', [$start_date, $end_date])
+			->orderByRaw('patologias.nombre, articulosZafiro.presentacion_completa, afiliados.apeynombres')
+			->get();
+
+			// dd($resultados);
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new ReporteMedicamentosExport($resultados), 'ReportePorMedicacion.xlsx');
+    }
+
+
+
+    public function reporteMedicosExcel(){
         $connection = config('database.default'); // Esto asumirá la conexión predeterminada definida en config/database.php
         $resultados = DB::table('entrantes', 'e')
             ->selectRaw('
@@ -168,17 +199,14 @@ class ReportesGenerales extends Controller
         SUM(CASE WHEN e.created_at BETWEEN "2023-06-01" AND "2023-07-01" THEN 1 ELSE 0 END) AS JUNIO,
         SUM(CASE WHEN e.created_at BETWEEN "2023-07-01" AND "2023-08-01" THEN 1 ELSE 0 END) AS JULIO,
         SUM(CASE WHEN e.created_at BETWEEN "2023-08-01" AND "2023-09-01" THEN 1 END) AS AGOSTO,
-       SUM(CASE WHEN e.created_at BETWEEN "2023-09-01" AND "2023-10-01" THEN 1 END) AS SEPTIEMBRE,
-       SUM(CASE WHEN e.created_at BETWEEN "2023-10-01" AND "2023-11-01" THEN 1 END) AS OCTUBRE,
-       SUM(CASE WHEN e.created_at BETWEEN "2023-11-01" AND "2023-12-01" THEN 1 END) AS NOVIEMBRE,
-       SUM(CASE WHEN e.created_at BETWEEN "2023-12-01" AND "2024-01-01" THEN 1 END) AS DICIEMBRE
-
-    ')
+       	SUM(CASE WHEN e.created_at BETWEEN "2023-09-01" AND "2023-10-01" THEN 1 END) AS SEPTIEMBRE,
+       	SUM(CASE WHEN e.created_at BETWEEN "2023-10-01" AND "2023-11-01" THEN 1 END) AS OCTUBRE,
+       	SUM(CASE WHEN e.created_at BETWEEN "2023-11-01" AND "2023-12-01" THEN 1 END) AS NOVIEMBRE,
+       	SUM(CASE WHEN e.created_at BETWEEN "2023-12-01" AND "2024-01-01" THEN 1 END) AS DICIEMBRE    
+		')
             ->leftJoin('medicos', 'e.medicos_id', '=', 'medicos.id')
             ->groupBy('e.medicos_id') // Agregar esta línea para agrupar por medicos_id
             ->get();
-
-
 
         return \Maatwebsite\Excel\Facades\Excel::download(new ReporteMedicosExport($resultados), 'ReporteMedicos.xlsx');
     }
