@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::get('/solicitudes_protesis', [\App\Http\Controllers\ApiDepositoController::class, 'solicitudesProtesis']);
+
+Route::get('/obtenerpedidos', [\App\Http\Controllers\ApiPedidoController::class, 'obtenerPedidos'])->name('obtenerPedidos');
