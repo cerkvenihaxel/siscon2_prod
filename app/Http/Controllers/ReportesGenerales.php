@@ -66,7 +66,7 @@ class ReportesGenerales extends Controller{
 					WHEN sub_proveedor IN ("DECADE.", "Decade") THEN "DECADE"
 					WHEN sub_proveedor IN ("DOCTOR PIE.","DR PIE","DR PIE.","PROPIEDAD DR PIE.") THEN "DOCTOR PIE"
 					-- DrGLOBAL MEDICA quedó en rojo en el excel de sol, hay que borrarlo?
-					WHEN c.proveedor IN ("Elvira") THEN "ELVIRA"
+					WHEN sub_proveedor IN ("Elvira") THEN "ELVIRA"
 					-- ENDOVIA se cargó bien
 					-- EXACTECH se elimina? está en rojo en el excel de sol
 					WHEN sub_proveedor IN ("Forca", "Forca SRL","FORCA.") THEN "FORCA"
