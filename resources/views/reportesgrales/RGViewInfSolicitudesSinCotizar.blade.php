@@ -16,6 +16,11 @@
 
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+{{-- paginado: --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 </head>
 
 <body>
@@ -24,7 +29,7 @@
     <h1> Periodo de tiempo = {{ $start_date }} - {{ $end_date}}</h1>
     <h1> Fecha de consulta = {{ $fecha }}</h1>
     <div class="table-responsive">
-        <table class='table table-hover table-striped table-bordered'>
+        <table class='table table-hover table-striped table-bordered' id = 'tabla'>
             <h3>Cantidad = {{ count($data)}}</h3>
             <thead>
                 <tr>
@@ -57,6 +62,16 @@
         </table>
     </div>
 
+    <script>
+        $(document).ready(function() {
+            $('#tabla').DataTable({
+                "order": [[0, 'desc']], // Puedes ajustar la columna de orden según tus necesidades
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                },
+            });
+        }); 
+    </script>
 
 </body>
 @else
