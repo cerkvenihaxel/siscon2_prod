@@ -58,6 +58,8 @@
                                         });
                                     });
                                 </script>
+                                <button type="submit" formaction="{{route('dateRangeMedicamentos')}}" class="btn btn-primary">Realizar
+                                    consulta</button>
                                 <input type="submit" formaction="{{route('reportes_generales.medicamentos')}}" class="btn btn-success"
                                     id="inputForm" value = "Descargar excel">
                             </form>
@@ -97,6 +99,8 @@
                                         });
                                     });
                                 </script>
+                                <button type="submit" formaction="{{route('dateRangeInfoProv')}}" class="btn btn-primary">Realizar
+                                    consulta</button>
                                 <input type="submit" formaction="{{route('reportes_generales.proveedores')}}" class="btn btn-success"
                                     id="inputForm" value = "Descargar excel">
                             </form>
@@ -140,6 +144,8 @@
                                             });
                                         });
                                     </script>
+                                    <button type="submit" formaction="{{route('dateRangeAdjudicadosAnuladosSA')}}" class="btn btn-primary">Realizar
+                                        consulta</button>
                                     <input type="submit" formaction="{{route('reportes_generales.adj-an-sinadj')}}" class="btn btn-success"
                                         id="inputForm" value = "Descargar excel">
                                 </form>
@@ -178,6 +184,8 @@
                                             });
                                         });
                                     </script>
+                                    <button type="submit" formaction="{{route('dateRangeSinCotizar')}}" class="btn btn-primary">Realizar
+                                        consulta</button>
                                     <input type="submit" formaction="{{route('reportes_generales.sin-cotizar')}}" class="btn btn-success"
                                         id="inputForm" value = "Descargar excel">
                                 </form>
@@ -220,6 +228,8 @@
                                             });
                                         });
                                     </script>
+                                    <button type="submit" formaction="{{route('dateRangePorEspecialidad')}}" class="btn btn-primary">Realizar
+                                        consulta</button>
                                     <input type="submit" formaction="{{route('reportes_generales.especialidad')}}" class="btn btn-success"
                                         id="inputForm" value = "Descargar excel">
                                 </form>
@@ -258,6 +268,8 @@
                                             });
                                         });
                                     </script>
+                                    <button type="submit" formaction="{{route('dateRangePorMes')}}" class="btn btn-primary">Realizar
+                                        consulta</button>
                                     <input type="submit" formaction="{{route('reportes_generales.mes')}}" class="btn btn-success"
                                         id="inputForm" value = "Descargar excel">
                                 </form>
@@ -302,6 +314,8 @@
                                             });
                                         });
                                     </script>
+                                    <button type="submit" formaction="{{route('dateRangePorMedico')}}" class="btn btn-primary">Realizar
+                                        consulta</button>
                                     <input type="submit" formaction="{{route('reportes_generales.medicos')}}" class="btn btn-success"
                                         id="inputForm" value = "Descargar excel">
                                 </form>
