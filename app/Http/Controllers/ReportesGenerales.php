@@ -141,7 +141,6 @@ function consultaSinCotizar($start_date, $end_date){
 	return $resultados;
 }
 
-
 function consultaPorEspecialidad($start_date, $end_date){
 	$resultados = DB::table('entrantes', 'e')->selectRaw('
 		grupos.des_grupo as Especialidad,
@@ -178,7 +177,6 @@ function consultaPorEspecialidad($start_date, $end_date){
 
 	return $resultados;
 }
-
 
 function consultaPorMes($start_date, $end_date){
 	$resultados = DB::table('entrantes', 'e')->selectRaw('
@@ -219,7 +217,6 @@ function consultaPorMes($start_date, $end_date){
 
 		return $resultados;
 }
-
 
 function consultaPorMedico($start_date, $end_date){
 	$resultados = DB::table('entrantes', 'e')->selectRaw('
@@ -297,7 +294,7 @@ function filtro_proveedores($tabla){
 		WHEN '.$tabla.' IN ("IMPLACOR.", "Implacor") THEN "IMPLACOR"
 		WHEN '.$tabla.' IN ("Implantes Medicos", "Implantes Medicos - cotización sin tornillos solicitados") THEN "IMPLANTES MEDICOS"
 		WHEN '.$tabla.' IN ("IMTERMED","INTERMED", "Intermed Rehab","INTERMED.") THEN "INTERMED."
-		WHEN '.$tabla.' IN ("INTERSIL.") THEN "INTERSIL"
+		WHEN '.$tabla.' IN ("INTERSIL.", "Intersil") THEN "INTERSIL"
 		WHEN '.$tabla.' IN ("Ip Magna") THEN "IP MAGNA"
 		WHEN '.$tabla.' IN ("Kineret") THEN "KINERET"
 		WHEN '.$tabla.' IN ("Mat Medical") THEN "MAT MEDICAL"
@@ -324,6 +321,7 @@ function filtro_proveedores($tabla){
 		WHEN '.$tabla.' IN ("Ortopedia Mayo") THEN "ORTOPEDIA MAYO"
 		WHEN '.$tabla.' IN ("Ortopedia Rapalar", "RAPALAR") THEN "ORTOPEDIA RAPALAR"
 		WHEN '.$tabla.' IN ("Santa Lucia", "SANTA LUCIA.", "SANTA LUCIA", "Sta Lucia") THEN "ORTOPEDIA SANTA LUCIA"
+		WHEN '.$tabla.' IN ("Silfab") THEN "SILFAB"
 		WHEN '.$tabla.' IN ("OSTEORIESTRA.", "Osteoriestra") THEN "OSTEORIESTRA"
 		-- PFM? qué es?
 		WHEN '.$tabla.' IN ("PROMEDICAL.") THEN "PROMEDICAL"
