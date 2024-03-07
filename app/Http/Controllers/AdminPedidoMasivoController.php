@@ -6,6 +6,10 @@
 	use DB;
 	use CRUDBooster;
 
+	use App\Models\PedidoC;
+	use App\Models\LinPedido;
+	use App\Models\PedidoMedicamento;
+
 	class AdminPedidoMasivoController extends \crocodicstudio\crudbooster\controllers\CBController {
 
         function getMedicamentos($ids){
@@ -20,8 +24,10 @@
 
                 $pedido = $pedidos->first();
 
-                $articuloZafiro[$k] = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->get();
-                $id_articulo = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->value('id_articulo');
+                // $articuloZafiro[$k] = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->get();
+				$articuloZafiro[$k] = DB::table('articulosZafiro')->where('id','=', $pedido->articuloZafiro_id)->get();
+                // $id_articulo = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->value('id_articulo');
+                $id_articulo = DB::table('articulosZafiro')->where('id','=', $pedido->articuloZafiro_id)->value('id_articulo');
 
                 if($id_articulo == null ){
                     $articuloZafiro[$k] = DB::table('articulosZafiro')->where('id_articulo','LIKE', '%'.$pedido->articuloZafiro_id .'%')->get();
@@ -31,7 +37,7 @@
 
                 $articuloZafiro[$k]['cantidad'] = $pedidos->sum('cantidad');
 
-                if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
+                if(empty(DB::table('banda_descuentos')->where('id_articulo', '=' ,$id_articulo)->value('banda_descuento'))){
                     $articuloZafiro[$k]['banda_descuento'] = '';
 
                 }
@@ -45,7 +51,7 @@
                     $articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio');
 
             }
-
+			// dd($articuloZafiro);
             return $articuloZafiro;
         }
 
@@ -101,6 +107,7 @@
             # START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
             $this->form[] = ['label'=>'Punto Retiro','name'=>'punto_retiro_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'punto_retiro,nombre'];
+			$this->form[] = ['label'=>'Pedido ID', 'name'=>'id_pedido', 'type'=>'hidden', 'value'=>$this->generatePedidoNumber()];
 			$this->form[] = ['label'=>'Usuario de carga','name'=>'stamp_user','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$stampUser, 'readonly'=>true];
 
             $columns = [];
@@ -259,9 +266,14 @@
 
 			$(document).ready(function () {
 				var medicamentos = " . json_encode($medicamentos) . ";
+				console.log('Medicamentos: ');
 				console.log(medicamentos);
 				let table = document.getElementById('table-detallesdelasolicitud');
 
+				var cantidadMedicamentos = Object.keys(medicamentos).length;
+				console.log('Cantidad de medicamentos:');
+				console.log(cantidadMedicamentos);
+				
 				if(table){
 				while (table.rows.length > 0) {
 					table.deleteRow(0);
@@ -275,10 +287,11 @@
 					$('.trNull').show();
 				}
 
-				console.log('ENTARNDO AL FOR');
-				for (var i = 0; i < medicamentos.length; i++) {
+				// console.log('ENTARNDO AL FOR');
+				for (i in medicamentos) {
+					// console.log('Estoy dentro del for');
 					let medicamento = medicamentos[i];
-					    console.log(medicamento);
+					// console.log(medicamento);
 
 					// Create a new row
 					let row = table.insertRow();
@@ -389,7 +402,7 @@
 					row.appendChild(td6);
 					row.appendChild(td7);
 				}
-				console.log('saliendo del for');
+				// console.log('saliendo del for');
 			});
 		";
 
@@ -510,10 +523,56 @@
 	    | @id = last insert id
 	    |
 	    */
+		/* editar esta función, tira el id de la solicitud que acabas de añadir */
 	    public function hook_after_add($id) {
 	        //Your code here
+			$pedidoNew = DB::table('pedido_masivo')->where('id', $id)->get();
+			$lin_pedido = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id)->get();
+			$pedidoNew = $pedidoNew[0];
+			$id_empresa = 2;
+			$origen_id_sucursal = 99;
+			$id_punto = $pedidoNew->punto_retiro_id;
+			$fecha_pedido = date('Y-m-d H:i:s');
+			$id_cliente = DB::table('punto_retiro')->where('id', $id_punto)->value('id_cliente');	
+			
+			$id_selected = Cache::get('ids_cache_key');
+			foreach($id_selected as $key => $id){
+				DB::table('pedido_medicamento')->where('id', $id[$key])->update(['estado_solicitud_id' => 11]);
+			}
 
+			$pedido = new PedidoC();
+			$pedido->created_at = $pedidoNew->created_at;
+			$pedido->updated_at = $pedidoNew->updated_at;
+			$pedido->id_empresa = $id_empresa;
+			$pedido->id_pedido = $pedidoNew->id_pedido;
+			$pedido->fecha_pedido = $fecha_pedido;
+			$pedido->estado_pedido = 'EM'; // Estado "EM" = "Enviado a Mostrador
+			$pedido->_origen_id_sucursal = $origen_id_sucursal;
+			$pedido->id_cliente = $id_cliente; // Valor va cambiando conforme el cliente
+			$pedido->observaciones = $pedidoNew->observaciones;
+			$pedido->nrosolicitud = 'Pedido Masivo';
+			$pedido->save();
+
+			// Insertar en la tabla lin_pedido
+			foreach ($lin_pedido as $key => $linpedido) {
+				$des_articulo = DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('des_articulo');
+				$presentacion = DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('presentacion');
+				$id_articulo =DB::table('articulosZafiro')->where('id', $linpedido->articuloZafiro_id)->value('id_articulo');
+				$linPedido = new LinPedido();
+				$linPedido->created_at = $linpedido->created_at;
+				$linPedido->updated_at = $linpedido->updated_at;
+				$linPedido->id_pedido = $pedidoNew->id_pedido;
+				$linPedido->item = $key + 1;
+				$linPedido->id_articulo = $id_articulo;
+				$linPedido->cantidad = $linpedido->cantidad;
+				$linPedido->des_articulo = $des_articulo;
+				$linPedido->presentacion = $presentacion;
+				$linPedido->pcio_vta_uni_siva = $linpedido->precio;
+				$linPedido->pcio_com_uni_siva = $linpedido->total;
+				$linPedido->save();
+			}
 	    }
+
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -568,5 +627,17 @@
 
 	    //By the way, you can still create your own method in here... :)
 
+		private function generatePedidoNumber()
+        {
+            $lastPedido = PedidoC::latest()->first();
 
+            if ($lastPedido) {
+                $lastNumber = substr($lastPedido->id_pedido, 7); // Suponiendo que el número de pedido siempre comienza con "PC-"
+                $newNumber = str_pad($lastNumber + 1, 8, '0', STR_PAD_LEFT); // Incrementa el número y rellena con ceros a la izquierda
+            } else {
+                $newNumber = '00000001'; // Si no hay pedidos anteriores, comienza desde el número 1
+            }
+
+            return 'PE0090-' . $newNumber;
+        }
 	}
