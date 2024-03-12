@@ -9,6 +9,11 @@
 	use App\Models\PedidoC;
 	use App\Models\LinPedido;
 	use App\Models\PedidoMedicamento;
+	use App\Models\PedidoMedicamentoDetail;
+	use App\Models\CotizacionConvenio;
+	use App\Models\CotizacionConvenioDetail;
+	use App\Models\Afiliados;
+	use App\Models\ArticulosZafiro;
 
 	class AdminPedidoMasivoController extends \crocodicstudio\crudbooster\controllers\CBController {
 
@@ -534,11 +539,14 @@
 			$id_punto = $pedidoNew->punto_retiro_id;
 			$fecha_pedido = date('Y-m-d H:i:s');
 			$id_cliente = DB::table('punto_retiro')->where('id', $id_punto)->value('id_cliente');	
+			$id_pedido = $pedidoNew->id_pedido;
+			$id_masivo = $pedidoNew->id;
 			
 			$id_selected = Cache::get('ids_cache_key');
 			foreach($id_selected as $key => $id){
 				DB::table('pedido_medicamento')->where('id', $id[$key])->update(['estado_solicitud_id' => 11]);
 			}
+
 
 			$pedido = new PedidoC();
 			$pedido->created_at = $pedidoNew->created_at;
@@ -571,6 +579,9 @@
 				$linPedido->pcio_com_uni_siva = $linpedido->total;
 				$linPedido->save();
 			}
+
+			/*Cargar en cotizacion_convenio: */
+			$this->singleRequestAdd($id_selected, $id_punto, $id_pedido, $id_masivo);
 	    }
 
 
@@ -640,4 +651,60 @@
 
             return 'PE0090-' . $newNumber;
         }
+
+		private function singleRequestAdd($id_selected, $id_punto, $id_pedido, $id_masivo){	
+			$myID = CRUDBooster::myId();
+			$stamp_user = DB::table('cms_users')->where('id', $myID)->value('email');							
+
+			$pedido_medicamento = [];
+			$pedido_medicamento_detail = [];
+
+			foreach($id_selected as $key => $id){
+				$pedido_medicamento[$key]	= PedidoMedicamento::where('id',$id)->get();
+				$pedido_medicamento_detail[$key] = PedidoMedicamentoDetail::where('pedido_medicamento_id', $id)->get();
+			}
+
+			$cotizacion_convenio = [];
+			$cotizacion_convenio_detail = [];
+			foreach($pedido_medicamento as $key => $pm){
+				$cotizacion_convenio[$key] = new CotizacionConvenio();
+				$cotizacion_convenio[$key]->nombreyapellido = Afiliados::where('id', $pm[0]->afiliados_id)->value('apeynombres');
+				$cotizacion_convenio[$key]->documento = Afiliados::where('id', $pm[0]->afiliados_id)->value('documento');
+				$cotizacion_convenio[$key]->nroAfiliado = $pm[0]->nroAfiliado;
+				$cotizacion_convenio[$key]->edad = $pm[0]->edad;
+				$cotizacion_convenio[$key]->nrosolicitud = $pm[0]->nrosolicitud;
+				$cotizacion_convenio[$key]->clinicas_id = $pm[0]->clinicas_id;
+				$cotizacion_convenio[$key]->medicos_id = $pm[0]->medicos_id;
+				$cotizacion_convenio[$key]->zona_residencia = $pm[0]->zona_residencia;
+				$cotizacion_convenio[$key]->tel_afiliado = $pm[0]->tel_afiliado;
+				$cotizacion_convenio[$key]->email = $pm[0]->email;
+				$cotizacion_convenio[$key]->fecha_receta = $pm[0]->fecha_receta;
+				$cotizacion_convenio[$key]->postdatada = DB::table('postdatada')->where('id',$pm[0]->postdatada)->value('cantidad');
+				$cotizacion_convenio[$key]->fecha_vencimiento = $pm[0]->fecha_vencimiento;
+				$cotizacion_convenio[$key]->estado_solicitud_id = 11;
+				$cotizacion_convenio[$key]->estado_pedido_id = 5;
+				$cotizacion_convenio[$key]->punto_retiro_id = $id_punto;
+				$cotizacion_convenio[$key]->proveedor = 'Global Médica';
+				$cotizacion_convenio[$key]->stamp_user = $stamp_user;
+				$cotizacion_convenio[$key]->discapacidad = $pm[0]->discapacidad;
+				$cotizacion_convenio[$key]->id_pedido = $id_pedido;
+				$cotizacion_convenio[$key]->save();
+
+				foreach($pedido_medicamento_detail as $key => $pmd){
+					$cotizacion_convenio_detail[$key] = new CotizacionConvenioDetail();
+					$cotizacion_convenio_detail[$key]->cotizacion_convenio_id = $cotizacion_convenio[$key]->id;
+					$cotizacion_convenio_detail[$key]->articuloZafiro_id = $pmd[0]->articuloZafiro_id;
+					$cotizacion_convenio_detail[$key]->laboratorio = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd[0]->articuloZafiro_id)->value('laboratorio');
+					$cotizacion_convenio_detail[$key]->cantidad = $pmd[0]->cantidad;
+					$cotizacion_convenio_detail[$key]->presentacion = ArticulosZafiro::where('id', $pmd[0]->articuloZafiro_id)->value('presentacion_completa');
+					$cotizacion_convenio_detail[$key]->precio = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd[0]->articuloZafiro_id)->value('precio');
+					$cotizacion_convenio_detail[$key]->descuento = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd[0]->articuloZafiro_id)->value('descuento');
+					$total_ccd = ($cotizacion_convenio_detail[$key]->cantidad * $cotizacion_convenio_detail[$key]->precio * (1 - $cotizacion_convenio_detail[$key]->descuento/100));
+					$cotizacion_convenio_detail[$key]->total =  $total_ccd;
+					$cotizacion_convenio_detail[$key]->save();
+				}
+			}
+			dd([$cotizacion_convenio, $cotizacion_convenio_detail]);
+
+		}
 	}
