@@ -56,7 +56,6 @@
                     $articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio');
 
             }
-			// dd($articuloZafiro);
             return $articuloZafiro;
         }
 
@@ -83,13 +82,12 @@
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Punto Retiro Id","name"=>"punto_retiro_id","join"=>"punto_retiro,id"];
-			$this->col[] = ["label"=>"Tel Medico","name"=>"tel_medico"];
-			$this->col[] = ["label"=>"Stamp User","name"=>"stamp_user"];
-			$this->col[] = ["label"=>"Observaciones","name"=>"observaciones"];
-			$this->col[] = ["label"=>"Archivo","name"=>"archivo"];
-			$this->col[] = ["label"=>"Archivo2","name"=>"archivo2"];
-			$this->col[] = ["label"=>"Archivo3","name"=>"archivo3"];
+			$this->col[] = ["label"=>"Fecha de creación","name"=>"created_at"];
+			$this->col[] = ["label"=>"Punto Retiro Id","name"=>"punto_retiro_id","join"=>"punto_retiro,nombre"];
+			$this->col[] = ["label"=>"Usuario de Carga","name"=>"stamp_user"];
+			$this->col[] = ["label"=>"Número pedido", "name"=>"id_pedido"];
+
+
 
 
 			# END COLUMNS DO NOT REMOVE THIS LINE
@@ -127,10 +125,10 @@
             $this->form[] = ['label'=>'Detalles de la solicitud','name'=>'pedido_masivo_detail','type'=>'child','columns'=>$columns,'table'=>'pedido_masivo_detail','foreign_key'=>'pedido_masivo_id', 'required' => true];
 
 
-			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Archivo3','name'=>'archivo3','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Archivo4','name'=>'archivo4','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'upload','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Archivo3','name'=>'archivo3','type'=>'upload','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Archivo4','name'=>'archivo4','type'=>'upload','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
@@ -543,8 +541,10 @@
 			$id_masivo = $pedidoNew->id;
 			
 			$id_selected = Cache::get('ids_cache_key');
-			foreach($id_selected as $key => $id){
-				DB::table('pedido_medicamento')->where('id', $id[$key])->update(['estado_solicitud_id' => 11]);
+			/*cambio de estado */
+
+			foreach($id_selected as $id){
+				DB::table('pedido_medicamento')->where('id', $id)->update(['estado_solicitud_id' => 11]);
 			}
 
 
@@ -582,7 +582,9 @@
 
 			/*Cargar en cotizacion_convenio: */
 			$this->singleRequestAdd($id_selected, $id_punto, $id_pedido, $id_masivo);
-	    }
+
+			Cache::flush();
+	    }	
 
 
 	    /*
@@ -664,6 +666,8 @@
 				$pedido_medicamento_detail[$key] = PedidoMedicamentoDetail::where('pedido_medicamento_id', $id)->get();
 			}
 
+			
+
 			$cotizacion_convenio = [];
 			$cotizacion_convenio_detail = [];
 			foreach($pedido_medicamento as $key => $pm){
@@ -690,21 +694,23 @@
 				$cotizacion_convenio[$key]->id_pedido = $id_pedido;
 				$cotizacion_convenio[$key]->save();
 
-				foreach($pedido_medicamento_detail as $key => $pmd){
-					$cotizacion_convenio_detail[$key] = new CotizacionConvenioDetail();
-					$cotizacion_convenio_detail[$key]->cotizacion_convenio_id = $cotizacion_convenio[$key]->id;
-					$cotizacion_convenio_detail[$key]->articuloZafiro_id = $pmd[0]->articuloZafiro_id;
-					$cotizacion_convenio_detail[$key]->laboratorio = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd[0]->articuloZafiro_id)->value('laboratorio');
-					$cotizacion_convenio_detail[$key]->cantidad = $pmd[0]->cantidad;
-					$cotizacion_convenio_detail[$key]->presentacion = ArticulosZafiro::where('id', $pmd[0]->articuloZafiro_id)->value('presentacion_completa');
-					$cotizacion_convenio_detail[$key]->precio = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd[0]->articuloZafiro_id)->value('precio');
-					$cotizacion_convenio_detail[$key]->descuento = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd[0]->articuloZafiro_id)->value('descuento');
+				foreach($pedido_medicamento_detail[$key] as $pmd){
+					$cotizacion_detail = new CotizacionConvenioDetail();
+					$cotizacion_detail->cotizacion_convenio_id = $cotizacion_convenio[$key]->id;
+					$cotizacion_detail->articuloZafiro_id = $pmd->articuloZafiro_id;
+					$cotizacion_detail->laboratorio = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd->articuloZafiro_id)->value('laboratorio');
+					$cotizacion_detail->cantidad = $pmd->cantidad;
+					$cotizacion_detail->presentacion = ArticulosZafiro::where('id', $pmd->articuloZafiro_id)->value('presentacion_completa');			
+					$cotizacion_detail->precio = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd->articuloZafiro_id)->value('precio');
+					$cotizacion_detail->descuento = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd->articuloZafiro_id)->value('descuento');
 					$total_ccd = ($cotizacion_convenio_detail[$key]->cantidad * $cotizacion_convenio_detail[$key]->precio * (1 - $cotizacion_convenio_detail[$key]->descuento/100));
-					$cotizacion_convenio_detail[$key]->total =  $total_ccd;
-					$cotizacion_convenio_detail[$key]->save();
+					$cotizacion_detail->total =  $total_ccd;
+					$cotizacion_detail->save();
+					$cotizacion_convenio_detail[$key][] = $cotizacion_detail;
 				}
 			}
-			dd([$cotizacion_convenio, $cotizacion_convenio_detail]);
 
 		}
 	}
+
+

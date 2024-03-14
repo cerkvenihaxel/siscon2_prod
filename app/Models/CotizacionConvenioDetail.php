@@ -10,6 +10,10 @@ class CotizacionConvenioDetail extends Model
     use HasFactory;
     protected $table = 'cotizacion_convenio_detail';
 
+    public function oficinaAutorizar(){
+        return $this->belongsTo(CotizacionConvenio::class, 'cotizacion_convenio_id');
+    }
+
     public function entranteConvenio(){
         return $this->belongsTo(CotizacionConvenio::class, 'id');
     }
