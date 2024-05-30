@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 
-class ReporteASDJ implements FromCollection, WithHeadings
+class ReporteMedicamentosExport implements FromCollection, WithHeadings
 {
     use Exportable;
 
@@ -26,18 +26,17 @@ class ReporteASDJ implements FromCollection, WithHeadings
 
     public function headings(): array
     {
+        // Define los nombres de las columnas aquí
         return [
-            'Proveedor',
-            'Fecha de carga',
-            'Año',
-            'Mes de carga',
+            'Patología',
             'Nombre',
-            'Clínica',
-            'Edad',
-            'N° de solicitud',
-            'Médico',
-            'Estado solicitud'
+            'Documento',
+            'Nro Afiliado',
+            'Medicación',
+            'Cantidad',
+            'Zona de Residencia',
+            'Fecha de Carga',
+            'Nro Solicitud'
         ];
     }
-
 }

@@ -201,15 +201,7 @@
             $this->form[] = ['label' => 'Nro de Afiliado', 'name' => 'nroAfiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->nroAfiliado()];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=> $edad];
 
-            $obraSocialId = $this->nroSolicitudObraSocial();
-
-            if($obraSocialId == 3){
                 $this->form[] = ['label' => 'Número de Solicitud', 'name' => 'nrosolicitud', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true, 'readonly' => 'true', 'value' => 'APOS-MED-' . date('Ydm'). '-' . rand(0, 9999)];
-            }
-            else if($obraSocialId == 1){
-                $this->form[] = ['label' => 'Número de Solicitud', 'name' => 'nrosolicitud', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true, 'readonly' => 'true', 'value' => 'ISSJ-' . date('Ydm'). '-' . rand(0, 9999)];
-            }
-
             $this->form[] = ['label' => 'Institución', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'required' => true];
             $this->form[] = ['label' => 'Médico Solicitante', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'required' => true];
 			$this->form[] = ['label'=>'Tel Medico','name'=>'tel_medico','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];

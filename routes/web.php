@@ -372,3 +372,30 @@ Route::get('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::
 //-- Sección de O2 Terapia
 
 Route::get('admin/crear_pedido_o2', [\App\Http\Controllers\O2Terapia\CrearPedido::class, 'newPedido'])->name('newPedido_o2');
+
+Route::post('/reportes_generales/dateRangeInfoProv', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangeInfoProv'])->name('dateRangeInfoProv');
+
+//ADRIAN:
+Route::post('/reportes_generales/medicamentos', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMedicamentosExcel'])->name('reportes_generales.medicamentos');
+Route::post('/reportes_generales/dateRangeMedicamentos', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangeMedicamentos'])->name('dateRangeMedicamentos');
+
+// Route::get('/reportes_generales/medicos', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMedicosExcel'])->name('reportes_generales.medicos');
+Route::post('/reportes_generales/medicos', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMedicosExcel'])->name('reportes_generales.medicos');
+Route::post('/reportes_generales/dateRangePorMedico', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangePorMedico'])->name('dateRangePorMedico');
+
+
+// Route::get('/reportes_generales/adj-an-sinadj', [\App\Http\Controllers\ReportesGenerales::class, 'reporteAdjudicadosAnuladosSA'])->name('reportes_generales.adj-an-sinadj');
+Route::post('/reportes_generales/adj-an-sinadj', [\App\Http\Controllers\ReportesGenerales::class, 'reporteAdjudicadosAnuladosSA'])->name('reportes_generales.adj-an-sinadj');
+Route::post('/reportes_generales/dateRangeAdjudicadosAnuladosSA', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangeAdjudicadosAnuladosSA'])->name('dateRangeAdjudicadosAnuladosSA');
+
+// Route::get('/reportes_generales/sin-cotizar', [\App\Http\Controllers\ReportesGenerales::class, 'reporteSinCotizar'])->name('reportes_generales.sin-cotizar');
+Route::post('/reportes_generales/sin-cotizar', [\App\Http\Controllers\ReportesGenerales::class, 'reporteSinCotizar'])->name('reportes_generales.sin-cotizar');
+Route::post('/reportes_generales/dateRangeSinCotizar', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangeSinCotizar'])->name('dateRangeSinCotizar');
+
+// Route::get('/reportes_generales/especialidad', [\App\Http\Controllers\ReportesGenerales::class, 'reporteEspecialidad'])->name('reportes_generales.especialidad');
+Route::post('/reportes_generales/especialidad', [\App\Http\Controllers\ReportesGenerales::class, 'reporteEspecialidad'])->name('reportes_generales.especialidad');
+Route::post('/reportes_generales/dateRangePorEspecialidad', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangePorEspecialidad'])->name('dateRangePorEspecialidad');
+
+// Route::get('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMes'])->name('reportes_generales.mes');
+Route::post('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMes'])->name('reportes_generales.mes');
+Route::post('/reportes_generales/dateRangePorMes', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangePorMes'])->name('dateRangePorMes');
