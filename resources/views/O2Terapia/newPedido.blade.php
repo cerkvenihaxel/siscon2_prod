@@ -60,7 +60,7 @@
         const dni = $('#dni').val();
         // Realiza la petición POST a la API para obtener los datos del afiliado
         $.ajax({
-            url: 'http://localhost:8000/api/afiliado_api/',
+            url: 'http://siscon.info/api/afiliado_api/',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ dni: dni }),
