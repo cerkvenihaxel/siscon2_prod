@@ -362,6 +362,17 @@ Route::get('/protesis/entrantes', function (){
 Route::get('/reportes_generales', [\App\Http\Controllers\ReportesGenerales::class, 'index'])->name('reportes_generales.index');
 // Route::get('/reportes_generales/proveedores', [\App\Http\Controllers\ReportesGenerales::class, 'reporteProveedoresExcel'])->name('reportes_generales.proveedores');
 Route::post('/reportes_generales/proveedores', [\App\Http\Controllers\ReportesGenerales::class, 'reporteProveedoresExcel'])->name('reportes_generales.proveedores');
+Route::get('/reportes_generales/medicos', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMedicosExcel'])->name('reportes_generales.medicos');
+Route::get('/reportes_generales/adj-an-sinadj', [\App\Http\Controllers\ReportesGenerales::class, 'reporteAdjudicadosAnuladosSA'])->name('reportes_generales.adj-an-sinadj');
+Route::get('/reportes_generales/sin-cotizar', [\App\Http\Controllers\ReportesGenerales::class, 'reporteSinCotizar'])->name('reportes_generales.sin-cotizar');
+Route::get('/reportes_generales/especialidad', [\App\Http\Controllers\ReportesGenerales::class, 'reporteEspecialidad'])->name('reportes_generales.especialidad');
+Route::get('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMes'])->name('reportes_generales.mes');
+
+
+//-- Sección de O2 Terapia
+
+Route::get('admin/crear_pedido_o2', [\App\Http\Controllers\O2Terapia\CrearPedido::class, 'newPedido'])->name('newPedido_o2');
+
 Route::post('/reportes_generales/dateRangeInfoProv', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangeInfoProv'])->name('dateRangeInfoProv');
 
 //ADRIAN:
