@@ -119,6 +119,7 @@
 			$this->col[] = ["label"=>"Fecha Entrega","name"=>"fechaEntrega"];
 			$this->col[] = ["label"=>"Mes de presentacion", "name"=>"mes"];
 			$this->col[] = ["label"=>"Precio Total","name"=>"precioTotal"];
+			$this->col[] = ["label"=>"Año presentacion", "name"=>"presentation_year"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
