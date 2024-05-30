@@ -367,3 +367,8 @@ Route::get('/reportes_generales/adj-an-sinadj', [\App\Http\Controllers\ReportesG
 Route::get('/reportes_generales/sin-cotizar', [\App\Http\Controllers\ReportesGenerales::class, 'reporteSinCotizar'])->name('reportes_generales.sin-cotizar');
 Route::get('/reportes_generales/especialidad', [\App\Http\Controllers\ReportesGenerales::class, 'reporteEspecialidad'])->name('reportes_generales.especialidad');
 Route::get('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMes'])->name('reportes_generales.mes');
+
+
+//-- Sección de O2 Terapia
+
+Route::get('admin/crear_pedido_o2', [\App\Http\Controllers\O2Terapia\CrearPedido::class, 'newPedido'])->name('newPedido_o2');

@@ -18,7 +18,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:sanctum')->group( function (){
+    // Route::get()
+});
+
 
 Route::get('/solicitudes_protesis', [\App\Http\Controllers\ApiDepositoController::class, 'solicitudesProtesis']);
-
 Route::get('/obtenerpedidos', [\App\Http\Controllers\ApiPedidoController::class, 'obtenerPedidos'])->name('obtenerPedidos');
+
+Route::post('/afiliado_api', [\App\Http\Controllers\API\AfiliadosAPI::class, 'searchAfiliateByDNI'])->name('searchAfiliateByDNI');
+Route::post('/afiliado_api_id', [\App\Http\Controllers\API\AfiliadosAPI::class, 'searchAfiliateByID'])->name('searchAfiliateByID');
+Route::get('/articulos_oxigeno', [\App\Http\Controllers\API\ArticulosO2Terapia::class, 'getArticles']);
