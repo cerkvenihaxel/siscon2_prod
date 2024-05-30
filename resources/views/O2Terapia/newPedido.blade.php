@@ -91,7 +91,7 @@
 
     function createPedido() {
         if (afiliadoId) {
-            window.location.href = `pedidos_o2/add??id=${afiliadoId}`;
+            window.location.href = `pedidos_o2/add?id=${afiliadoId}`;
         } else {
             alert('Debe buscar un afiliado primero');
         }
