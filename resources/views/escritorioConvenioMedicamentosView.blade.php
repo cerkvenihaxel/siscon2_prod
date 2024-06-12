@@ -126,6 +126,8 @@
     </div>
     </div>z
 -->
+
+<!--
     @if($privilegio == 1 || $privilegio == 38)
     <h3 class="card-title">Global Medica</h3>
     <div class="text-center">
@@ -159,6 +161,7 @@
 
     @endif
 
+-->
 
     <div class="row">
         <div class="col-md-12">
