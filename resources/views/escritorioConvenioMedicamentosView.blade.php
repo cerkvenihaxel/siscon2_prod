@@ -124,7 +124,7 @@
             </div>
         </div>
     </div>
-    </div>
+    </div>z
 -->
     @if($privilegio == 1 || $privilegio == 38)
     <h3 class="card-title">Global Medica</h3>
