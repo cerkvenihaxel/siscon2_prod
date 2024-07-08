@@ -8,10 +8,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 </head>
@@ -201,7 +199,7 @@
                         <div class="card-body bg-white">
                             <h5 class="card-title text-bold">Informe por especialidad</h5>
                             <p class="card-text">Descargar informe con todas especialidades</p>
-                            
+
                             <div class="formulario">
                                 <form method="POST">
                                     @csrf
@@ -233,7 +231,7 @@
                                     <input type="submit" formaction="{{route('reportes_generales.especialidad')}}" class="btn btn-success"
                                         id="inputForm" value = "Descargar excel">
                                 </form>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -273,8 +271,8 @@
                                     <input type="submit" formaction="{{route('reportes_generales.mes')}}" class="btn btn-success"
                                         id="inputForm" value = "Descargar excel">
                                 </form>
-                            </div>  
-                          
+                            </div>
+
                             {{-- <a href="{{route('reportes_generales.mes')}}"class="btn btn-success">Descargar excel</a> --}}
                         </div>
                     </div>
@@ -287,7 +285,7 @@
                         <div class="card-body">
                             <h5 class="card-title text-bold">Informe por médicos</h5>
                             <p class="card-text">Descargar informe de cada médico diferenciado por meses.</p>
-                           
+
                             <div class="formulario">
                                 <form method="POST">
                                     @csrf
@@ -319,8 +317,8 @@
                                     <input type="submit" formaction="{{route('reportes_generales.medicos')}}" class="btn btn-success"
                                         id="inputForm" value = "Descargar excel">
                                 </form>
-                            </div>  
-                           
+                            </div>
+
                             {{-- <a href="{{route('reportes_generales.medicos')}}" class="btn btn-success">Descargar excel</a> --}}
                         </div>
                     </div>

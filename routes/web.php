@@ -399,3 +399,12 @@ Route::post('/reportes_generales/dateRangePorEspecialidad', [\App\Http\Controlle
 // Route::get('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMes'])->name('reportes_generales.mes');
 Route::post('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMes'])->name('reportes_generales.mes');
 Route::post('/reportes_generales/dateRangePorMes', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangePorMes'])->name('dateRangePorMes');
+
+
+// Reportes grales con gráficos
+Route::prefix('reportes_nuevo')->group(function (){
+    Route::get('/convenio', function (){
+        return view ('reports_graphs.convenio');
+    });
+});
+
