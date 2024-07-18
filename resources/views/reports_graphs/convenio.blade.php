@@ -72,6 +72,7 @@
     <div class="btn-group" role="group" aria-label="Select Chart">
         <button type="button" class="btn btn-primary" onclick="showPatologiaCharts()">Patologías</button>
         <button type="button" class="btn btn-primary" onclick="showDispensaChart()">Puntos de dispensa</button>
+        <button type="button" class="btn btn-primary" onclick="showMedicacionTable()">Medicación</button>
     </div>
 
     <div id="patologiaChartsContainer">
@@ -96,18 +97,37 @@
     </div>
 
 
+     <div id="medicacionTableContainer" style="display: none;">
+         <x-medicamentos-chart  :startDate="request()->get('startDate', '2023-01-01')"
+                                :endDate="request()->get('endDate', '2029-12-31')"/>
+    </div>
+
+
+
+
+
 </section>
 
 <script>
     function showPatologiaCharts() {
         document.getElementById('patologiaChartsContainer').style.display = 'block';
         document.getElementById('dispensaChartContainer').style.display = 'none';
+        document.getElementById('medicacionTableContainer').style.display = 'none';
+
     }
 
     function showDispensaChart() {
         document.getElementById('patologiaChartsContainer').style.display = 'none';
         document.getElementById('dispensaChartContainer').style.display = 'block';
+        document.getElementById('medicacionTableContainer').style.display = 'none';
     }
+
+    function showMedicacionTable() {
+        document.getElementById('patologiaChartsContainer').style.display = 'none';
+        document.getElementById('dispensaChartContainer').style.display = 'none';
+        document.getElementById('medicacionTableContainer').style.display = 'block';
+    }
+
 </script>
 </body>
 </html>
