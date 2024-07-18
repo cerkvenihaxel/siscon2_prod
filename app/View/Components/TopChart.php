@@ -47,6 +47,6 @@ class TopChart extends Component
      */
     public function render()
     {
-        return view('components.reporteconvenio.topchart');
+        return view('components.topchart');
     }
 }
