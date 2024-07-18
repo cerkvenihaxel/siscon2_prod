@@ -94,6 +94,8 @@
                             :startDate="request()->get('startDate', '2023-01-01')"
                             :endDate="request()->get('endDate', '2029-12-31')" />
     </div>
+
+
 </section>
 
 <script>

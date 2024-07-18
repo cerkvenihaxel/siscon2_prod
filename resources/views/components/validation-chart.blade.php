@@ -15,20 +15,21 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var ctx = document.getElementById('validationChart').getContext('2d');
-        var datasetAssignated = @json($datasetAssignated);
+        //var datasetAssignated = @json($datasetAssignated);
         var datasetValidate = @json($datasetValidate);
 
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: @json($labels),
-                datasets: [{
+                datasets: [
+                    /*{
                     label: 'Cantidad de validaciones asignadas en el periodo',
                     data: datasetAssignated,
                     backgroundColor: 'rgb(236, 112, 99)',
                     borderColor: 'rgba(255, 99, 132, 0.2)',
                     borderWidth: 5,
-                }, {
+                }, */{
                     label: 'Cantidad de validaciones realizadas en el periodo',
                     data: datasetValidate,
                     backgroundColor: 'rgb(155, 89, 182)',
