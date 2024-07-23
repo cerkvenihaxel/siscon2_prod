@@ -14,7 +14,7 @@ class MedicamentosChart extends Component
     public function __construct($startDate = '2024-01-01', $endDate = '2024-12-31')
     {
         $resultData = DB::table('pedido_medicamento_detail as pmd')
-            ->select('pmd.presentacion as nombreMedicacion', DB::raw('COUNT(*) as cantidadMedicacion'))
+            ->select('az.presentacion_completa as nombreMedicacion', DB::raw('COUNT(*) as cantidadMedicacion'))
             ->leftJoin('articulosZafiro as az', 'pmd.articuloZafiro_id', '=', 'az.id')
             ->leftJoin('pedido_medicamento as pm', 'pmd.pedido_medicamento_id'  ,'=', 'pm.id')
             ->whereBetween('pm.created_at', [$startDate, $endDate])
