@@ -8,7 +8,7 @@
 <h2>
     Cantidad de medicación requerida por la obra social
 </h2>
-<table id="table" class="display">
+<table id="table1" class="display">
     <thead>
     <tr>
         <th>Nombre Medicación</th>
@@ -32,7 +32,9 @@
 <script src="https://cdn.datatables.net/2.0.8/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#table').DataTable();
+        $('#table1').DataTable({
+            "order": [[1, 'desc']]
+        });
     });
 </script>
 

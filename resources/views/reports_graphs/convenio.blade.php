@@ -93,13 +93,19 @@
                           :endDate="request()->get('endDate', '2029-12-31')" />
         <x-validation-chart id="validationChart"
                             :startDate="request()->get('startDate', '2023-01-01')"
-                            :endDate="request()->get('endDate', '2029-12-31')" />
+                            :endDate="request()->get('endDate', '2029-12-31')"
+        />
     </div>
 
 
      <div id="medicacionTableContainer" style="display: none;">
-         <x-medicamentos-chart  :startDate="request()->get('startDate', '2023-01-01')"
-                                :endDate="request()->get('endDate', '2029-12-31')"/>
+       <x-medicamentos-chart  :startDate="request()->get('startDate', '2023-01-01')"
+                                :endDate="request()->get('endDate', '2029-12-31')"
+                                tableIdSuffix="1" />
+
+         <x-punto-retiro-medicacion :startDate="request()->get('startDate', '2023-01-01')"
+                                    :endDate="request()->get('endDate', '2029-12-31')"
+                                    tableIdSuffix="2" />
     </div>
 
 

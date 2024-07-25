@@ -11,7 +11,7 @@ class MedicamentosChart extends Component
     public $result;
 
 
-    public function __construct($startDate = '2024-01-01', $endDate = '2024-12-31')
+    public function __construct($startDate = '2024-01-01', $endDate = '2024-12-31', $tableIdSuffix = '')
     {
         $resultData = DB::table('pedido_medicamento_detail as pmd')
             ->select('az.presentacion_completa as nombreMedicacion', DB::raw('COUNT(*) as cantidadMedicacion'))
@@ -23,6 +23,7 @@ class MedicamentosChart extends Component
             ->get();
 
         $this->result = $resultData;
+        $this->tableId = 'table' . $tableIdSuffix;
 
     }
 
