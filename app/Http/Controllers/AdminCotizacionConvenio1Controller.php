@@ -148,6 +148,7 @@
 			$this->col[] = ["label"=>"Estado pedido", "name"=>"estado_pedido_id", "join"=>"estado_pedido,estado"];
 			$this->col[] = ["label"=>"Número pedido", "name"=>"id_pedido"];
 			$this->col[] = ["label"=>"Nro remito" , "name"=>"nro_remito"];
+			$this->col[] = ["label"=>"Nro Factura", "name"=>"nro_factura"];
 			$this->col[] = ["label"=>"Punto retiro", "name"=>"punto_retiro_id", "join"=>"punto_retiro,nombre"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 			$pedido_medicamento = $this->getDatos();
