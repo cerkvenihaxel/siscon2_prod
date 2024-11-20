@@ -3,10 +3,29 @@
 </div>
 
 <style>
-    .patologia-container {
-        max-width: 600px;
-        margin: auto;
-        float: right;
+    #patologiaChartsContainer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    #patologiaChartsContainer > div {
+        flex: 1;
+        min-width: 300px;
+        max-width: 50%;
+    }
+
+    @media screen and (max-width: 768px) {
+        #patologiaChartsContainer {
+            flex-direction: column;
+        }
+
+        #patologiaChartsContainer > div {
+            max-width: 100%;
+            width: 100%;
+        }
     }
 </style>
 

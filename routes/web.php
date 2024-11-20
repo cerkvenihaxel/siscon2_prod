@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AdminPedidoMedicamento35Controller;
+use App\Models\User;
+use crocodicstudio\crudbooster\helpers\CRUDBooster;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticulosReportController;
 use App\Http\Controllers\ProveedoresReportController;
@@ -404,7 +407,21 @@ Route::post('/reportes_generales/dateRangePorMes', [\App\Http\Controllers\Report
 // Reportes grales con gráficos
 Route::prefix('reportes_nuevo')->group(function (){
     Route::get('/convenio', function (){
-        return view ('reports_graphs.convenio');
+        $id = CRUDBooster::myId();
+        $privilegio = User::where('id', $id)->value('id_cms_privileges');
+
+        $nroEntrantes = DB::table('pedido_medicamento')->where('estado_solicitud_id', 1)->count();
+        $nroAutorizados = DB::table('pedido_medicamento')->where('estado_solicitud_id', 3)->count();
+        $nroRechazados = DB::table('pedido_medicamento')->whereIn('estado_solicitud_id', [5, 9])->count();
+        $nroAuditados = DB::table('pedido_medicamento')->where('estado_solicitud_id', 8)->count();
+
+        $nroAsignados = DB::table('convenio_oficina_os')->where('proveedor', 2)->count();
+        $nroProcesados = DB::table('cotizacion_convenio')->where('proveedor', 'LIKE', 'Global Médica')->count();
+        $nroEntregados = DB::table('cotizacion_convenio')->where('proveedor', 'LIKE', 'Global Médica')->where('estado_pedido_id', 1)->count();
+        $nroRechazadosGlobal = DB::table('cotizacion_convenio')->where('proveedor', 'LIKE', 'Global Médica')->whereIn('estado_solicitud_id', [10, 5])->count();
+
+        $patologiasName = DB::table('patologias')->get();
+        return view ('reports_graphs.convenio', compact('nroEntrantes', 'nroAutorizados', 'nroRechazados', 'privilegio','nroAsignados', 'nroAuditados','nroProcesados', 'nroRechazadosGlobal','nroEntregados', 'patologiasName'));
     });
 });
 

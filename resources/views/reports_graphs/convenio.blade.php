@@ -14,6 +14,7 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 </head>
+
 <body>
 <h1>Datos Convenio Medicamentos</h1>
 
@@ -65,6 +66,54 @@
 
 <x-topchart :start-date="request()->get('startDate', '2022-01-01')"
             :end-date="request()->get('endDate', '2029-12-31')" />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Tabla de Patologías</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="patologiasTable" class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Patologías</th>
+                            <th>Cantidad de pacientes</th>
+                            <th>Opción</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($patologiasName as $pato)
+                            <tr>
+                                <td>{{ $pato->nombre  }}</td>
+                                <td> {{ $consulta = DB::table('afiliados_articulos')
+                                            ->select('patologias')
+                                             ->where('patologias', $pato->id)
+                                            ->distinct('nro_afiliado')
+                                            ->count() }}</td>
+                                <td><button class="btn btn-info btn-xs m-5">
+                                        <a href="/admin/afiliados_articulos47?q={{$pato->nombre}}" style="color: white">
+                                            Ver más
+                                        </a>
+                                    </button>  </td>
+                            </tr>
+                            @php
+                                $suma += $consulta
+                            @endphp
+
+                        @endforeach
+
+                        </tbody>
+                    </table>
+                    <h4>Total afiliados por patologías : {{ $suma }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 
 <section class="graphSection">
     <h2>Gráficos</h2>
@@ -146,6 +195,29 @@
 
     .period-selection {
         margin-top: 1rem;
+    }
+
+    .row .card {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 15px;
+    }
+
+    #patologiaChartsContainer {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 15px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    @media screen and (max-width: 768px) {
+        .row .card,
+        #patologiaChartsContainer {
+            padding: 10px;
+        }
     }
 </style>
 @endsection
