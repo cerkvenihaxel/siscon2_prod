@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminPedidoMedicamento35Controller;
+use App\Http\Controllers\ReporteMedicamentosParticularController;
+use App\Http\Controllers\ReportesMedicamentosController;
 use App\Models\User;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 use Illuminate\Support\Facades\DB;
@@ -425,3 +427,8 @@ Route::prefix('reportes_nuevo')->group(function (){
     });
 });
 
+Route::get('/reportes-medicamentos', [ReportesMedicamentosController::class, 'obtenerReportes'])->name('reportes.obtener');
+Route::get('/exportar-excel', [ReportesMedicamentosController::class, 'exportarExcel'])->name('reportes.exportar');
+
+Route::get('/reportes-medicamentos-particular', [ReporteMedicamentosParticularController::class, 'obtenerReportes'])->name('reportes.obtener.particular');
+Route::get('/exportar-excel-particular', [ReporteMedicamentosParticularController::class, 'exportarExcel'])->name('reportes.exportar.particular');

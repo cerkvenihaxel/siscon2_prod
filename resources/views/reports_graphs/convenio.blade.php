@@ -122,6 +122,7 @@
         <button type="button" class="btn btn-primary" onclick="showPatologiaCharts()">Patologías</button>
         <button type="button" class="btn btn-primary" onclick="showDispensaChart()">Puntos de dispensa</button>
         <button type="button" class="btn btn-primary" onclick="showMedicacionTable()">Medicación</button>
+        <button type="button" class="btn btn-primary" onclick="showReportesContainer()">Reportes</button>
     </div>
 
     <div id="patologiaChartsContainer">
@@ -157,6 +158,14 @@
                                     tableIdSuffix="2" />
     </div>
 
+    <div id="reportesContainer" style="display: none;">
+        <x-reportes-medicamentos-container>
+        </x-reportes-medicamentos-container>
+        <x-reporte-medicamentos-particular-component>
+        </x-reporte-medicamentos-particular-component>
+    </div>
+
+
 
 
 
@@ -168,6 +177,8 @@
         document.getElementById('patologiaChartsContainer').style.display = 'block';
         document.getElementById('dispensaChartContainer').style.display = 'none';
         document.getElementById('medicacionTableContainer').style.display = 'none';
+        document.getElementById('reportesContainer').style.display = 'none';
+
 
     }
 
@@ -175,12 +186,21 @@
         document.getElementById('patologiaChartsContainer').style.display = 'none';
         document.getElementById('dispensaChartContainer').style.display = 'block';
         document.getElementById('medicacionTableContainer').style.display = 'none';
+        document.getElementById('reportesContainer').style.display = 'none';
     }
 
     function showMedicacionTable() {
         document.getElementById('patologiaChartsContainer').style.display = 'none';
         document.getElementById('dispensaChartContainer').style.display = 'none';
         document.getElementById('medicacionTableContainer').style.display = 'block';
+        document.getElementById('reportesContainer').style.display = 'none';
+    }
+
+    function showReportesContainer() {
+        document.getElementById('patologiaChartsContainer').style.display = 'none';
+        document.getElementById('dispensaChartContainer').style.display = 'none';
+        document.getElementById('medicacionTableContainer').style.display = 'none';
+        document.getElementById('reportesContainer').style.display = 'block';
     }
 
 </script>
