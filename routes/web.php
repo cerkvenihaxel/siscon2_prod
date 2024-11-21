@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminPedidoMedicamento35Controller;
 use App\Http\Controllers\ReporteMedicamentosParticularController;
 use App\Http\Controllers\ReportesMedicamentosController;
+use App\Http\Controllers\SeguimientoMedicamento\SeguimientoMedicamentoController;
 use App\Models\User;
 use crocodicstudio\crudbooster\helpers\CRUDBooster;
 use Illuminate\Support\Facades\DB;
@@ -432,3 +433,8 @@ Route::get('/exportar-excel', [ReportesMedicamentosController::class, 'exportarE
 
 Route::get('/reportes-medicamentos-particular', [ReporteMedicamentosParticularController::class, 'obtenerReportes'])->name('reportes.obtener.particular');
 Route::get('/exportar-excel-particular', [ReporteMedicamentosParticularController::class, 'exportarExcel'])->name('reportes.exportar.particular');
+
+Route::post('/seguimiento-medicamentos', [SeguimientoMedicamentoController::class, 'index'])->name('seguimiento.obtener');
+Route::get('/seguimientos-medicamentos', function (){
+    return view('seguimientoMedicamentos.seguimientoMedicamento');
+});
