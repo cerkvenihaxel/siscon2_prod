@@ -67,7 +67,8 @@
             color: #0056b3;
         }
 
-        @media (max-width: 768px) {
+        /* Estilos responsivos */
+        @media (max-width: 458px) {
             .timeline-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -83,6 +84,18 @@
 
             .timeline-item .line {
                 left: 50%;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-control {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
             }
         }
     </style>
