@@ -44,7 +44,7 @@
                         <label for="select-obra-social">Obra social</label>
                         <select class="form-control select2" id="obra_social_id" name="obra_social_id">
                                     <option value="1">Incluir Salud SJ</option>
-                                    <option value="2">FARMAPOS - Ministerio de Salud</option>
+                                    <option selected value="2">FARMAPOS - Ministerio de Salud</option>
                                     <option selected value="3">APOS</option>
                                     <option value="4">Hospital E. Vera Barros</option>
                                     <option value="5">Hospital de la Madre y el Niño</option>

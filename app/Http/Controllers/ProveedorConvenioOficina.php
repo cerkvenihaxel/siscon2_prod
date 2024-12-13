@@ -94,7 +94,7 @@ class ProveedorConvenioOficina extends Controller
             $medicamento->des_monodroga = $descripcionMonodroga;
             $id_proveedor = DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('id_proveedor');
             $id_organizacion = DB::table('proveedores')->where('id_proveedor', $id_proveedor)->value('id_organizacion');
-            $medicamento->laboratorio = DB::table('banda_descuentos')->where('id_articulo', $numeroArticulo)->value('laboratorio') ?? '';
+            $medicamento->laboratorio = DB::table('banda_descuentos24')->where('id_articulo', $numeroArticulo)->value('laboratorio') ?? '';
             $precio = DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('pcio_vta_siva');
             $medicamento->precio = round($precio, 2);
         }
@@ -304,7 +304,7 @@ class ProveedorConvenioOficina extends Controller
         foreach($medicamento as $med){
             $med->precio = ArticulosZafiro::where('id_articulo', $med->articuloszafiro_id)->value('pcio_vta_siva');
             $med->precio = round($med->precio, 2);
-            $med->laboratorio = DB::table('banda_descuentos')->where('id_articulo', $med->articuloszafiro_id)->value('laboratorio') ?? '';
+            $med->laboratorio = DB::table('banda_descuentos24')->where('id_articulo', $med->articuloszafiro_id)->value('laboratorio') ?? '';
         }
 
         //Debugbar::info($medicamento);

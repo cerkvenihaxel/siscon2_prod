@@ -58,7 +58,7 @@
     function renderTableReportes(data) {
         let html = '<table class="table table-striped"><thead><tr>';
         html += '<th>ID Pedido</th><th>Nro Factura</th><th>Punto de Retiro</th>';
-        html += '<th>Fecha de Carga</th><th>Artículo</th><th>Cantidad</th><th>Total</th>';
+        html += '<th>Fecha Factura</th><th>Fecha de Carga</th><th>Artículo</th><th>Cantidad</th><th>Total</th>';
         html += '</tr></thead><tbody>';
 
         data.forEach(row => {
@@ -66,6 +66,7 @@
                 <td>${row.id_pedido}</td>
                 <td>${row.nro_factura}</td>
                 <td>${row.Punto_de_Retiro}</td>
+                <td>${row.Fecha_Comprobante}</td>
                 <td>${row.Fecha_de_Carga}</td>
                 <td>${row.Articulo}</td>
                 <td>${row.Cantidad}</td>

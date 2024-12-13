@@ -27,6 +27,7 @@ class ReporteMedicamentosParticularController extends Controller
                 'cotizacion_convenio.nroAfiliado AS Numero_de_Afiliado',
                 'cotizacion_convenio.id_pedido',
                 'cotizacion_convenio.nro_remito AS Remito',
+                'cotizacion_convenio.nro_factura as Factura',
                 'cotizacion_convenio_detail.created_at AS Fecha_de_Carga',
                 'patologias.nombre AS Patología'
             ])

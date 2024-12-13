@@ -42,18 +42,18 @@
 
                 $articuloZafiro[$k]['cantidad'] = $pedidos->sum('cantidad');
 
-                if(empty(DB::table('banda_descuentos')->where('id_articulo', '=' ,$id_articulo)->value('banda_descuento'))){
+                if(empty(DB::table('banda_descuentos24')->where('id_articulo', '=' ,$id_articulo)->value('banda_descuento'))){
                     $articuloZafiro[$k]['banda_descuento'] = '';
 
                 }
                 else{
-                    $articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento');
+                    $articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('banda_descuento');
                 }
 
-                if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio')))
+                if(empty(DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('laboratorio')))
                     $articuloZafiro[$k]['laboratorio'] = '';
                 else
-                    $articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio');
+                    $articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('laboratorio');
 
             }
             return $articuloZafiro;
@@ -276,7 +276,7 @@
 				var cantidadMedicamentos = Object.keys(medicamentos).length;
 				console.log('Cantidad de medicamentos:');
 				console.log(cantidadMedicamentos);
-				
+
 				if(table){
 				while (table.rows.length > 0) {
 					table.deleteRow(0);
@@ -536,10 +536,10 @@
 			$origen_id_sucursal = 99;
 			$id_punto = $pedidoNew->punto_retiro_id;
 			$fecha_pedido = date('Y-m-d H:i:s');
-			$id_cliente = DB::table('punto_retiro')->where('id', $id_punto)->value('id_cliente');	
+			$id_cliente = DB::table('punto_retiro')->where('id', $id_punto)->value('id_cliente');
 			$id_pedido = $pedidoNew->id_pedido;
 			$id_masivo = $pedidoNew->id;
-			
+
 			$id_selected = Cache::get('ids_cache_key');
 			/*cambio de estado */
 
@@ -584,7 +584,7 @@
 			$this->singleRequestAdd($id_selected, $id_punto, $id_pedido, $id_masivo);
 
 			Cache::flush();
-	    }	
+	    }
 
 
 	    /*
@@ -654,9 +654,9 @@
             return 'PE0090-' . $newNumber;
         }
 
-		private function singleRequestAdd($id_selected, $id_punto, $id_pedido, $id_masivo){	
+		private function singleRequestAdd($id_selected, $id_punto, $id_pedido, $id_masivo){
 			$myID = CRUDBooster::myId();
-			$stamp_user = DB::table('cms_users')->where('id', $myID)->value('email');							
+			$stamp_user = DB::table('cms_users')->where('id', $myID)->value('email');
 
 			$pedido_medicamento = [];
 			$pedido_medicamento_detail = [];
@@ -666,7 +666,7 @@
 				$pedido_medicamento_detail[$key] = PedidoMedicamentoDetail::where('pedido_medicamento_id', $id)->get();
 			}
 
-			
+
 
 			$cotizacion_convenio = [];
 			$cotizacion_convenio_detail = [];
@@ -700,7 +700,7 @@
 					$cotizacion_detail->articuloZafiro_id = $pmd->articuloZafiro_id;
 					$cotizacion_detail->laboratorio = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd->articuloZafiro_id)->value('laboratorio');
 					$cotizacion_detail->cantidad = $pmd->cantidad;
-					$cotizacion_detail->presentacion = ArticulosZafiro::where('id', $pmd->articuloZafiro_id)->value('presentacion_completa');			
+					$cotizacion_detail->presentacion = ArticulosZafiro::where('id', $pmd->articuloZafiro_id)->value('presentacion_completa');
 					$cotizacion_detail->precio = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd->articuloZafiro_id)->value('precio');
 					$cotizacion_detail->descuento = DB::table('pedido_masivo_detail')->where('pedido_masivo_id', $id_masivo)->where('articuloZafiro_id', $pmd->articuloZafiro_id)->value('descuento');
 					$total_ccd = ($cotizacion_convenio_detail[$key]->cantidad * $cotizacion_convenio_detail[$key]->precio * (1 - $cotizacion_convenio_detail[$key]->descuento/100));

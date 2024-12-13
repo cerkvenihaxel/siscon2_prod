@@ -10,6 +10,36 @@ class PedidoMedicamento extends Model
     use HasFactory;
 
     protected $table = 'pedido_medicamento';
+    protected $fillable = [
+        'afiliados_id',
+        'nroAfiliado',
+        'edad',
+        'nrosolicitud',
+        'clinicas_id',
+        'medicos_id',
+        'zona_residencia',
+        'tel_afiliado',
+        'email',
+        'fecha_receta',
+        'postdatada',
+        'fecha_vencimiento',
+        'estado_solicitud_id',
+        'tel_medico',
+        'stamp_user',
+        'discapacidad',
+        'observaciones',
+        'archivo',
+        'archivo2',
+        'archivo3',
+        'archivo4',
+        'obra_social',
+        'provincia',
+        'patologia',
+        'diagnostico',
+        'ant_postdatada',
+        'ant_est_sol',
+        'renovaciones'
+    ];
 
     public function detalles()
     {

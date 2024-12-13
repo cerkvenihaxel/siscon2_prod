@@ -28,7 +28,8 @@ class ReportesMedicamentosController extends Controller
                 'cotizacion_convenio_detail.cantidad AS Cantidad',
                 'cotizacion_convenio_detail.precio',
                 'cotizacion_convenio_detail.descuento',
-                'cotizacion_convenio_detail.total'
+                'cotizacion_convenio_detail.total',
+                'cotizacion_convenio.fecha_comprobante AS Fecha_Comprobante'
             ])
             ->leftJoin('cotizacion_convenio_detail', 'cotizacion_convenio.id', '=', 'cotizacion_convenio_detail.cotizacion_convenio_id')
             ->leftJoin('punto_retiro', 'cotizacion_convenio.punto_retiro_id', '=', 'punto_retiro.id')

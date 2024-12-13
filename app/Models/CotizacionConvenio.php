@@ -10,6 +10,9 @@ class CotizacionConvenio extends Model
     use HasFactory;
     protected $table = 'cotizacion_convenio';
 
+    protected $fillable = [
+        'notificated'
+    ];
     public function index()
     {
         return view('validadorFarmacia');

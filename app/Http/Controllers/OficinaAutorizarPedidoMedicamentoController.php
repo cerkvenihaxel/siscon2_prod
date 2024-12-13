@@ -87,7 +87,7 @@ class OficinaAutorizarPedidoMedicamentoController extends Controller
             // ! REVISAR EL NÚMERO DE ARTÍCULO QUE SE ESTÁ GUARDANDO EN LA BASE DE DATOS
             $numeroArticulo =  str_pad($medicamento->articuloZafiro_id, 10, '0', STR_PAD_LEFT); // Rellena con ceros a la izquierda
             $idArticulo = DB::table('articulosZafiro')->where('id_articulo', $numeroArticulo)->value('id_articulo');
-            $medicamento->banda_descuento = DB::table('banda_descuentos')->where('id_articulo', $idArticulo)->value('banda_descuento');
+            $medicamento->banda_descuento = DB::table('banda_descuentos24')->where('id_articulo', $idArticulo)->value('banda_descuento');
             // Agregar el medicamento actualizado al arreglo
             $medicamentosActualizados[] = $medicamento;
         }

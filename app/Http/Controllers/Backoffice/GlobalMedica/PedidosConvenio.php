@@ -36,7 +36,7 @@ class PedidosConvenio extends Controller
 
         $requ = $request->input('articulo');
         $precio = DB::table('articulosZafiro')->where('id_articulo', $requ)->value('pcio_vta_siva');
-        $descuento = DB::table('banda_descuentos')->where('id_articulo', $requ)->value('banda_descuento') ?? 0;
+        $descuento = DB::table('banda_descuentos24')->where('id_articulo', $requ)->value('banda_descuento') ?? 0;
         $total = $precio * $request->input('cantidad');
         $total = $total - ($total * $descuento / 100);
         // Crea un nuevo elemento en forma de arreglo JSON
@@ -44,7 +44,7 @@ class PedidosConvenio extends Controller
             'nro_articulo' => $request->input('articulo'),
             'presentacion' => ArticulosZafiro::where('id_articulo', $requ)->first()->presentacion_completa,
             'monodroga' => ArticulosZafiro::where('id_articulo', $requ)->first()->des_monodroga,
-            'laboratorio' => DB::table('banda_descuentos')->where('id_articulo', $requ)->value('laboratorio') ?? '',
+            'laboratorio' => DB::table('banda_descuentos24')->where('id_articulo', $requ)->value('laboratorio') ?? '',
             'precio' => round($precio, 2),
             'cantidad' => $request->input('cantidad'),
             'subtotal' => $precio * $request->input('cantidad'),

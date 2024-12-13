@@ -47,18 +47,18 @@
 
 				$articuloZafiro[$k]['cantidad'] = $pedido->cantidad;
 
-				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
+				if(empty(DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
 					$articuloZafiro[$k]['banda_descuento'] = '';
 
 				}
 				else{
-					$articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento');
+					$articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('banda_descuento');
 				}
 
-				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio')))
+				if(empty(DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('laboratorio')))
 					$articuloZafiro[$k]['laboratorio'] = '';
 				else
-					$articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio');
+					$articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('laboratorio');
 
 			}
 
@@ -657,6 +657,7 @@
 	    */
 	    public function hook_after_add($id) {
 	        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
+            DB::table('cotizacion_convenio')->where('id', $id)->update(['notificated' => false]);
 			PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
 			$this->enviarPedidoSingular($id);
         }

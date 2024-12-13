@@ -73,7 +73,8 @@
 
     function renderTable(data) {
         let html = '<table class="table table-striped"><thead><tr>';
-        html += '<th>ID Pedido</th><th>Nro Remito</th><th>Sucursal</th>';
+        html += '<th>ID Pedido</th><th>Nro Remito</th><th>Nro Factura</th><th>Sucursal</th>';
+        html += '<th>Afiliado</th><th>Nro Afiliado</th><th>Id Articulo</th>'
         html += '<th>Fecha de Carga</th><th>Artículo</th><th>Cantidad</th><th>Patología</th>';
         html += '</tr></thead><tbody>';
 
@@ -81,7 +82,11 @@
             html += `<tr>
                 <td>${row.id_pedido}</td>
                 <td>${row.Remito}</td>
+                <td>${row.Factura}</td>
                 <td>${row.Sucursal}</td>
+                <td>${row.Afiliado}</td>
+                <td>${row.Numero_de_Afiliado}</td>
+                <td>${row.Id_Articulo}</td>
                 <td>${row.Fecha_de_Carga}</td>
                 <td>${row.Artículo}</td>
                 <td>${row.Cantidad}</td>
