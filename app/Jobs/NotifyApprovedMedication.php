@@ -55,7 +55,7 @@ class NotifyApprovedMedication implements ShouldQueue
         if($response->successful())
         {
             $pedidoMedicamento->update([
-                'notificated' => 1
+                'notificated' => true
             ]);
         }
 
