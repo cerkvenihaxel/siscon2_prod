@@ -51,7 +51,7 @@
                 ];
 
                 // Realizar el POST
-                $response = Http::post('http://127.0.0.1:8081/notification-medication', $data);
+                $response = Http::post('http://siscon.info:8081/notification-medication', $data);
 
                 if ($response->successful()) {
                     // Marcar como notificado
