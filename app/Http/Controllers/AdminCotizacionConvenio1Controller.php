@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
-	use App\Models\PedidoC;
+	use App\Jobs\NotifyApprovedMedication;
+    use App\Models\PedidoC;
 	use App\Models\PedidoMedicamento;
 	use App\Models\CotizacionConvenio;
 	use App\Models\CotizacionConvenioDetail;
@@ -659,6 +660,8 @@
 	        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
             DB::table('cotizacion_convenio')->where('id', $id)->update(['notificated' => false]);
 			PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+            $idPedidoMedicamento = PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->value('id');
+            NotifyApprovedMedication::dispatch($idPedidoMedicamento);
 			$this->enviarPedidoSingular($id);
         }
 

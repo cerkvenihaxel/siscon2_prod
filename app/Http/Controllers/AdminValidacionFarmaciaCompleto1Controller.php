@@ -79,7 +79,7 @@
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
 			$this->col[] = ["label"=>"Fecha Carga","name"=>"created_at"];
-                        $this->col[] = ["label"=>"Actualizado en ", "name"=>"updated_at"];
+            $this->col[] = ["label"=>"Actualizado en ", "name"=>"updated_at"];
 			$this->col[] = ["label"=>"Nombre y apellido","name"=>"nombreyapellido"];
 			$this->col[] = ["label"=>"NroAfiliado","name"=>"nroAfiliado"];
 			$this->col[] = ["label"=>"Nrosolicitud","name"=>"nrosolicitud"];
