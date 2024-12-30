@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
-	use Illuminate\Support\Facades\Cache;
+	use App\Models\PedidoMedicamento;
+    use Illuminate\Support\Facades\Cache;
+    use Illuminate\Support\Facades\Log;
     use Illuminate\Support\Facades\Redirect;
     use Session;
 	use Request;
@@ -608,6 +610,7 @@
 	    public function hook_after_add($id) {
 
             DB::table('pedido_medicamento')->where('id',$id)->update(['estado_solicitud_id'=> 4]);
+            $this->normalizePhoneNumber($id);
 
 	    }
 
@@ -673,8 +676,44 @@
 		 }
 
         public function generarPedidoMasivo($id_selected) {
-            Cache::put('ids_cache_key', $id_selected, now()->addMinutes(20)); // Puedes ajustar el tiempo de expiración según tus necesidades
-            return CRUDBooster::redirect('/admin/pedido_masivo/add', "Ahora podrá generar un pedido masivo", "success");
+
+            dd($id_selected);
+            //Cache::put('ids_cache_key', $id_selected, now()->addMinutes(20)); // Puedes ajustar el tiempo de expiración según tus necesidades
+            //return CRUDBooster::redirect('/admin/pedido_masivo/add', "Ahora podrá generar un pedido masivo", "success");
+        }
+
+        public function normalizePhoneNumber($id)
+        {
+            $pedido = PedidoMedicamento::find($id);
+
+            if (!$pedido) {
+                Log::warning("PedidoMedicamento con ID $id no encontrado.");
+                return;
+            }
+
+            $telefono = $pedido->tel_afiliado;
+
+            if (empty($telefono)) {
+                Log::info("PedidoMedicamento ID $id tiene un número de teléfono vacío.");
+                return;
+            }
+
+            $telefonoNormalizado = preg_replace('/[^0-9+]/', '', $telefono);
+
+            if (substr($telefonoNormalizado, 0, 3) !== '+54') {
+                if (substr($telefonoNormalizado, 0, 1) === '9') {
+                    $telefonoNormalizado = '+54' . substr($telefonoNormalizado, 1);
+                } else {
+                    $telefonoNormalizado = '+54' . $telefonoNormalizado;
+                }
+            }
+
+            // Guardar el número normalizado en la base de datos
+            $pedido->tel_afiliado = $telefonoNormalizado;
+            $pedido->save();
+
+            // Registrar en el log
+            Log::info("PedidoMedicamento ID $id: Número de teléfono normalizado. Original: $telefono, Normalizado: $telefonoNormalizado");
         }
 
 	    //By the way, you can still create your own method in here... :)
