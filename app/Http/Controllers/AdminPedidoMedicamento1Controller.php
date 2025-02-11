@@ -9,7 +9,7 @@
 	use DB;
 	use CRUDBooster;
 	use App\Models\AfiliadosArticulos;
-	use Illuminate\Support\Str;
+
 
 
 
@@ -199,8 +199,8 @@
 			$this->col[] = ["label"=> "Zona de retiro", "name"=> "zona_residencia"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
-			$ulidCompleto = (string) Str::ulid();
-			$ulidCorto = substr($ulidCompleto, 0, 10);
+			
+			
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
