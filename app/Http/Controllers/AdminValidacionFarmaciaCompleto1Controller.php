@@ -100,7 +100,8 @@
 			$this->form[] = ['label'=>'Zona Residencia','name'=>'zona_residencia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'readonly' => true];
 			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Email','name'=>'email','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
-			$this->form[] = ['label'=>'Fecha Entrega','name'=>'fecha_entrega','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value' => date('Y-m-d'), 'readonly' => true];
+			$this->form[] = ['label'=>'Fecha Comprobante','name'=>'fecha_comprobante','type'=>'date','validation'=>'required|date','width'=>'col-sm-10', 'value' => date('Y-m-d')];
+
 
             $columns = [];
             $columns[] = ['label'=>'Presentacion','name'=>'presentacion', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'readonly' => true];

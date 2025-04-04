@@ -16,7 +16,7 @@
 
 <div class="container mt-5">
     <img src="https://i.ibb.co/G91yZ8Z/SISCON.png" alt="SISCON" border="0" class="img-fluid left" width="65px" height="40px">
-    <p class="text-right">Fecha {{ now() }}</p>
+    <p class="text-right">Fecha {{ date('d-m-Y', strtotime($pedido->fecha_comprobante)) }}</p>
     <hr class="border">
     <a>Datos del Pedido</a>
     <table class="table table-bordered">
