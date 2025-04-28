@@ -208,7 +208,8 @@
             $this->form[] = ['label' => 'Nro de Afiliado', 'name' => 'nroAfiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->nroAfiliado()];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=> $edad];
 
-                $this->form[] = ['label' => 'Número de Solicitud', 'name' => 'nrosolicitud', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true, 'readonly' => 'true', 'value' => 'APOS-MED-' . date('Ydm'). '-' . rand(0, 999999)];
+                // $this->form[] = ['label' => 'Número de Solicitud', 'name' => 'nrosolicitud', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true, 'readonly' => 'true', 'value' => 'APOS-MED-' . date('Ydm'). '-' . rand(0, 999999)];
+				// $this->form[] = ['label' => 'Número de Solicitud', 'name' => 'nrosolicitud', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true, 'readonly' => 'true', 'value' => ''];
             $this->form[] = ['label' => 'Institución', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'required' => true];
             $this->form[] = ['label' => 'Médico Solicitante', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'required' => true];
 			$this->form[] = ['label'=>'Tel Medico','name'=>'tel_medico','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
@@ -616,6 +617,26 @@
 
             DB::table('pedido_medicamento')->where('id',$id)->update(['estado_solicitud_id'=> 4]);
             $this->normalizePhoneNumber($id);
+
+			//obtener el registro creado recientemente
+			$pedido = DB::table('pedido_medicamento')->where('id', $id)->first();
+
+			if($pedido->zona_residencia == "Incluir Salud San Juan"){
+				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'ISSJ-MED-' . date('Ydm'). '-' . rand(0, 999999)]);
+			}
+			else{
+				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'APOS-MED-' . date('Ydm'). '-' . rand(0, 999999)]);
+				
+			}
+
+			/*dentro del else no funcionó el INSERT de este store_procedure porque "nrosolicitud" 
+			sigue estando vacío en la variable local $pedido. Hay que actualizarla (volver a crearla)*/
+
+			$pedido = DB::table('pedido_medicamento')->where('id', $id)->first();
+			if($pedido->zona_residencia == "FARMAPOS"){
+				DB::select('CALL pedido_medicamento_to_processed(?, ?)', [$id, $pedido->nrosolicitud]);
+			}
+
 
 	    }
 
