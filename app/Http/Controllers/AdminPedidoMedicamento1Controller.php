@@ -213,7 +213,7 @@
             $this->form[] = ['label' => 'Institución', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'required' => true];
             $this->form[] = ['label' => 'Médico Solicitante', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'required' => true];
 			$this->form[] = ['label'=>'Tel Medico','name'=>'tel_medico','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Elegir zona de retiro','name'=>'zona_residencia','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum' => 'Norte;Sur;Este;Oeste;FARMAPOS;Centro;Chamical;Chilecito;Famatina;Villa Unión;Incluir Salud San Juan'];
+			$this->form[] = ['label'=>'Elegir zona de retiro','name'=>'zona_residencia','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'dataenum' => 'Norte;Sur;Este;Oeste;FARMAPOS;Centro;Chamical;Chilecito;Famatina;Villa Unión;Incluir Salud San Juan;Farmapos Ministerio'];
 			$this->form[] = ['label'=>'Provincia','name'=>'provincia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value' => 'La Rioja'];
 			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Email Afiliado','name'=>'email','type'=>'email','validation'=>'min:1|max:255|email','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
@@ -623,6 +623,9 @@
 
 			if($pedido->zona_residencia == "Incluir Salud San Juan"){
 				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'ISSJ-MED-' . date('Ydm'). '-' . rand(0, 999999)]);
+			}
+			else if($pedido->zona_residencia == "Farmapos Ministerio"){
+				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'FAR-MIN-' . date('Ydm'). '-' . rand(0, 999999)]);
 			}
 			else{
 				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'APOS-MED-' . date('Ydm'). '-' . rand(0, 999999)]);
