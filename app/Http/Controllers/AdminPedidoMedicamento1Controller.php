@@ -623,33 +623,50 @@
 	    */
 	    public function hook_after_add($id) {
 
-            DB::table('pedido_medicamento')->where('id',$id)->update(['estado_solicitud_id'=> 4]);
-            $this->normalizePhoneNumber($id);
+			DB::table('pedido_medicamento')->where('id', $id)->update(['estado_solicitud_id'=> 4]);
+			$this->normalizePhoneNumber($id);
 
-			//obtener el registro creado recientemente
+			// obtener el registro creado recientemente
 			$pedido = DB::table('pedido_medicamento')->where('id', $id)->first();
 
-			if($pedido->zona_residencia == "Incluir Salud San Juan"){
-				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'ISSJ-MED-' . date('Ydm'). '-' . rand(0, 999999)]);
-			}
-			else if($pedido->zona_residencia == "Farmapos Ministerio"){
-				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'FAR-MIN-' . date('Ydm'). '-' . rand(0, 999999)]);
-			}
-			else{
-				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'APOS-MED-' . date('Ydm'). '-' . rand(0, 999999)]);
-				
+			if ($pedido->zona_residencia == "Incluir Salud San Juan") {
+				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'ISSJ-MED-' . date('Ydm') . '-' . rand(0, 999999)]);
+			} else if ($pedido->zona_residencia == "Farmapos Ministerio") {
+				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'FAR-MIN-' . date('Ydm') . '-' . rand(0, 999999)]);
+			} else {
+				DB::table('pedido_medicamento')->where('id', $id)->update(['nrosolicitud' => 'APOS-MED-' . date('Ydm') . '-' . rand(0, 999999)]);
 			}
 
-			/*dentro del else no funcionó el INSERT de este store_procedure porque "nrosolicitud" 
-			sigue estando vacío en la variable local $pedido. Hay que actualizarla (volver a crearla)*/
-
+			// actualizar el registro local para obtener el nrosolicitud generado
 			$pedido = DB::table('pedido_medicamento')->where('id', $id)->first();
-			if($pedido->zona_residencia == "FARMAPOS"){
+
+			// zonas que deben disparar el stored procedure
+			$zonasProcesadas = [
+				'FARMAPOS',
+				'VILLA CASTELLI (Zona A)',
+				'GUANDACOL (Zona A)',
+				'VINCHINA (Zona A)',
+				'AIMOGASTA (Zona A)',
+				'ANILLACO (Zona B)',
+				'SANAGASTA (Zona B)',
+				'PITUIL (Zona B)',
+				'SAN BLAS (Zona B)',
+				'MALANZAN (Zona C)',
+				'ULAPES (Zona C)',
+				'TAMA (Zona C)',
+				'OLTA (Zona C)',
+				'MILAGRO (Zona D)',
+				'PATQUIA (Zona D)',
+				'CHEPES (Zona D)',
+				'CHAÑAR (Zona D)',
+				'CATUNA (Zona D)',
+				'CAMPANA (Zona D)',
+			];
+
+			if (in_array($pedido->zona_residencia, $zonasProcesadas)) {
 				DB::select('CALL pedido_medicamento_to_processed(?, ?)', [$id, $pedido->nrosolicitud]);
 			}
-
-
-	    }
+		}
 
 	    /*
 	    | ----------------------------------------------------------------------
