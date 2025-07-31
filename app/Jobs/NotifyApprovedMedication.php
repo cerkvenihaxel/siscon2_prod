@@ -50,7 +50,7 @@ class NotifyApprovedMedication implements ShouldQueue
             ])
         ];
 
-        $response = Http::post('http://siscon.info:8081/notification-approved', $data);
+        $response = Http::post('https://sisconsalud.com/notification-approved', $data);
 
         if($response->successful())
         {
