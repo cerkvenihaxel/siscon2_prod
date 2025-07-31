@@ -663,7 +663,12 @@
 				'CAMPANA (Zona D)',
 			];
 
-			if (in_array($pedido->zona_residencia, $zonasProcesadas)) {
+			if (
+				in_array($pedido->zona_residencia, $zonasProcesadas)
+				&& !(
+					$pedido->zona_residencia == 'FARMAPOS' && $pedido->patologia == 2 // Excluir diabetes de FARMAPOS
+				)
+			) {
 				DB::select('CALL pedido_medicamento_to_processed(?, ?)', [$id, $pedido->nrosolicitud]);
 			}
 		}
