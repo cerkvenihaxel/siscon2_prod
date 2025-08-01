@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
-	use App\Models\PedidoC;
+	use App\Jobs\NotifyApprovedMedication;
+    use App\Models\PedidoC;
 	use App\Models\PedidoMedicamento;
 	use App\Models\CotizacionConvenio;
 	use App\Models\CotizacionConvenioDetail;
@@ -47,18 +48,18 @@
 
 				$articuloZafiro[$k]['cantidad'] = $pedido->cantidad;
 
-				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
+				if(empty(DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
 					$articuloZafiro[$k]['banda_descuento'] = '';
 
 				}
 				else{
-					$articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento');
+					$articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('banda_descuento');
 				}
 
-				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio')))
+				if(empty(DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('laboratorio')))
 					$articuloZafiro[$k]['laboratorio'] = '';
 				else
-					$articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('laboratorio');
+					$articuloZafiro[$k]['laboratorio'] = DB::table('banda_descuentos24')->where('id_articulo', $id_articulo)->value('laboratorio');
 
 			}
 
@@ -148,6 +149,7 @@
 			$this->col[] = ["label"=>"Estado pedido", "name"=>"estado_pedido_id", "join"=>"estado_pedido,estado"];
 			$this->col[] = ["label"=>"Número pedido", "name"=>"id_pedido"];
 			$this->col[] = ["label"=>"Nro remito" , "name"=>"nro_remito"];
+			$this->col[] = ["label"=>"Nro Factura", "name"=>"nro_factura"];
 			$this->col[] = ["label"=>"Punto retiro", "name"=>"punto_retiro_id", "join"=>"punto_retiro,nombre"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 			$pedido_medicamento = $this->getDatos();
@@ -195,7 +197,7 @@
 
 			$this->form[] = ['label'=>'Detalles de la solicitud','name'=>'cotizacion_convenio_detail','type'=>'child','columns'=>$columns,'table'=>'cotizacion_convenio_detail','foreign_key'=>'cotizacion_convenio_id', 'required' => true];
 
-			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
+	$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo3','name'=>'archivo3','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo4','name'=>'archivo4','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
@@ -642,9 +644,43 @@
 	    | @arr
 	    |
 	    */
-	    public function hook_before_add(&$postdata) {
+	    //public function hook_before_add(&$postdata) {}
+
+		public function hook_before_add(&$postdata) {
 	        //Your code here
 
+	                // Ensure all string values are properly sanitized
+        if (isset($postdata['cotizacion_convenio_detail']) && is_array($postdata['cotizacion_convenio_detail'])) {
+            foreach ($postdata['cotizacion_convenio_detail'] as $key => $detail) {
+                // Ensure string fields are properly quoted and sanitized
+                if (isset($detail['laboratorio'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['laboratorio'] = (string) $detail['laboratorio'];
+                }
+                if (isset($detail['presentacion'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['presentacion'] = (string) $detail['presentacion'];
+                }
+                if (isset($detail['precio'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['precio'] = (string) $detail['precio'];
+                }
+                if (isset($detail['descuento'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['descuento'] = (string) $detail['descuento'];
+                }
+                if (isset($detail['total'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['total'] = (string) $detail['total'];
+                }
+                if (isset($detail['observacion'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['observacion'] = (string) $detail['observacion'];
+                }
+                
+                // Ensure numeric fields are properly cast
+                if (isset($detail['articuloZafiro_id'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['articuloZafiro_id'] = (int) $detail['articuloZafiro_id'];
+                }
+                if (isset($detail['cantidad'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['cantidad'] = (int) $detail['cantidad'];
+                }
+            }
+        }
 	    }
 
 	    /*
@@ -654,16 +690,60 @@
 	    | @id = last insert id
 	    |
 	    */
-	    public function hook_after_add($id) {
-	        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
-			PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
-			$this->enviarPedidoSingular($id);
+	        public function hook_after_add($id) {
+        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
+		PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+		$this->enviarPedidoSingular($id);
+    }
+    
+    /**
+     * Override the default add method to handle child form data properly
+     */
+    public function postAddSave() {
+        try {
+            // Get the main form data
+            $postdata = request()->all();
+            
+            // Process the main form data
+            $mainData = [];
+            foreach ($postdata as $key => $value) {
+                if ($key !== 'cotizacion_convenio_detail' && !str_contains($key, '_token')) {
+                    $mainData[$key] = $value;
+                }
+            }
+            
+            // Insert main record
+            $mainId = DB::table('cotizacion_convenio')->insertGetId($mainData);
+            
+            // Process child form data manually using Eloquent for proper escaping
+            if (isset($postdata['cotizacion_convenio_detail']) && is_array($postdata['cotizacion_convenio_detail'])) {
+                foreach ($postdata['cotizacion_convenio_detail'] as $detail) {
+                    $cotizacionDetail = new CotizacionConvenioDetail();
+                    $cotizacionDetail->cotizacion_convenio_id = $mainId;
+                    $cotizacionDetail->articuloZafiro_id = (int) $detail['articuloZafiro_id'];
+                    $cotizacionDetail->laboratorio = (string) $detail['laboratorio'];
+                    $cotizacionDetail->cantidad = (int) $detail['cantidad'];
+                    $cotizacionDetail->presentacion = (string) $detail['presentacion'];
+                    $cotizacionDetail->precio = (string) $detail['precio'];
+                    $cotizacionDetail->descuento = (string) $detail['descuento'];
+                    $cotizacionDetail->total = (string) $detail['total'];
+                    $cotizacionDetail->observacion = isset($detail['observacion']) ? (string) $detail['observacion'] : null;
+                    $cotizacionDetail->save();
+                }
+            }
+            
+            // Call the after add hook
+            $this->hook_after_add($mainId);
+            
+            return redirect($this->mainpath)->with('message', 'Data has been saved successfully!');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error saving data: ' . $e->getMessage())->withInput();
         }
-
+    }
 	    /*
 	    | ----------------------------------------------------------------------
 	    | Hook for manipulate data input before update data is execute
-	    | ----------------------------------------------------------------------
 	    | @postdata = input post data
 	    | @id       = current id
 	    |

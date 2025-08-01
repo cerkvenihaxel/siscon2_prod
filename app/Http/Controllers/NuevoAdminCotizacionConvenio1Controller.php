@@ -105,16 +105,27 @@
 
 		private function generatePedidoNumber()
         {
-            $lastPedido = PedidoC::latest()->first();
+            $lastPedido = DB::table('cotizacion_convenio')
+                ->whereNotNull('id_pedido')
+                ->where('id_pedido', '!=', '')
+                ->orderBy('id', 'desc')
+                ->first();
 
-            if ($lastPedido) {
-                $lastNumber = substr($lastPedido->id_pedido, 7); // Suponiendo que el número de pedido siempre comienza con "PC-"
-                $newNumber = str_pad($lastNumber + 1, 8, '0', STR_PAD_LEFT); // Incrementa el número y rellena con ceros a la izquierda
+            \Log::info('Last pedido found: ' . ($lastPedido ? $lastPedido->id_pedido : 'none'));
+
+            if ($lastPedido && !empty($lastPedido->id_pedido)) {
+                // Extraer el número del último pedido
+                $lastNumber = (int)substr($lastPedido->id_pedido, -8); // Obtener los últimos 8 dígitos
+                $newNumber = str_pad($lastNumber + 1, 8, '0', STR_PAD_LEFT);
+                \Log::info('Last number: ' . $lastNumber . ', New number: ' . $newNumber);
             } else {
                 $newNumber = '00000001'; // Si no hay pedidos anteriores, comienza desde el número 1
+                \Log::info('No previous pedidos found, starting with: ' . $newNumber);
             }
 
-            return 'PE0090-' . $newNumber;
+            $finalNumber = 'PE0090-' . $newNumber;
+            \Log::info('Final pedido number: ' . $finalNumber);
+            return $finalNumber;
         }
 
 	    public function cbInit() {
@@ -137,6 +148,7 @@
 			$this->button_import = false;
 			$this->button_export = true;
 			$this->table = "cotizacion_convenio";
+
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
@@ -179,13 +191,13 @@
 			$this->form[] = ['label'=>'Proveedor', 'name'=>'proveedor', 'type'=>'hidden', 'value'=>'Global Médica'];
 			$this->form[] = ['label'=>'Stamp User', 'name'=>'stamp_user', 'type'=>'hidden', 'value'=>$myEmail];
 			$this->form[] = ['label'=>'Discapacidad', 'name'=>'discapacidad', 'type'=>'hidden', 'value'=>$pedido_medicamento[0]->discapacidad];
-			$this->form[] = ['label'=>'Pedido ID', 'name'=>'id_pedido', 'type'=>'hidden', 'value'=>$this->generatePedidoNumber()];
+			$this->form[] = ['label'=>'Pedido ID', 'name'=>'id_pedido', 'type'=>'hidden', 'value'=>$this->generatePedidoNumber(), 'readonly'=>true];
 
 			//END HIDDEN FORMS
 
 
 			$columns = [];
-			$columns[] = ['label'=>'Articulo','name'=>'articuloZafiro_id','type'=>'text','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'readonly'=>'true'];
+			$columns[] = ['label'=>'Articulo','name'=>'articuloZafiro_id','type'=>'datamodal','validation'=>'required|integer|min:0','width'=>'col-sm-10','datamodal_table'=>'articulosZafiro','datamodal_columns'=>'id,id_articulo,nombre,presentacion,laboratorio,precio','datamodal_select_to'=>'presentacion:presentacion,laboratorio:laboratorio,precio:precio','datamodal_size'=>'large'];
 			$columns[] = ['label'=>'Presentacion','name'=>'presentacion', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Laboratorio', 'name'=>'laboratorio', 'type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Precio', 'name'=>'precio', 'type'=>'number','validation'=>'required|min:0','width'=>'col-sm-10'];
@@ -193,7 +205,10 @@
 			$columns[] = ['label'=>'Descuento', 'name'=>'descuento', 'type'=>'number','validation'=>'required|min:0','width'=>'col-sm-10'];
 			$columns[] = ['label'=>'Total' , 'name'=>'total', 'type'=>'number','validation'=>'required|min:0','width'=>'col-sm-10', 'disabled'=>'true'];
 
-			$this->form[] = ['label'=>'Detalles de la solicitud','name'=>'cotizacion_convenio_detail','type'=>'child','columns'=>$columns,'table'=>'cotizacion_convenio_detail','foreign_key'=>'cotizacion_convenio_id', 'required' => true];
+			// Get medicamentos data for pre-loading
+			$medicamentos = $this->getMedicamentos();
+			
+			$this->form[] = ['label'=>'Detalles de la solicitud','name'=>'cotizacion_convenio_detail','type'=>'child','columns'=>$columns,'table'=>'cotizacion_convenio_detail','foreign_key'=>'cotizacion_convenio_id', 'required' => true, 'data'=>$medicamentos];
 
 			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
@@ -642,10 +657,38 @@
 	    | @arr
 	    |
 	    */
-	    public function hook_before_add(&$postdata) {
-	        //Your code here
+	        public function hook_before_add(&$postdata) {
+        \Log::info('hook_before_add called with data: ' . json_encode($postdata));
+        
+        // Generate the pedido number if not already set
+        if (!isset($postdata['id_pedido']) || empty($postdata['id_pedido'])) {
+            $pedidoNumber = $this->generatePedidoNumber();
+            $postdata['id_pedido'] = $pedidoNumber;
+            \Log::info('Generated pedido number in hook_before_add: ' . $pedidoNumber);
+        }
+        
+        // Store child form data for later processing
+        if (isset($postdata['cotizacion_convenio_detail']) && is_array($postdata['cotizacion_convenio_detail'])) {
+            \Log::info('Child form data found: ' . count($postdata['cotizacion_convenio_detail']) . ' records');
+            
+            // Store the child data in session for later processing
+            session(['pending_child_data' => $postdata['cotizacion_convenio_detail']]);
+            
+            // Remove child data from postdata to prevent CRUDBooster from processing it
+            unset($postdata['cotizacion_convenio_detail']);
+            
+            \Log::info('Child data stored in session and removed from postdata');
+        }
+        
+        // If we have child data, we need to handle the save manually
+        if (session('pending_child_data')) {
+            \Log::info('Child data detected, will handle save manually');
+            // This will trigger our custom save method
+            $this->handleCustomSave = true;
+        }
+        
 
-	    }
+    }
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -654,11 +697,214 @@
 	    | @id = last insert id
 	    |
 	    */
-	    public function hook_after_add($id) {
-	        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
-			PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
-			$this->enviarPedidoSingular($id);
+	        public function hook_after_add($id) {
+        \Log::info('hook_after_add called with ID: ' . $id);
+        
+        $nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
+        $idPedido = DB::table('cotizacion_convenio')->where('id', $id)->value('id_pedido');
+        
+        \Log::info('Nro Solicitud: ' . $nroSolicitud . ', ID Pedido: ' . $idPedido);
+        
+        // Process child form data from session
+        $childData = session('pending_child_data');
+        if ($childData && is_array($childData)) {
+            \Log::info('Processing ' . count($childData) . ' child records from session');
+            
+            foreach ($childData as $index => $detail) {
+                \Log::info('Processing child record ' . ($index + 1) . ': ' . json_encode($detail));
+                
+                $cotizacionDetail = new CotizacionConvenioDetail();
+                $cotizacionDetail->cotizacion_convenio_id = $id;
+                $cotizacionDetail->articuloZafiro_id = (int) $detail['articuloZafiro_id'];
+                $cotizacionDetail->laboratorio = (string) $detail['laboratorio'];
+                $cotizacionDetail->cantidad = (int) $detail['cantidad'];
+                $cotizacionDetail->presentacion = (string) $detail['presentacion'];
+                $cotizacionDetail->precio = (string) $detail['precio'];
+                $cotizacionDetail->descuento = (string) $detail['descuento'];
+                $cotizacionDetail->total = (string) $detail['total'];
+                $cotizacionDetail->observacion = isset($detail['observacion']) ? (string) $detail['observacion'] : null;
+                $cotizacionDetail->save();
+                
+                \Log::info('Child record ' . ($index + 1) . ' saved with ID: ' . $cotizacionDetail->id);
+            }
+            
+            // Clear the session data
+            session()->forget('pending_child_data');
+            \Log::info('Session data cleared');
         }
+        
+		PedidoMedicamento::where('nrosolicitud', $nroSolicitud)->update(['estado_solicitud_id' => 11]);
+		$this->enviarPedidoSingular($id);
+    }
+    
+    /**
+     * Manually save child records if CRUDBooster failed to do so
+     */
+    private function saveChildRecords($parentId) {
+        $postdata = request()->all();
+        
+        if (isset($postdata['cotizacion_convenio_detail']) && is_array($postdata['cotizacion_convenio_detail'])) {
+            foreach ($postdata['cotizacion_convenio_detail'] as $detail) {
+                $cotizacionDetail = new CotizacionConvenioDetail();
+                $cotizacionDetail->cotizacion_convenio_id = $parentId;
+                $cotizacionDetail->articuloZafiro_id = (int) $detail['articuloZafiro_id'];
+                $cotizacionDetail->laboratorio = (string) $detail['laboratorio'];
+                $cotizacionDetail->cantidad = (int) $detail['cantidad'];
+                $cotizacionDetail->presentacion = (string) $detail['presentacion'];
+                $cotizacionDetail->precio = (string) $detail['precio'];
+                $cotizacionDetail->descuento = (string) $detail['descuento'];
+                $cotizacionDetail->total = (string) $detail['total'];
+                $cotizacionDetail->observacion = isset($detail['observacion']) ? (string) $detail['observacion'] : null;
+                $cotizacionDetail->save();
+                
+                \Log::info('Saved child record: ' . $cotizacionDetail->id);
+            }
+        }
+    }
+    
+    /**
+     * Override the default add save method to handle child form data properly
+     */
+    public function postAddSave() {
+        try {
+            \Log::info('postAddSave called - starting custom save process');
+            
+            // Get all form data
+            $postdata = request()->all();
+            
+            // Generate pedido number
+            $pedidoNumber = $this->generatePedidoNumber();
+            \Log::info('Generated pedido number: ' . $pedidoNumber);
+            
+            // Prepare main data (exclude child form data)
+            $mainData = [];
+            foreach ($postdata as $key => $value) {
+                if ($key !== 'cotizacion_convenio_detail' && !str_contains($key, '_token')) {
+                    $mainData[$key] = $value;
+                }
+            }
+            
+            // Set the pedido number
+            $mainData['id_pedido'] = $pedidoNumber;
+            
+            // Insert main record
+            $mainId = DB::table('cotizacion_convenio')->insertGetId($mainData);
+            \Log::info('Main record inserted with ID: ' . $mainId);
+            
+            // Process child form data manually using Eloquent
+            if (isset($postdata['cotizacion_convenio_detail']) && is_array($postdata['cotizacion_convenio_detail'])) {
+                \Log::info('Processing ' . count($postdata['cotizacion_convenio_detail']) . ' child records');
+                
+                foreach ($postdata['cotizacion_convenio_detail'] as $index => $detail) {
+                    \Log::info('Processing child record ' . ($index + 1) . ': ' . json_encode($detail));
+                    
+                    $cotizacionDetail = new CotizacionConvenioDetail();
+                    $cotizacionDetail->cotizacion_convenio_id = $mainId;
+                    $cotizacionDetail->articuloZafiro_id = (int) $detail['articuloZafiro_id'];
+                    $cotizacionDetail->laboratorio = (string) $detail['laboratorio'];
+                    $cotizacionDetail->cantidad = (int) $detail['cantidad'];
+                    $cotizacionDetail->presentacion = (string) $detail['presentacion'];
+                    $cotizacionDetail->precio = (string) $detail['precio'];
+                    $cotizacionDetail->descuento = (string) $detail['descuento'];
+                    $cotizacionDetail->total = (string) $detail['total'];
+                    $cotizacionDetail->observacion = isset($detail['observacion']) ? (string) $detail['observacion'] : null;
+                    $cotizacionDetail->save();
+                    
+                    \Log::info('Child record ' . ($index + 1) . ' saved with ID: ' . $cotizacionDetail->id);
+                }
+            }
+            
+            // Call the after add hook
+            $this->hook_after_add($mainId);
+            
+            \Log::info('Custom save process completed successfully');
+            return redirect('/admin/cotizacion_convenio_1')->with('message', 'Cotización guardada exitosamente!');
+            
+        } catch (\Exception $e) {
+            \Log::error('Error in postAddSave: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->back()->with('error', 'Error al guardar la cotización: ' . $e->getMessage())->withInput();
+        }
+    }
+    
+    /**
+     * Override the default add save method to use our custom save
+     */
+    public function postAdd() {
+        return $this->postAddSave();
+    }
+    
+    /**
+     * Override the default edit save method to handle child form data properly
+     */
+    public function postEditSave($id) {
+        try {
+            \Log::info('postEditSave called for ID: ' . $id . ' - starting custom edit process');
+            
+            // Get all form data
+            $postdata = request()->all();
+            
+            // Prepare main data (exclude child form data)
+            $mainData = [];
+            foreach ($postdata as $key => $value) {
+                if ($key !== 'cotizacion_convenio_detail' && !str_contains($key, '_token')) {
+                    $mainData[$key] = $value;
+                }
+            }
+            
+            // Update main record
+            DB::table('cotizacion_convenio')->where('id', $id)->update($mainData);
+            \Log::info('Main record updated for ID: ' . $id);
+            
+            // Delete existing child records
+            DB::table('cotizacion_convenio_detail')->where('cotizacion_convenio_id', $id)->delete();
+            \Log::info('Existing child records deleted for parent ID: ' . $id);
+            
+            // Process child form data manually using Eloquent
+            if (isset($postdata['cotizacion_convenio_detail']) && is_array($postdata['cotizacion_convenio_detail'])) {
+                \Log::info('Processing ' . count($postdata['cotizacion_convenio_detail']) . ' child records for edit');
+                
+                foreach ($postdata['cotizacion_convenio_detail'] as $index => $detail) {
+                    \Log::info('Processing child record ' . ($index + 1) . ': ' . json_encode($detail));
+                    
+                    $cotizacionDetail = new CotizacionConvenioDetail();
+                    $cotizacionDetail->cotizacion_convenio_id = $id;
+                    $cotizacionDetail->articuloZafiro_id = (int) $detail['articuloZafiro_id'];
+                    $cotizacionDetail->laboratorio = (string) $detail['laboratorio'];
+                    $cotizacionDetail->cantidad = (int) $detail['cantidad'];
+                    $cotizacionDetail->presentacion = (string) $detail['presentacion'];
+                    $cotizacionDetail->precio = (string) $detail['precio'];
+                    $cotizacionDetail->descuento = (string) $detail['descuento'];
+                    $cotizacionDetail->total = (string) $detail['total'];
+                    $cotizacionDetail->observacion = isset($detail['observacion']) ? (string) $detail['observacion'] : null;
+                    $cotizacionDetail->save();
+                    
+                    \Log::info('Child record ' . ($index + 1) . ' saved with ID: ' . $cotizacionDetail->id);
+                }
+            }
+            
+            \Log::info('Custom edit process completed successfully');
+            return redirect('/admin/cotizacion_convenio_1')->with('message', 'Cotización actualizada exitosamente!');
+            
+        } catch (\Exception $e) {
+            \Log::error('Error in postEditSave: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->back()->with('error', 'Error al actualizar la cotización: ' . $e->getMessage())->withInput();
+        }
+    }
+    
+    /**
+     * Override the default edit save method to use our custom save
+     */
+    public function postEdit($id) {
+        return $this->postEditSave($id);
+    }
+    
+
+    
+
+    
+
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -668,10 +914,42 @@
 	    | @id       = current id
 	    |
 	    */
-	    public function hook_before_edit(&$postdata,$id) {
-	        //Your code here
-
-	    }
+	        public function hook_before_edit(&$postdata,$id) {
+        //Your code here
+        
+        // Ensure all string values are properly sanitized for edit operations
+        if (isset($postdata['cotizacion_convenio_detail']) && is_array($postdata['cotizacion_convenio_detail'])) {
+            foreach ($postdata['cotizacion_convenio_detail'] as $key => $detail) {
+                // Ensure string fields are properly quoted and sanitized
+                if (isset($detail['laboratorio'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['laboratorio'] = (string) $detail['laboratorio'];
+                }
+                if (isset($detail['presentacion'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['presentacion'] = (string) $detail['presentacion'];
+                }
+                if (isset($detail['precio'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['precio'] = (string) $detail['precio'];
+                }
+                if (isset($detail['descuento'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['descuento'] = (string) $detail['descuento'];
+                }
+                if (isset($detail['total'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['total'] = (string) $detail['total'];
+                }
+                if (isset($detail['observacion'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['observacion'] = (string) $detail['observacion'];
+                }
+                
+                // Ensure numeric fields are properly cast
+                if (isset($detail['articuloZafiro_id'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['articuloZafiro_id'] = (int) $detail['articuloZafiro_id'];
+                }
+                if (isset($detail['cantidad'])) {
+                    $postdata['cotizacion_convenio_detail'][$key]['cantidad'] = (int) $detail['cantidad'];
+                }
+            }
+        }
+    }
 
 	    /*
 	    | ----------------------------------------------------------------------
@@ -711,8 +989,14 @@
 
 		public function enviarPedidoSingular($id){
 
-			$numero = $this->generatePedidoNumber();
-			DB::table('cotizacion_convenio')->where('id', $id)->update(['id_pedido' => $numero]);
+			// Get the existing pedido number or generate a new one if it doesn't exist
+			$existingPedido = DB::table('cotizacion_convenio')->where('id', $id)->value('id_pedido');
+			if (empty($existingPedido)) {
+				$numero = $this->generatePedidoNumber();
+				DB::table('cotizacion_convenio')->where('id', $id)->update(['id_pedido' => $numero]);
+			} else {
+				$numero = $existingPedido;
+			}
 			DB::table('cotizacion_convenio')->where('id', $id)->update(['estado_pedido_id' => 5]);
 			$nroSolicitud = DB::table('cotizacion_convenio')->where('id', $id)->value('nrosolicitud');
 			$observaciones = CotizacionConvenio::where('id', $id)->value('observaciones');
@@ -807,3 +1091,4 @@
 
 
 	}
+
