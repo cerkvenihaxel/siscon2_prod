@@ -49,7 +49,6 @@
 
 				if(empty(DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento'))){
 					$articuloZafiro[$k]['banda_descuento'] = '';
-
 				}
 				else{
 					$articuloZafiro[$k]['banda_descuento'] = DB::table('banda_descuentos')->where('id_articulo', $id_articulo)->value('banda_descuento');
@@ -156,6 +155,7 @@
 
 			$nombreyapellido = DB::table('afiliados')->where('nroAfiliado', $pedido_medicamento[0]->nroAfiliado)->value('apeynombres');
 			$documento = DB::table('afiliados')->where('id', $pedido_medicamento[0]->afiliados_id)->value('documento');
+			$observaciones = $pedido_medicamento[0]->observaciones;
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Nombre y apellido','name'=>'nombreyapellido','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$nombreyapellido];
@@ -194,6 +194,21 @@
 			$columns[] = ['label'=>'Total' , 'name'=>'total', 'type'=>'number','validation'=>'required|min:0','width'=>'col-sm-10', 'disabled'=>'true'];
 
 			$this->form[] = ['label'=>'Detalles de la solicitud','name'=>'cotizacion_convenio_detail','type'=>'child','columns'=>$columns,'table'=>'cotizacion_convenio_detail','foreign_key'=>'cotizacion_convenio_id', 'required' => true];
+
+			$observaciones_html = '<div class="form-group">
+				<label class="control-label col-sm-2">Observaciones de la solicitud</label>
+				<div class="col-sm-10">
+					<div class="panel panel-default">
+						<div class="panel-body" style="background-color: #f8f9fa; border-left: 4px solid #007bff; min-height: 60px; padding: 15px;">
+							<i class="fa fa-comment-o text-muted" style="margin-right: 8px;"></i>
+							<span style="color: #495057; font-style: italic;">' . (!empty($observaciones) ? htmlspecialchars($observaciones) : 'Sin observaciones registradas') . '</span>
+						</div>
+					</div>
+					<input type="hidden" name="observaciones" value="' . htmlspecialchars($observaciones ?? '') . '">
+				</div>
+			</div>';
+
+			$this->form[] = ['name'=>'observaciones_field','type'=>'custom','html'=>$observaciones_html,'width'=>'col-sm-10'];
 
 			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
