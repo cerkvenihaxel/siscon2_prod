@@ -97,6 +97,18 @@
 			return $afiliado;
 		}
 
+		function afiliadoEmail(){
+			$nroAfiliado = $_GET['nroAfiliado'];
+			$email = DB::table('afiliados')->where('nroAfiliado', $nroAfiliado)->value('email');
+			return $email ?? '';
+		}
+
+		function afiliadoTelefono(){
+			$nroAfiliado = $_GET['nroAfiliado'];
+			$telefono = DB::table('afiliados')->where('nroAfiliado', $nroAfiliado)->value('telefonos');
+			return $telefono ?? '';
+		}
+
         function nroSolicitudObraSocial(){
             $nroAfiliado = $_GET['nroAfiliado'];
             $obraSocial = DB::table('afiliados')->where('nroAfiliado', $nroAfiliado)->value('obra_social_id');
@@ -204,7 +216,7 @@
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-            $this->form[] = ['label' => 'Nombre y Apellido Afiliado', 'name' => 'afiliados_id', 'type' => 'datamodal', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datamodal_table' => 'afiliados', 'datamodal_columns' => 'apeynombres,nroAfiliado,documento,sexo,localidad', 'datamodal_select_to' => 'nroAfiliado:nroAfiliado,obra_social:obra_social', 'datamodal_size' => 'large', 'value' => $this->afiliadoID()];
+            $this->form[] = ['label' => 'Nombre y Apellido Afiliado', 'name' => 'afiliados_id', 'type' => 'datamodal', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datamodal_table' => 'afiliados', 'datamodal_columns' => 'apeynombres,nroAfiliado,documento,sexo,localidad,email,telefonos', 'datamodal_select_to' => 'nroAfiliado:nroAfiliado,obra_social:obra_social,email:email,telefonos:tel_afiliado', 'datamodal_size' => 'large', 'value' => $this->afiliadoID()];
             $this->form[] = ['label' => 'Nro de Afiliado', 'name' => 'nroAfiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->nroAfiliado()];
 			$this->form[] = ['label'=>'Edad','name'=>'edad','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10', 'value'=> $edad];
 
@@ -223,8 +235,8 @@
 				'dataenum' => 'Norte;Sur;Este;Oeste;FARMAPOS;Centro;Chamical;Chilecito;Famatina;Villa Unión;Incluir Salud San Juan;Farmapos Ministerio;Zona A;Zona B;Zona C;Zona D;VILLA CASTELLI (Zona A);GUANDACOL (Zona A);VINCHINA (Zona A);AIMOGASTA (Zona A);ANILLACO (Zona B);SANAGASTA (Zona B);PITUIL (Zona B);SAN BLAS (Zona B);MALANZAN (Zona C);ULAPES (Zona C);TAMA (Zona C);OLTA (Zona C);MILAGRO (Zona D);PATQUIA (Zona D);CHEPES (Zona D);CHAÑAR (Zona D);CATUNA (Zona D);CAMPANA (Zona D)'
 			];
 			$this->form[] = ['label'=>'Provincia','name'=>'provincia','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value' => 'La Rioja'];
-			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Email Afiliado','name'=>'email','type'=>'email','validation'=>'min:1|max:255|email','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida'];
+			$this->form[] = ['label'=>'Tel Afiliado','name'=>'tel_afiliado','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10', 'value'=>$this->afiliadoTelefono()];
+			$this->form[] = ['label'=>'Email Afiliado','name'=>'email','type'=>'email','validation'=>'min:1|max:255|email','width'=>'col-sm-10','placeholder'=>'Introduce una dirección de correo electrónico válida', 'value'=>$this->afiliadoEmail()];
             $this->form[] = ['label' => 'Fecha Receta', 'name' => 'fecha_receta', 'type' => 'date', 'validation' => 'required|date', 'width' => 'col-sm-10', 'value' => date('Y-m-d')];
 			$this->form[] = ['label'=>'Receta prolongada','name'=>'postdatada','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10' , 'datatable' => 'postdatada,cantidad'];
 

@@ -13,11 +13,16 @@
         private $articulos;
         private $medicamento;
         private $lastUID;
+        private $afiliado_email;
+        private $afiliado_telefono;
 
         public function __construct(Request $request)
         {
             $this->url = $_GET['id'];
-            $this->afiliado_id = DB::table('afiliados')->where('nroAfiliado', $this->url)->value('id');
+            $afiliado_data = DB::table('afiliados')->where('nroAfiliado', $this->url)->first();
+            $this->afiliado_id = $afiliado_data->id ?? null;
+            $this->afiliado_email = $afiliado_data->email ?? '';
+            $this->afiliado_telefono = $afiliado_data->telefonos ?? '';
             $this->articulos = DB::table('afiliados_articulos')->where('nro_afiliado', $this->url)->get();
             $articulo_ids = [];
             foreach ($this->articulos as $articulo) {
@@ -94,7 +99,7 @@
                 //Prueba
             # START FORM DO NOT REMOVE THIS LINE
             $this->form = [];
-            $this->form[] = ['label' => 'Nombre y Apellido Afiliado', 'name' => 'afiliados_id', 'type' => 'datamodal', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datamodal_table' => 'afiliados', 'datamodal_columns' => 'apeynombres,nroAfiliado,documento,sexo,localidad', 'datamodal_select_to' => 'nroAfiliado:nroAfiliado,obra_social:obra_social', 'datamodal_size' => 'large', 'value' => $this->afiliado_id];
+            $this->form[] = ['label' => 'Nombre y Apellido Afiliado', 'name' => 'afiliados_id', 'type' => 'datamodal', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datamodal_table' => 'afiliados', 'datamodal_columns' => 'apeynombres,nroAfiliado,documento,sexo,localidad,email,telefonos', 'datamodal_select_to' => 'nroAfiliado:nroAfiliado,obra_social:obra_social,email:email,telefonos:tel_afiliado', 'datamodal_size' => 'large', 'value' => $this->afiliado_id];
             $this->form[] = ['label' => 'Nro de Afiliado', 'name' => 'nroAfiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'readonly' => true, 'value' => $this->url];
             $this->form[] = ['label' => 'Obra social', 'name' => 'obra_social', 'type' => 'text', 'validation' => 'min:1|max:255', 'width' => 'col-sm-10'];
             $this->form[] = ['label' => 'Edad', 'name' => 'edad', 'type' => 'number', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10'];
@@ -102,8 +107,8 @@
             $this->form[] = ['label' => 'Institución', 'name' => 'clinicas_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'clinicas,nombre', 'required' => true];
             $this->form[] = ['label' => 'Médico Solicitante', 'name' => 'medicos_id', 'type' => 'select2', 'validation' => 'required|integer|min:0', 'width' => 'col-sm-10', 'datatable' => 'medicos,nombremedico', 'required' => true, 'value' => $IDMEDICO];
             $this->form[] = ['label' => 'Zona Residencia', 'name' => 'zona_residencia', 'type' => 'select', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'dataenum' => 'Norte;Sur;Este;Oeste;Centro;Interior'];
-            $this->form[] = ['label' => 'Telefono afiliado', 'name' => 'tel_afiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true];
-            $this->form[] = ['label' => 'Email', 'name' => 'email', 'type' => 'text', 'validation' => 'min:1|max:255|email|', 'width' => 'col-sm-10', 'placeholder' => 'Introduce una dirección de correo electrónico válida'];
+            $this->form[] = ['label' => 'Telefono afiliado', 'name' => 'tel_afiliado', 'type' => 'text', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'required' => true, 'value' => $this->afiliado_telefono];
+            $this->form[] = ['label' => 'Email', 'name' => 'email', 'type' => 'text', 'validation' => 'min:1|max:255|email|', 'width' => 'col-sm-10', 'placeholder' => 'Introduce una dirección de correo electrónico válida', 'value' => $this->afiliado_email];
             $this->form[] = ['label' => 'Provincia', 'name' => 'provincia', 'type' => 'select', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'datatable' => 'provincias,nombre', 'required' => true];
             $this->form[] = ['label' => 'Fecha Receta', 'name' => 'fecha_receta', 'type' => 'date', 'validation' => 'required|date', 'width' => 'col-sm-10', 'value' => date('Y-m-d')];
             $this->form[] = ['label' => 'Receta Post-datada', 'name' => 'postdatada', 'type' => 'select2', 'validation' => 'required|min:1|max:255', 'width' => 'col-sm-10', 'datatable' => 'postdatada,cantidad'];
