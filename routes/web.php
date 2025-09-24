@@ -339,7 +339,7 @@ Route::post('/guardar-filas', [AfiliadoArticuloController::class, 'guardarFilas'
 
 //BUSQUEDA DE PRUEBA
 
-Route::get('/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search.index');
+// Route::get('/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search.index');
 
 Route::get('/searchprueba', function (){
     return view('search');
@@ -388,3 +388,83 @@ Route::post('/reportes_generales/dateRangePorEspecialidad', [\App\Http\Controlle
 // Route::get('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMes'])->name('reportes_generales.mes');
 Route::post('/reportes_generales/mes', [\App\Http\Controllers\ReportesGenerales::class, 'reporteMes'])->name('reportes_generales.mes');
 Route::post('/reportes_generales/dateRangePorMes', [\App\Http\Controllers\ReportesGenerales::class, 'dateRangePorMes'])->name('dateRangePorMes');
+
+// Rutas para Oxigenoterapia
+Route::prefix('admin/oxigenoterapia')->group(function () {
+    Route::get('/get-afiliado/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'getAfiliado']);
+    Route::get('/get-medico/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'getMedico']);
+    Route::get('/get-equipo/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'getEquipo']);
+    Route::get('/autorizar/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'autorizar']);
+    Route::get('/prestamo/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'realizarPrestamo']);
+    Route::get('/ver-prestamo/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'verPrestamo']);
+    Route::get('/renovar/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'renovar']);
+    Route::get('/finalizar/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'finalizar']);
+    Route::get('/imprimir/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'imprimirDocumentos']);
+    Route::get('/ver-documento/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'verDocumento']);
+    Route::get('/materiales/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'materiales']);
+    Route::post('/prestamo/store', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'storePrestamo'])->name('oxigenoterapia.prestamo.store');
+});
+
+// Rutas para documentos PDF
+Route::get('/documentos/consentimiento/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'generarConsentimiento'])->name('oxigenoterapia.documentos.consentimiento');
+Route::get('/documentos/terminos/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'generarTerminos'])->name('oxigenoterapia.documentos.terminos');
+Route::get('/documentos/contrato/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'generarContrato'])->name('oxigenoterapia.documentos.contrato');
+Route::get('/documentos/instrucciones/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'generarInstrucciones'])->name('oxigenoterapia.documentos.instrucciones');
+Route::get('/documentos/checklist/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'generarChecklist'])->name('oxigenoterapia.documentos.checklist');
+Route::get('/documentos/resumen/{id}', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'generarResumen'])->name('oxigenoterapia.documentos.resumen');
+Route::get('/equipos-disponibles', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'getEquiposDisponibles']);
+Route::get('/estadisticas', [\App\Http\Controllers\AdminOxigenoterapiaController::class, 'estadisticas']);
+
+// Rutas para Préstamos de Oxigenoterapia
+Route::prefix('admin/prestamo-oxigenoterapia')->group(function () {
+    Route::get('/ver-prestamo/{id}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'verPrestamo']);
+    Route::get('/renovar/{id}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'renovar']);
+    Route::post('/renovar/{id}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'procesarRenovacion']);
+    Route::get('/finalizar/{id}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'finalizar']);
+    Route::post('/finalizar/{id}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'procesarFinalizacion']);
+    Route::get('/documentos/{id}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'documentos']);
+    Route::post('/documentos/{id}/subir', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'subirDocumento']);
+    Route::get('/documentos/descargar/{documentoId}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'descargarDocumento'])->name('documentos.descargar');
+    Route::get('/documentos/ver/{documentoId}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'verDocumento'])->name('documentos.ver');
+    Route::delete('/documentos/{documentoId}', [\App\Http\Controllers\AdminPrestamoOxigenoterapiaController::class, 'eliminarDocumento']);
+});
+
+// Rutas para Préstamos
+Route::prefix('prestamo')->group(function () {
+    Route::post('/store', [\App\Http\Controllers\PrestamoOxigenoterapiaController::class, 'store'])->name('prestamo.store');
+    Route::post('/entregar/{id}', [\App\Http\Controllers\PrestamoOxigenoterapiaController::class, 'entregar'])->name('prestamo.entregar');
+    Route::post('/renovar/{id}', [\App\Http\Controllers\PrestamoOxigenoterapiaController::class, 'renovar'])->name('prestamo.renovar');
+    Route::post('/finalizar/{id}', [\App\Http\Controllers\PrestamoOxigenoterapiaController::class, 'finalizar'])->name('prestamo.finalizar');
+    Route::post('/firmar-documento/{id}', [\App\Http\Controllers\PrestamoOxigenoterapiaController::class, 'firmarDocumento'])->name('prestamo.firmar-documento');
+    Route::get('/ver-documento/{id}', [\App\Http\Controllers\PrestamoOxigenoterapiaController::class, 'verDocumento'])->name('prestamo.ver-documento');
+    Route::post('/generar-documento/{id}', [\App\Http\Controllers\PrestamoOxigenoterapiaController::class, 'generarDocumento'])->name('prestamo.generar-documento');
+});
+
+// Rutas para Equipos de Oxigenoterapia
+Route::prefix('admin/equipos-oxigenoterapia')->group(function () {
+    Route::get('/prestamos/{id}', [\App\Http\Controllers\AdminEquiposOxigenoterapiaController::class, 'prestamos']);
+    Route::get('/mantenimiento/{id}', [\App\Http\Controllers\AdminEquiposOxigenoterapiaController::class, 'mantenimiento']);
+    Route::post('/registrar-mantenimiento/{id}', [\App\Http\Controllers\AdminEquiposOxigenoterapiaController::class, 'registrarMantenimiento']);
+    Route::get('/historial/{id}', [\App\Http\Controllers\AdminEquiposOxigenoterapiaController::class, 'historial']);
+});
+
+// Rutas para Cliente (Portal del Cliente) - Comentadas hasta implementar controladores
+/*
+Route::prefix('cliente/oxigenoterapia')->group(function () {
+    Route::get('/mis-pedidos', 'ClienteOxigenoterapiaController@misPedidos')->name('cliente.mis-pedidos');
+    Route::get('/pedido/{id}', 'ClienteOxigenoterapiaController@verPedido')->name('cliente.ver-pedido');
+    Route::get('/prestamo/{id}', 'ClienteOxigenoterapiaController@verPrestamo')->name('cliente.ver-prestamo');
+    Route::post('/firmar-documento/{id}', 'ClienteOxigenoterapiaController@firmarDocumento')->name('cliente.firmar-documento');
+    Route::get('/documentos/{id}', 'ClienteOxigenoterapiaController@documentos')->name('cliente.documentos');
+});
+*/
+
+// Rutas para API (si se necesita) - Comentadas hasta implementar controladores
+/*
+Route::prefix('api/oxigenoterapia')->group(function () {
+    Route::get('/pedidos', 'ApiOxigenoterapiaController@pedidos');
+    Route::get('/prestamos', 'ApiOxigenoterapiaController@prestamos');
+    Route::get('/equipos', 'ApiOxigenoterapiaController@equipos');
+    Route::post('/notificar-vencimiento', 'ApiOxigenoterapiaController@notificarVencimiento');
+});
+*/
