@@ -208,7 +208,7 @@
 				</div>
 			</div>';
 
-			$this->form[] = ['name'=>'observaciones_field','type'=>'custom','html'=>$observaciones_html,'width'=>'col-sm-10'];
+			$this->form[] = ['name'=>'custom_field','type'=>'custom','html'=>$observaciones_html,'width'=>'col-sm-10'];
 
 			$this->form[] = ['label'=>'Archivo','name'=>'archivo','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			$this->form[] = ['label'=>'Archivo2','name'=>'archivo2','type'=>'upload','validation'=>'min:1|max:255','width'=>'col-sm-10'];
