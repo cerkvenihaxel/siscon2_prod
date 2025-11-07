@@ -37,7 +37,7 @@ class UnionPersonalSoapService
                 'cache_wsdl' => $this->config['cache_wsdl'],
                 'connection_timeout' => $this->config['connection_timeout'],
                 'features' => defined('SOAP_SINGLE_ELEMENT_ARRAYS') ? SOAP_SINGLE_ELEMENT_ARRAYS : 1,
-                'soap_version' => SOAP_1_1,
+                'soap_version' => defined('SOAP_1_1') ? SOAP_1_1 : 1,
                 'encoding' => 'UTF-8',
                 'stream_context' => stream_context_create([
                     'ssl' => [
