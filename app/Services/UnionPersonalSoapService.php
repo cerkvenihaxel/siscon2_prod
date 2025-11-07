@@ -18,6 +18,10 @@ class UnionPersonalSoapService
 
     public function __construct()
     {
+        if (!extension_loaded('soap')) {
+            throw new \Exception('SOAP extension is not installed. Please install php-soap extension.');
+        }
+        
         $this->config = config('union_personal');
         $this->ambiente = $this->config['ambiente'];
         $this->initSoapClient();

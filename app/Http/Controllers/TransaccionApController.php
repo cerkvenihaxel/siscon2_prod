@@ -17,7 +17,12 @@ class TransaccionApController extends Controller
 
     public function __construct()
     {
-        $this->soapService = new UnionPersonalSoapService();
+        try {
+            $this->soapService = new UnionPersonalSoapService();
+        } catch (\Exception $e) {
+            \Log::error('SOAP Service initialization failed: ' . $e->getMessage());
+            $this->soapService = null;
+        }
         $this->twilioSender = new TwilioSender();
     }
 
@@ -56,7 +61,14 @@ class TransaccionApController extends Controller
                 $params['vercred'] = $request->input('vercred') ?? null;
             }
 
-            $soapService = new UnionPersonalSoapService();
+            try {
+                $soapService = new UnionPersonalSoapService();
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'SOAP extension not available: ' . $e->getMessage()
+                ], 500);
+            }
             
             // Capturar el XML de solicitud
             $xmlSolicitud = $this->construirXmlElegibilidad($params);
@@ -154,6 +166,9 @@ class TransaccionApController extends Controller
                 ]);
 
                 try {
+                    if (!$this->soapService) {
+                        throw new \Exception('SOAP service not available');
+                    }
                     $responseXML = $this->soapService->enviarTransaccionAP($xmlSolicitud);
                     $xmlResponse = simplexml_load_string($responseXML);
 
