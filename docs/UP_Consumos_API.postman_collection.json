@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "up-consumos-api-collection",
+		"name": "UP Consumos API - SISCON2",
+		"description": "API para gestión de consumos de medicamentos de Unión Personal. Permite consultar, filtrar y actualizar consumos desde sistemas externos como farmacias.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "siscon2-up-api"
+	},
+	"item": [
+		{
+			"name": "Consumos",
+			"item": [
+				{
+					"name": "Listar Consumos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/up-consumos?fecha_desde=2024-10-01&fecha_hasta=2024-10-31&estado_flujo=pendiente&per_page=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"up-consumos"
+							],
+							"query": [
+								{
+									"key": "fecha_desde",
+									"value": "2024-10-01",
+									"description": "Fecha desde (Y-m-d)"
+								},
+								{
+									"key": "fecha_hasta",
+									"value": "2024-10-31",
+									"description": "Fecha hasta (Y-m-d)"
+								},
+								{
+									"key": "estado_flujo",
+									"value": "pendiente",
+									"description": "Estado del flujo: pendiente, elegibilidad_ok, aprobado, entregado, anulado"
+								},
+								{
+									"key": "codigo_afiliado",
+									"value": "54715500",
+									"description": "Código del afiliado",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "20",
+									"description": "Elementos por página (default: 50)"
+								}
+							]
+						},
+						"description": "Obtiene lista paginada de consumos con filtros opcionales por fecha, estado y afiliado."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/up-consumos?fecha_desde=2024-10-01&estado_flujo=pendiente",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"up-consumos"
+									],
+									"query": [
+										{
+											"key": "fecha_desde",
+											"value": "2024-10-01"
+										},
+										{
+											"key": "estado_flujo",
+											"value": "pendiente"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"desc\": \"PARACETAMOL 500MG\",\n            \"afiliado\": \"54715500\",\n            \"cant\": 1,\n            \"estado_flujo\": \"pendiente\",\n            \"observaciones\": null,\n            \"created_at\": \"2024-10-15T10:30:00.000000Z\",\n            \"fecha_entrega\": null\n        }\n    ],\n    \"pagination\": {\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"per_page\": 50,\n        \"total\": 1\n    },\n    \"filters_applied\": {\n        \"fecha_desde\": \"2024-10-01\",\n        \"fecha_hasta\": null,\n        \"estado_flujo\": \"pendiente\",\n        \"codigo_afiliado\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Ver Consumo Específico",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/up-consumos/{{consumo_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"up-consumos",
+								"{{consumo_id}}"
+							]
+						},
+						"description": "Obtiene detalles completos de un consumo específico incluyendo información del workflow."
+					},
+					"response": [
+						{
+							"name": "Consumo Encontrado",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/up-consumos/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"up-consumos",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 1,\n        \"desc\": \"PARACETAMOL 500MG\",\n        \"afiliado\": \"54715500\",\n        \"cant\": 1,\n        \"estado_flujo\": \"aprobado\",\n        \"observaciones\": \"Medicamento listo para entrega\",\n        \"idaut\": \"82502981\",\n        \"fecha_aprobacion\": \"2024-10-15T14:20:00.000000Z\",\n        \"created_at\": \"2024-10-15T10:30:00.000000Z\",\n        \"elegibilidad\": {\n            \"id\": 1,\n            \"status\": \"OK\",\n            \"idtran\": \"326423927\"\n        },\n        \"autorizacion\": {\n            \"id\": 1,\n            \"status\": \"OK\",\n            \"idaut\": \"82502981\"\n        }\n    },\n    \"workflow_status\": {\n        \"puede_elg\": false,\n        \"puede_ap\": false,\n        \"puede_entrega\": true,\n        \"puede_anular\": true\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Actualizar Observaciones",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"observaciones\": \"Medicamento entregado al titular. Presentó DNI 12345678. Entrega realizada en farmacia central.\",\n    \"usuario\": \"Farmacia Central\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/up-consumos/{{consumo_id}}/observaciones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"up-consumos",
+								"{{consumo_id}}",
+								"observaciones"
+							]
+						},
+						"description": "Actualiza las observaciones de un consumo específico. Útil para que las farmacias agreguen notas sobre la entrega."
+					},
+					"response": [
+						{
+							"name": "Observaciones Actualizadas",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"observaciones\": \"Medicamento entregado al titular\",\n    \"usuario\": \"Farmacia Central\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/up-consumos/1/observaciones",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"up-consumos",
+										"1",
+										"observaciones"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Observaciones actualizadas correctamente\",\n    \"data\": {\n        \"id\": 1,\n        \"desc\": \"PARACETAMOL 500MG\",\n        \"observaciones\": \"Medicamento entregado al titular\",\n        \"usuario_observaciones\": \"Farmacia Central\",\n        \"fecha_observaciones\": \"2024-10-15T16:45:00.000000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Estadísticas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/up-consumos/stats?fecha_desde=2024-10-01&fecha_hasta=2024-10-31",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"up-consumos",
+								"stats"
+							],
+							"query": [
+								{
+									"key": "fecha_desde",
+									"value": "2024-10-01",
+									"description": "Fecha desde para estadísticas"
+								},
+								{
+									"key": "fecha_hasta",
+									"value": "2024-10-31",
+									"description": "Fecha hasta para estadísticas"
+								}
+							]
+						},
+						"description": "Obtiene estadísticas del workflow de consumos, útil para dashboards y reportes."
+					},
+					"response": [
+						{
+							"name": "Estadísticas del Período",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/up-consumos/stats?fecha_desde=2024-10-01",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"up-consumos",
+										"stats"
+									],
+									"query": [
+										{
+											"key": "fecha_desde",
+											"value": "2024-10-01"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"total\": 150,\n        \"por_estado\": {\n            \"pendiente\": 45,\n            \"elegibilidad_ok\": 20,\n            \"aprobado\": 35,\n            \"entregado\": 40,\n            \"anulado\": 10\n        },\n        \"entregados_hoy\": 8,\n        \"pendientes\": 45\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints para gestión de consumos de medicamentos"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string",
+			"description": "URL base del sistema SISCON2"
+		},
+		{
+			"key": "consumo_id",
+			"value": "1",
+			"type": "string",
+			"description": "ID del consumo para pruebas"
+		}
+	]
+}
