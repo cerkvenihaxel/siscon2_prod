@@ -438,3 +438,90 @@ Route::post('/seguimiento-medicamentos', [SeguimientoMedicamentoController::clas
 Route::get('/seguimientos-medicamentos', function (){
     return view('seguimientoMedicamentos.seguimientoMedicamento');
 });
+
+// Manual de Usuario - Flujo UP
+Route::get('/admin/manual-flujo-up', 'App\Http\Controllers\ManualFlujoUpController@getIndex');
+
+// Configuración de Ambiente UP
+Route::get('/admin/up_ambiente', 'App\Http\Controllers\UpAmbienteController@getIndex');
+Route::post('/admin/up_ambiente/cambiar-ambiente', 'App\Http\Controllers\UpAmbienteController@postCambiarAmbiente');
+Route::get('/admin/up_ambiente/crear-datos-prueba', 'App\Http\Controllers\UpAmbienteController@getCrearDatosPrueba');
+Route::get('/admin/up_ambiente/limpiar-datos-prueba', 'App\Http\Controllers\UpAmbienteController@getLimpiarDatosPrueba');
+
+// Vista Personalizada Consumos UP V2
+Route::get('/admin/consumos_up_v2', 'App\Http\Controllers\ConsumosUpV2Controller@index');
+Route::get('/admin/consumos_up_v2/{id}', 'App\Http\Controllers\ConsumosUpV2Controller@show');
+Route::get('/admin/consumos_up_v2/{id}/elegibilidad', 'App\Http\Controllers\ConsumosUpV2Controller@consultarElegibilidad');
+Route::post('/admin/consumos_up_v2/{id}/elegibilidad', 'App\Http\Controllers\ConsumosUpV2Controller@actualizarElegibilidad');
+Route::post('/admin/consumos_up_v2/{id}/aprobar', 'App\Http\Controllers\ConsumosUpV2Controller@aprobarPrestacion');
+Route::post('/admin/consumos_up_v2/{id}/aprobar-elegibilidad', 'App\Http\Controllers\ConsumosUpV2Controller@aprobarConElegibilidad');
+Route::post('/admin/consumos_up_v2/{id}/aprobar-directo', 'App\Http\Controllers\ConsumosUpV2Controller@aprobarDirecto');
+Route::post('/admin/consumos_up_v2/{id}/validar', 'App\Http\Controllers\ConsumosUpV2Controller@generarValidacion');
+Route::get('/admin/consumos_up_v2/{id}/validacion', 'App\Http\Controllers\ConsumosUpV2Controller@mostrarValidacion');
+Route::post('/admin/consumos_up_v2/{id}/procesar-validacion', 'App\Http\Controllers\ConsumosUpV2Controller@procesarValidacion');
+Route::get('/admin/consumos_up_v2/entregas', 'App\Http\Controllers\ConsumosUpV2Controller@mostrarEntregas');
+
+// Consumos UP - Nueva Vista
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'farmacias.up'])->group(function () {
+    Route::get('/admin/consumos-up', 'App\Http\Controllers\ConsumosUpController@index');
+    Route::get('/admin/consumos-up/{id}/imprimir', 'App\Http\Controllers\ConsumosUpController@imprimir');
+    Route::get('/admin/consumos-up/{id}/xml', 'App\Http\Controllers\ConsumosUpController@getXML');
+    Route::get('/admin/consumos-up/{id}', 'App\Http\Controllers\ConsumosUpController@show');
+    Route::post('/admin/consumos-up/marcar-entregado', 'App\Http\Controllers\ConsumosUpController@marcarEntregado');
+    Route::post('/admin/consumos-up/anular', 'App\Http\Controllers\ConsumosUpController@anular');
+});
+
+// Entregas UP
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'farmacias.up'])->group(function () {
+    Route::get('/admin/entregas-up', 'App\Http\Controllers\EntregasUpController@index');
+    Route::get('/admin/entregas-up/add/{consumo_id}', 'App\Http\Controllers\EntregasUpController@add');
+    Route::get('/admin/entregas-up/imprimir-formulario/{consumo_id}', 'App\Http\Controllers\EntregasUpController@imprimirFormulario');
+    Route::post('/admin/entregas-up/store', 'App\Http\Controllers\EntregasUpController@store');
+    Route::get('/admin/entregas-up/{id}/consentimiento', 'App\Http\Controllers\EntregasUpController@consentimiento');
+    Route::post('/admin/entregas-up/{id}/generar-pdf', 'App\Http\Controllers\EntregasUpController@generarPDF');
+});
+
+// UP Ambiente Controller
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend'])->group(function () {
+    Route::post('/admin/up_ambiente/cambiar-ambiente', 'App\Http\Controllers\UpAmbienteController@cambiarAmbiente');
+    Route::get('/admin/up_ambiente/ambiente-actual', 'App\Http\Controllers\UpAmbienteController@getAmbienteActual');
+});
+
+// Transacción AP (Consumo de prestaciones)
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'farmacias.up'])->group(function () {
+    Route::get('/admin/transaccion-ap', 'App\Http\Controllers\TransaccionApController@index');
+    Route::post('/transaccion-ap/elegibilidad', 'App\Http\Controllers\TransaccionApController@consultarElegibilidad');
+    Route::post('/transaccion-ap/procesar', 'App\Http\Controllers\TransaccionApController@procesarTransaccionAp');
+    Route::post('/transaccion-ap/procesar-multiples', 'App\Http\Controllers\TransaccionApController@procesarMultiplesAP');
+    Route::get('/transaccion-ap/buscar-articulos', 'App\Http\Controllers\TransaccionApController@buscarArticulos');
+    Route::post('/transaccion-ap/guardar-consumo', 'App\Http\Controllers\TransaccionApController@guardarConsumo');
+    Route::get('/transaccion-ap/ticket-rechazo', 'App\Http\Controllers\TransaccionApController@imprimirTicketRechazo');
+    Route::get('/admin/transaccion-ap/{idtran}/xml', 'App\Http\Controllers\TransaccionApController@getXML');
+});
+
+// Anulación UP (ATR)
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'farmacias.up'])->group(function () {
+    Route::get('/admin/anulacion-up', 'App\Http\Controllers\AnulacionUpController@index')->name('anulacion-up.index');
+    Route::post('/anulacion-up/procesar', 'App\Http\Controllers\AnulacionUpController@procesarAnulacion')->name('anulacion-up.procesar');
+    Route::get('/anulacion-up/xml/{idtran}', 'App\Http\Controllers\AnulacionUpController@getXML');
+});
+
+// Anulaciones UP (Listado)
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'farmacias.up'])->group(function () {
+    Route::get('/admin/anulaciones-up', 'App\Http\Controllers\AnulacionesUpController@index');
+    Route::get('/admin/anulaciones-up/detalle/{id}', 'App\Http\Controllers\AnulacionesUpController@detalle');
+    Route::get('/admin/anulaciones-up/imprimir/{id}', 'App\Http\Controllers\AnulacionesUpController@imprimir');
+    Route::get('/admin/anulaciones-up/xml/{id}', 'App\Http\Controllers\AnulacionesUpController@verXml');
+});
+
+// Redirección automática para usuarios Farmacias UP
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend'])->group(function () {
+    Route::get('/admin', function() {
+        // Si es usuario "Farmacias UP", redirigir a transaccion-ap
+        if (CRUDBooster::myPrivilegeName() == 'Farmacias UP') {
+            return redirect('/admin/transaccion-ap');
+        }
+        // Para otros usuarios, mostrar dashboard normal
+        return app('CRUDBooster')->getDashboard();
+    });
+});
