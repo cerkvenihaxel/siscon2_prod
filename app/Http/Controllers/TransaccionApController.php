@@ -352,6 +352,26 @@ class TransaccionApController extends Controller
         $ambiente = $config['ambiente'];
         $ambienteConfig = $config[$ambiente];
         
+        // Verificar si el usuario tiene privilegio "Farmacias UP"
+        $currentPrivilege = \CRUDBooster::myPrivilegeName();
+        $currentUser = \CRUDBooster::me();
+        $currentEmail = $currentUser ? $currentUser->email : 'no-email';
+        
+        $isFarmaciaUp = $currentPrivilege == 'Farmacias UP';
+        
+        if ($isFarmaciaUp && $currentEmail && $currentEmail != 'no-email') {
+            // Extraer USRID del email (parte antes del @)
+            $emailParts = explode('@', $currentEmail);
+            $usrid = $emailParts[0];
+            $usrpass = 'DIAB';
+            $idprestador = $usrid;
+        } else {
+            // Usar credenciales del environment
+            $usrid = $ambienteConfig['user_id'];
+            $usrpass = $ambienteConfig['user_pass'];
+            $idprestador = $ambienteConfig['prestador_id'];
+        }
+        
         $msgId = str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT);
         $fecha = date('Y-m-d');
         $time = date('Y-m-d\TH:i:s');
@@ -380,13 +400,13 @@ class TransaccionApController extends Controller
             <SEGURIDAD>
                 <TIPOAUT>U</TIPOAUT>
                 <TIPOCON>PRES</TIPOCON>
-                <USRID>{$ambienteConfig['user_id']}</USRID>
-                <USRPASS>{$ambienteConfig['user_pass']}</USRPASS>
+                <USRID>{$usrid}</USRID>
+                <USRPASS>{$usrpass}</USRPASS>
             </SEGURIDAD>
             <OPER>
                 <TIPO>AP</TIPO>
                 <IDASEG>UP</IDASEG>
-                <IDPRESTADOR>{$ambienteConfig['prestador_id']}</IDPRESTADOR>
+                <IDPRESTADOR>{$idprestador}</IDPRESTADOR>
                 <FECHA>{$fecha}</FECHA>
             </OPER>
             <PID>
@@ -408,6 +428,46 @@ class TransaccionApController extends Controller
         $config = config('union_personal');
         $ambiente = $config['ambiente'];
         $ambienteConfig = $config[$ambiente];
+        
+        // Verificar si el usuario tiene privilegio "Farmacias UP"
+        $currentPrivilege = \CRUDBooster::myPrivilegeName();
+        $currentUser = \CRUDBooster::me(); // Usar CRUDBooster::me() para obtener datos del usuario
+        $currentEmail = $currentUser ? $currentUser->email : 'no-email';
+        
+        // Debug temporal
+        \Log::info('Debug XML Elegibilidad', [
+            'privilege' => $currentPrivilege,
+            'email' => $currentEmail,
+            'user_data' => $currentUser,
+            'is_farmacias_up' => $currentPrivilege == 'Farmacias UP'
+        ]);
+        
+        $isFarmaciaUp = $currentPrivilege == 'Farmacias UP';
+        
+        if ($isFarmaciaUp && $currentEmail && $currentEmail != 'no-email') {
+            // Extraer USRID del email (parte antes del @)
+            $emailParts = explode('@', $currentEmail);
+            $usrid = $emailParts[0];
+            $usrpass = 'DIAB';
+            $idprestador = $usrid;
+            
+            \Log::info('Using Farmacias UP credentials', [
+                'usrid' => $usrid,
+                'usrpass' => $usrpass,
+                'idprestador' => $idprestador
+            ]);
+        } else {
+            // Usar credenciales del environment
+            $usrid = $ambienteConfig['user_id'];
+            $usrpass = $ambienteConfig['user_pass'];
+            $idprestador = $ambienteConfig['prestador_id'];
+            
+            \Log::info('Using environment credentials', [
+                'usrid' => $usrid,
+                'usrpass' => $usrpass,
+                'idprestador' => $idprestador
+            ]);
+        }
         
         $msgId = $params['msgid'];
         $fecha = date('Y-m-d');
@@ -435,13 +495,13 @@ class TransaccionApController extends Controller
             <SEGURIDAD>
                 <TIPOAUT>U</TIPOAUT>
                 <TIPOCON>PRES</TIPOCON>
-                <USRID>{$ambienteConfig['user_id']}</USRID>
-                <USRPASS>{$ambienteConfig['user_pass']}</USRPASS>
+                <USRID>{$usrid}</USRID>
+                <USRPASS>{$usrpass}</USRPASS>
             </SEGURIDAD>
             <OPER>
                 <TIPO>ELG</TIPO>
                 <IDASEG>UP</IDASEG>
-                <IDPRESTADOR>{$ambienteConfig['prestador_id']}</IDPRESTADOR>
+                <IDPRESTADOR>{$idprestador}</IDPRESTADOR>
                 <FECHA>{$fecha}</FECHA>
             </OPER>
             <PID>

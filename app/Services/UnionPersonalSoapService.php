@@ -368,6 +368,22 @@ class UnionPersonalSoapService
         // Pasar el tipo de operación a los parámetros
         $params['tipo_operacion'] = $tipo;
 
+        // Verificar si el usuario tiene privilegio "Farmacias UP"
+        $currentPrivilege = \CRUDBooster::myPrivilegeName();
+        $currentUser = \CRUDBooster::me();
+        $currentEmail = $currentUser ? $currentUser->email : null;
+        
+        $isFarmaciaUp = $currentPrivilege == 'Farmacias UP';
+        
+        if ($isFarmaciaUp && $currentEmail) {
+            // Extraer USRID del email (parte antes del @)
+            $emailParts = explode('@', $currentEmail);
+            $usrid = $emailParts[0];
+            $params['usrid'] = $usrid;
+            $params['usrpass'] = 'DIAB';
+            $params['prestador_id'] = $usrid; // El IDPRESTADOR es el mismo que USRID
+        }
+
         $emisor = $this->buildEmisorSegment($params['msgid']);
         $seguridad = $this->buildSeguridadSegment($params);
         $oper = $this->buildOperSegment($tipo, $params);
