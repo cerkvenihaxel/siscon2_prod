@@ -522,6 +522,6 @@ Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend'])->group(f
             return redirect('/admin/transaccion-ap');
         }
         // Para otros usuarios, mostrar dashboard normal
-        return app('CRUDBooster')->getDashboard();
+        return redirect('/admin/statistic_builder/dashboard');
     });
 });
