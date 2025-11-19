@@ -275,7 +275,7 @@ class TransaccionApController extends Controller
             // Datos de la prestación
             'fecha_tran' => now(),
             'prestacion' => null, // Campo numérico de orden
-            'tipo_pres' => (string)($pr->TIPO ?? 'P'),
+            'tipo_pres' => (string)($pr->TIPO ?? 'M'),
             'cod_prestacion' => (string)($pr->ID ?? $medicamento['codigo']),
             'cant' => (int)($pr->CANT ?? $medicamento['cantidad']),
             'desc' => (string)($pr->DESCRIPCION ?? $medicamento['descripcion'] ?? ''),
@@ -416,7 +416,7 @@ class TransaccionApController extends Controller
                 <TIPO>A</TIPO>
             </CONTEXTO>
             <PR>
-                <TIPO>P</TIPO>
+                <TIPO>M</TIPO>
                 <CANT>{$params['cantidad']}</CANT>
                 <ID>{$params['codigo_prestacion']}</ID>
             </PR>
