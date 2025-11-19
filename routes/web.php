@@ -494,6 +494,7 @@ Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'farmacia
     Route::post('/transaccion-ap/procesar', 'App\Http\Controllers\TransaccionApController@procesarTransaccionAp');
     Route::post('/transaccion-ap/procesar-multiples', 'App\Http\Controllers\TransaccionApController@procesarMultiplesAP');
     Route::get('/transaccion-ap/buscar-articulos', 'App\Http\Controllers\TransaccionApController@buscarArticulos');
+    Route::post('/transaccion-ap/validar-medicamento', 'App\Http\Controllers\TransaccionApController@validarMedicamento');
     Route::post('/transaccion-ap/guardar-consumo', 'App\Http\Controllers\TransaccionApController@guardarConsumo');
     Route::get('/transaccion-ap/ticket-rechazo', 'App\Http\Controllers\TransaccionApController@imprimirTicketRechazo');
     Route::get('/admin/transaccion-ap/{idtran}/xml', 'App\Http\Controllers\TransaccionApController@getXML');

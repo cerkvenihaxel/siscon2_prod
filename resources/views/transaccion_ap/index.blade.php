@@ -173,7 +173,9 @@
                     
                     <div class="row">
                         <div class="input-field col s12 m8">
-                            <select id="medicamento_select" style="width: 100%;"></select>
+                            <input id="medicamento_search" type="text" class="validate autocomplete" placeholder="Escriba para buscar medicamento...">
+                            <label for="medicamento_search">Buscar Medicamento</label>
+                            <div id="medicamento_results" class="collection" style="display: none; position: absolute; z-index: 1000; width: 100%; max-height: 300px; overflow-y: auto; background: white; border: 1px solid #ddd;"></div>
                         </div>
                         <div class="input-field col s12 m2">
                             <input id="cantidad_medicamento" type="number" class="validate" value="1" min="1">
@@ -187,27 +189,66 @@
                         </div>
                     </div>
 
-                    <!-- Entrada Manual de Código -->
+                    <!-- Botón para entrada manual -->
+                    <div class="center" style="margin: 20px 0;">
+                        <button type="button" id="toggleManualEntry" class="btn btn-outline waves-effect waves-light">
+                            <i class="material-icons left">edit</i>
+                            Colocar manualmente código artículo
+                        </button>
+                    </div>
+
+                    <!-- Entrada Manual de Código (oculta por defecto) -->
+                    <div id="manualEntrySection" style="display: none;">
+                        <div class="divider" style="margin: 20px 0;"></div>
+                        <h6><i class="material-icons left">edit</i>Entrada Manual de Código</h6>
+                        <div class="row">
+                            <div class="input-field col s12 m4">
+                                <input id="codigo_manual" type="text" class="validate">
+                                <label for="codigo_manual">Código de Prestación</label>
+                            </div>
+                            <div class="input-field col s12 m4">
+                                <input id="descripcion_manual" type="text" class="validate">
+                                <label for="descripcion_manual">Descripción (opcional)</label>
+                            </div>
+                            <div class="input-field col s12 m2">
+                                <input id="cantidad_manual" type="number" class="validate" value="1" min="1">
+                                <label for="cantidad_manual">Cantidad</label>
+                            </div>
+                            <div class="col s12 m2">
+                                <button type="button" id="agregarManual" class="btn btn-orange waves-effect waves-light full-width" style="margin-top: 25px;">
+                                    <i class="material-icons left">add_circle</i>
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prescripción -->
                     <div class="divider" style="margin: 20px 0;"></div>
-                    <h6><i class="material-icons left">edit</i>Entrada Manual de Código</h6>
+                    <h6><i class="material-icons left">assignment</i>Prescripción</h6>
                     <div class="row">
-                        <div class="input-field col s12 m4">
-                            <input id="codigo_manual" type="text" class="validate">
-                            <label for="codigo_manual">Código de Prestación</label>
+                        <div class="input-field col s12 m3">
+                            <select id="tipo_matricula">
+                                <option value="" disabled selected>Seleccione tipo</option>
+                                <option value="Ciudad de B.Aires">Ciudad de B.Aires</option>
+                                <option value="Provincia de Buenos Aires">Provincia de Buenos Aires</option>
+                                <option value="Córdoba">Córdoba</option>
+                                <option value="Santa Fe">Santa Fe</option>
+                                <option value="Mendoza">Mendoza</option>
+                            </select>
+                            <label>Tipo Matrícula</label>
                         </div>
-                        <div class="input-field col s12 m4">
-                            <input id="descripcion_manual" type="text" class="validate">
-                            <label for="descripcion_manual">Descripción (opcional)</label>
+                        <div class="input-field col s12 m3">
+                            <input id="matricula" type="text" class="validate">
+                            <label for="matricula">Matrícula</label>
                         </div>
-                        <div class="input-field col s12 m2">
-                            <input id="cantidad_manual" type="number" class="validate" value="1" min="1">
-                            <label for="cantidad_manual">Cantidad</label>
+                        <div class="input-field col s12 m3">
+                            <input id="fecha_receta" type="text" class="datepicker validate">
+                            <label for="fecha_receta">Fecha Receta</label>
                         </div>
-                        <div class="col s12 m2">
-                            <button type="button" id="agregarManual" class="btn btn-orange waves-effect waves-light full-width" style="margin-top: 25px;">
-                                <i class="material-icons left">add_circle</i>
-                                Agregar
-                            </button>
+                        <div class="input-field col s12 m3">
+                            <input id="diagnostico" type="text" class="validate">
+                            <label for="diagnostico">Diagnóstico</label>
                         </div>
                     </div>
 
@@ -300,6 +341,24 @@ $(document).ready(function() {
     // Initialize Material components
     M.AutoInit();
     
+    // Inicializar datepicker
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+        yearRange: [2020, 2030],
+        autoClose: true,
+        defaultDate: new Date(),
+        setDefaultDate: true,
+        i18n: {
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+            weekdaysAbbrev: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+            cancel: 'Cancelar',
+            done: 'Aceptar'
+        }
+    });
+    
     // Variables globales
     let transaccionData = {};
     let medicamentosAgregados = [];
@@ -364,7 +423,7 @@ $(document).ready(function() {
                     $('#medicamentosSection').slideDown();
                     $('#verXmlBtn').show();
                     updateProgress(2);
-                    initMedicamentosSelect();
+                    medicamentoSearch = initMedicamentosSearch();
                     showToast('Elegibilidad verificada - Puede buscar medicamentos');
                 } else {
                     let errorHtml = `
@@ -411,26 +470,91 @@ $(document).ready(function() {
                  .trim();
     }
 
-    // Inicializar select de medicamentos con búsqueda optimizada
-    function initMedicamentosSelect() {
-        $('#medicamento_select').select2({
-            placeholder: 'Buscar...',
-            ajax: {
-                url: '/transaccion-ap/buscar-articulos',
-                dataType: 'json',
-                delay: 300,
-                data: function(params) {
-                    return { search: params.term };
-                },
-                processResults: function(data) {
-                    return { results: data };
-                },
-                cache: true
-            },
-            minimumInputLength: 3,
-            theme: 'default'
+    // Inicializar búsqueda de medicamentos
+    function initMedicamentosSearch() {
+        let searchTimeout;
+        let selectedMedicamento = null;
+        
+        $('#medicamento_search').on('input', function() {
+            const query = $(this).val().trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 3) {
+                $('#medicamento_results').hide();
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                $.ajax({
+                    url: '/transaccion-ap/buscar-articulos',
+                    method: 'GET',
+                    data: { search: query },
+                    success: function(data) {
+                        const results = $('#medicamento_results');
+                        results.empty();
+                        
+                        if (data.length === 0) {
+                            results.append('<div class="collection-item grey-text">No se encontraron medicamentos</div>');
+                        } else {
+                            data.forEach(item => {
+                                results.append(`
+                                    <a href="#!" class="collection-item medicamento-item" data-codigo="${item.codigo}" data-descripcion="${item.descripcion}" data-precio="${item.precio}">
+                                        <div class="row valign-wrapper no-margin">
+                                            <div class="col s10">
+                                                <span class="title">${item.descripcion}</span><br>
+                                                <small class="grey-text">Código: ${item.codigo} | Precio: $${item.precio}</small>
+                                            </div>
+                                            <div class="col s2 right-align">
+                                                <i class="material-icons grey-text">add_circle_outline</i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                `);
+                            });
+                        }
+                        
+                        results.show();
+                    }
+                });
+            }, 300);
         });
+        
+        // Seleccionar medicamento
+        $(document).on('click', '.medicamento-item', function() {
+            selectedMedicamento = {
+                codigo: $(this).data('codigo'),
+                descripcion: $(this).data('descripcion'),
+                precio: $(this).data('precio')
+            };
+            
+            $('#medicamento_search').val(selectedMedicamento.descripcion);
+            $('#medicamento_results').hide();
+        });
+        
+        // Ocultar resultados al hacer click fuera
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('#medicamento_search, #medicamento_results').length) {
+                $('#medicamento_results').hide();
+            }
+        });
+        
+        return { getSelected: () => selectedMedicamento };
     }
+
+    // Toggle entrada manual
+    $('#toggleManualEntry').on('click', function() {
+        const section = $('#manualEntrySection');
+        const button = $(this);
+        
+        if (section.is(':visible')) {
+            section.slideUp();
+            button.html('<i class="material-icons left">edit</i>Colocar manualmente código artículo');
+        } else {
+            section.slideDown();
+            button.html('<i class="material-icons left">close</i>Ocultar entrada manual');
+        }
+    });
 
     // Procesar múltiples transacciones AP
     $('#procesarTransacciones').on('click', function() {
@@ -446,7 +570,13 @@ $(document).ready(function() {
             method: 'POST',
             data: {
                 medicamentos: medicamentosAgregados,
-                afiliado_data: afiliadoElegibilidad
+                afiliado_data: afiliadoElegibilidad,
+                prescripcion: {
+                    tipo_matricula: $('#tipo_matricula').val(),
+                    matricula: $('#matricula').val(),
+                    fecha_receta: $('#fecha_receta').val(),
+                    diagnostico: $('#diagnostico').val()
+                }
             },
             success: function(response) {
                 hideLoading();
@@ -753,8 +883,9 @@ $(document).ready(function() {
     }
 
     // Agregar medicamento
+    let medicamentoSearch;
     $('#agregarMedicamento').on('click', function() {
-        const medicamentoData = $('#medicamento_select').select2('data')[0];
+        const medicamentoData = medicamentoSearch ? medicamentoSearch.getSelected() : null;
         const cantidad = $('#cantidad_medicamento').val();
 
         if (!medicamentoData || !cantidad) {
@@ -771,7 +902,7 @@ $(document).ready(function() {
 
         medicamentosAgregados.push(medicamento);
         actualizarListaMedicamentos();
-        $('#medicamento_select').val(null).trigger('change');
+        $('#medicamento_search').val('');
         $('#cantidad_medicamento').val(1);
         showToast('Medicamento agregado');
     });

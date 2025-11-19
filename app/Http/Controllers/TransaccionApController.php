@@ -143,11 +143,53 @@ class TransaccionApController extends Controller
         }
     }
 
+    public function validarMedicamento(Request $request)
+    {
+        try {
+            $codigo = $request->input('codigo');
+            
+            if (empty($codigo)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Código de medicamento requerido'
+                ], 400);
+            }
+
+            $articulo = ArticulosZafiro::select('id_articulo', 'presentacion_completa', 'nro_registro_alfabeta', 'pcio_vta_siva')
+                ->where('nro_registro_alfabeta', $codigo)
+                ->first();
+
+            if (!$articulo) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Medicamento no encontrado'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $articulo->id_articulo,
+                    'codigo' => $articulo->nro_registro_alfabeta,
+                    'descripcion' => $articulo->presentacion_completa,
+                    'precio' => $articulo->pcio_vta_siva ?? 0
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function procesarMultiplesAP(Request $request)
     {
         try {
             $medicamentos = $request->input('medicamentos', []);
             $afiliadoData = $request->input('afiliado_data', []);
+            $prescripcionData = $request->input('prescripcion', []);
 
             if (empty($medicamentos)) {
                 return response()->json(['success' => false, 'message' => 'No hay medicamentos para procesar']);
@@ -162,7 +204,10 @@ class TransaccionApController extends Controller
                     'plan' => $afiliadoData['plan'],
                     'vercred' => $afiliadoData['vercred'],
                     'codigo_prestacion' => $medicamento['codigo'],
-                    'cantidad' => $medicamento['cantidad']
+                    'cantidad' => $medicamento['cantidad'],
+                    'tipo_matricula' => $prescripcionData['tipo_matricula'] ?? '',
+                    'matricula' => $prescripcionData['matricula'] ?? '',
+                    'fecha_receta' => $prescripcionData['fecha_receta'] ?? ''
                 ]);
 
                 try {
@@ -352,7 +397,6 @@ class TransaccionApController extends Controller
         $ambiente = $config['ambiente'];
         $ambienteConfig = $config[$ambiente];
         
-        // Verificar si el usuario tiene privilegio "Farmacias UP"
         $currentPrivilege = \CRUDBooster::myPrivilegeName();
         $currentUser = \CRUDBooster::me();
         $currentEmail = $currentUser ? $currentUser->email : 'no-email';
@@ -360,13 +404,11 @@ class TransaccionApController extends Controller
         $isFarmaciaUp = $currentPrivilege == 'Farmacias UP';
         
         if ($isFarmaciaUp && $currentEmail && $currentEmail != 'no-email') {
-            // Extraer USRID del email (parte antes del @)
             $emailParts = explode('@', $currentEmail);
             $usrid = $emailParts[0];
             $usrpass = 'DIAB';
             $idprestador = $usrid;
         } else {
-            // Usar credenciales del environment
             $usrid = $ambienteConfig['user_id'];
             $usrpass = $ambienteConfig['user_pass'];
             $idprestador = $ambienteConfig['prestador_id'];
@@ -387,40 +429,69 @@ class TransaccionApController extends Controller
         
         $pidContent .= "<VERIFID>AUTO</VERIFID>";
 
-        return "
-        <SOLICITUD>
-            <EMISOR>
-                <ID>hms-ca-web.osup.com.ar</ID>
-                <PROT>CA_V20</PROT>
-                <MSGID>{$msgId}</MSGID>
-                <TER>Web</TER>
-                <APP>{$config['app_name']}</APP>
-                <TIME>{$time}</TIME>
-            </EMISOR>
-            <SEGURIDAD>
-                <TIPOAUT>U</TIPOAUT>
-                <TIPOCON>PRES</TIPOCON>
-                <USRID>{$usrid}</USRID>
-                <USRPASS>{$usrpass}</USRPASS>
-            </SEGURIDAD>
-            <OPER>
-                <TIPO>AP</TIPO>
-                <IDASEG>UP</IDASEG>
-                <IDPRESTADOR>{$idprestador}</IDPRESTADOR>
-                <FECHA>{$fecha}</FECHA>
-            </OPER>
-            <PID>
-                {$pidContent}
-            </PID>
-            <CONTEXTO>
-                <TIPO>A</TIPO>
-            </CONTEXTO>
-            <PR>
-                <TIPO>M</TIPO>
-                <CANT>{$params['cantidad']}</CANT>
-                <ID>{$params['codigo_prestacion']}</ID>
-            </PR>
-        </SOLICITUD>";
+        // Obtener datos del medicamento desde ArticulosZafiro
+        $articulo = ArticulosZafiro::where('nro_registro_alfabeta', $params['codigo_prestacion'])->first();
+        
+        $troquel = $articulo->nro_troquel ?? '';
+        $codbarra = ''; // No hay campo código de barras en la tabla
+        $nomprod = $articulo->des_articulo ?? '';
+        $nompres = $articulo->presentacion ?? '';
+
+        // Datos de prescripción desde el frontend
+        $orgPrescripcion = $params['tipo_matricula'] ?? 'MP 12';
+        $matPrescripcion = $params['matricula'] ?? '507';
+        $fechaPrescripcion = $params['fecha_receta'] ?? $fecha;
+        
+        // Convertir fecha de dd/mm/yyyy a yyyy-mm-dd si viene del frontend
+        if (!empty($params['fecha_receta']) && strpos($params['fecha_receta'], '/') !== false) {
+            $fechaParts = explode('/', $params['fecha_receta']);
+            if (count($fechaParts) === 3) {
+                $fechaPrescripcion = $fechaParts[2] . '-' . str_pad($fechaParts[1], 2, '0', STR_PAD_LEFT) . '-' . str_pad($fechaParts[0], 2, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return "<SOLICITUD>
+<EMISOR>
+    <ID>hms-ca-web.osup.com.ar</ID>
+    <PROT>CA_V20</PROT>
+    <MSGID>{$msgId}</MSGID>
+    <TER>Web</TER>
+    <APP>{$config['app_name']}</APP>
+    <TIME>{$time}</TIME>
+</EMISOR>
+<SEGURIDAD>
+    <TIPOAUT>U</TIPOAUT>
+    <USRID>{$usrid}</USRID>
+    <USRPASS>{$usrpass}</USRPASS>
+    <TIPOCON>PRES</TIPOCON>
+</SEGURIDAD>
+<OPER>
+    <TIPO>AP</TIPO>
+    <IDASEG>UP</IDASEG>
+    <IDPRESTADOR>{$idprestador}</IDPRESTADOR>
+    <FECHA>{$fecha}</FECHA>
+</OPER>
+<PID>
+    {$pidContent}
+</PID>
+<CONTEXTO>
+    <TIPO>A</TIPO>
+</CONTEXTO>
+<PRESCRIP>
+    <ORG>{$orgPrescripcion}</ORG>
+    <MAT>{$matPrescripcion}</MAT>
+    <FECHA>{$fechaPrescripcion}</FECHA>
+</PRESCRIP>
+<PR>
+    <TIPO>M</TIPO>
+    <CANT>{$params['cantidad']}</CANT>
+    <TROQUEL>{$troquel}</TROQUEL>
+    <CODBARRA>{$codbarra}</CODBARRA>
+    <ID>{$params['codigo_prestacion']}</ID>
+    <NOMPROD>{$nomprod}</NOMPROD>
+    <NOMPRES>{$nompres}</NOMPRES>
+</PR>
+</SOLICITUD>";
     }
 
     private function construirXmlElegibilidad($params)
