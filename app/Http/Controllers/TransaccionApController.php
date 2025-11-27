@@ -203,6 +203,7 @@ class TransaccionApController extends Controller
                     'token' => $afiliadoData['token'],
                     'plan' => $afiliadoData['plan'],
                     'vercred' => $afiliadoData['vercred'],
+                    'tipo' => $medicamento['tipo'] ?? 'M', // Usar el tipo del medicamento
                     'codigo_prestacion' => $medicamento['codigo'],
                     'cantidad' => $medicamento['cantidad'],
                     'tipo_matricula' => $prescripcionData['tipo_matricula'] ?? '',
@@ -219,6 +220,7 @@ class TransaccionApController extends Controller
 
                     $resultado = [
                         'medicamento' => [
+                            'tipo' => $medicamento['tipo'] ?? 'M',
                             'codigo' => (string)($xmlResponse->PR->ID ?? $medicamento['codigo']),
                             'descripcion' => (string)($xmlResponse->PR->DESCRIPCION ?? $medicamento['descripcion'] ?? 'Medicamento manual'),
                             'cantidad' => (int)($xmlResponse->PR->CANT ?? $medicamento['cantidad'])
@@ -429,13 +431,24 @@ class TransaccionApController extends Controller
         
         $pidContent .= "<VERIFID>AUTO</VERIFID>";
 
-        // Obtener datos del medicamento desde ArticulosZafiro
-        $articulo = ArticulosZafiro::where('nro_registro_alfabeta', $params['codigo_prestacion'])->first();
+        // Usar el tipo del parámetro (M o P)
+        $tipo = $params['tipo'] ?? 'M';
+
+        // Si es tipo M (Medicamento), obtener datos del medicamento desde ArticulosZafiro
+        $troquel = '';
+        $codbarra = '';
+        $nomprod = '';
+        $nompres = '';
         
-        $troquel = $articulo->nro_troquel ?? '';
-        $codbarra = ''; // No hay campo código de barras en la tabla
-        $nomprod = $articulo->des_articulo ?? '';
-        $nompres = $articulo->presentacion ?? '';
+        if ($tipo === 'M') {
+            $articulo = ArticulosZafiro::where('nro_registro_alfabeta', $params['codigo_prestacion'])->first();
+            if ($articulo) {
+                $troquel = $articulo->nro_troquel ?? '';
+                $codbarra = ''; // No hay campo código de barras en la tabla
+                $nomprod = $articulo->des_articulo ?? '';
+                $nompres = $articulo->presentacion ?? '';
+            }
+        }
 
         // Datos de prescripción desde el frontend
         $orgPrescripcion = $params['tipo_matricula'] ?? 'MP 12';
@@ -449,6 +462,15 @@ class TransaccionApController extends Controller
                 $fechaPrescripcion = $fechaParts[2] . '-' . str_pad($fechaParts[1], 2, '0', STR_PAD_LEFT) . '-' . str_pad($fechaParts[0], 2, '0', STR_PAD_LEFT);
             }
         }
+
+        // Construir el nodo PR según el tipo
+        $prContent = "<TIPO>{$tipo}</TIPO><CANT>{$params['cantidad']}</CANT><ID>{$params['codigo_prestacion']}</ID>";
+        
+        if ($tipo === 'M') {
+            // Para medicamentos, agregar campos específicos
+            $prContent .= "<TROQUEL>{$troquel}</TROQUEL><CODBARRA>{$codbarra}</CODBARRA><NOMPROD>{$nomprod}</NOMPROD><NOMPRES>{$nompres}</NOMPRES>";
+        }
+        // Para prestaciones (P), solo se necesita TIPO, CANT e ID
 
         return "<SOLICITUD>
 <EMISOR>
@@ -483,13 +505,7 @@ class TransaccionApController extends Controller
     <FECHA>{$fechaPrescripcion}</FECHA>
 </PRESCRIP>
 <PR>
-    <TIPO>M</TIPO>
-    <CANT>{$params['cantidad']}</CANT>
-    <TROQUEL>{$troquel}</TROQUEL>
-    <CODBARRA>{$codbarra}</CODBARRA>
-    <ID>{$params['codigo_prestacion']}</ID>
-    <NOMPROD>{$nomprod}</NOMPROD>
-    <NOMPRES>{$nompres}</NOMPRES>
+    {$prContent}
 </PR>
 </SOLICITUD>";
     }

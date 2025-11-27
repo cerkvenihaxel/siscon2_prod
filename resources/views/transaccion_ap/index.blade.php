@@ -67,7 +67,7 @@
                     <div class="col s6 center">
                         <div id="step1-indicator" class="status-chip status-pending">
                             <i class="material-icons tiny left">person_search</i>
-                            1. Elegibilidad
+                            1. Validación de Afiliado
                         </div>
                     </div>
                     <div class="col s6 center">
@@ -84,13 +84,13 @@
         </div>
     </div>
 
-    <!-- Sección 1: Consulta de Elegibilidad -->
+    <!-- Sección 1: Validación de Afiliado -->
     <div class="card step-card">
         <div class="step-header">
             <div class="row valign-wrapper">
                 <div class="step-number">1</div>
                 <div>
-                    <h5 class="white-text no-margin">Consulta Rápida de Elegibilidad</h5>
+                    <h5 class="white-text no-margin">Validación de Afiliado</h5>
                     <p class="white-text opacity-8 no-margin">Verificar estado del afiliado en tiempo real</p>
                 </div>
             </div>
@@ -202,11 +202,18 @@
                         <div class="divider" style="margin: 20px 0;"></div>
                         <h6><i class="material-icons left">edit</i>Entrada Manual de Código</h6>
                         <div class="row">
-                            <div class="input-field col s12 m4">
-                                <input id="codigo_manual" type="text" class="validate">
+                            <div class="input-field col s12 m2">
+                                <select id="tipo_manual">
+                                    <option value="P" selected>P - Prestación</option>
+                                    <option value="M">M - Medicamento</option>
+                                </select>
+                                <label>TIPO</label>
+                            </div>
+                            <div class="input-field col s12 m3">
+                                <input id="codigo_manual" type="text" class="validate" placeholder="1420107">
                                 <label for="codigo_manual">Código de Prestación</label>
                             </div>
-                            <div class="input-field col s12 m4">
+                            <div class="input-field col s12 m3">
                                 <input id="descripcion_manual" type="text" class="validate">
                                 <label for="descripcion_manual">Descripción (opcional)</label>
                             </div>
@@ -292,7 +299,7 @@
 <!-- Modal para XMLs -->
 <div id="xmlModal" class="modal modal-fixed-footer" style="width: 90%; max-width: 1200px;">
     <div class="modal-content">
-        <h4><i class="material-icons left">code</i>XML de Elegibilidad</h4>
+        <h4><i class="material-icons left">code</i>XML de Validación de Afiliado</h4>
         <div class="row">
             <div class="col s6">
                 <h6 class="blue-text">XML Solicitud</h6>
@@ -366,7 +373,7 @@ $(document).ready(function() {
     let afiliadoElegibilidad = {};
     let xmlData = {}; // Para almacenar XMLs
 
-    // Consulta de Elegibilidad - Guardar datos del afiliado
+    // Validación de Afiliado - Guardar datos del afiliado
     $('#elegibilidadForm').on('submit', function(e) {
         e.preventDefault();
         showLoading();
@@ -424,11 +431,11 @@ $(document).ready(function() {
                     $('#verXmlBtn').show();
                     updateProgress(2);
                     medicamentoSearch = initMedicamentosSearch();
-                    showToast('Elegibilidad verificada - Puede buscar medicamentos');
+                    showToast('Validación verificada - Puede buscar medicamentos');
                 } else {
                     let errorHtml = `
                         <div class="red lighten-4 red-text text-darken-2" style="padding: 20px; border-radius: 8px;">
-                            <h6><i class="material-icons left">error</i>Error de Elegibilidad</h6>
+                            <h6><i class="material-icons left">error</i>Error de Validación</h6>
                             <p><strong>Mensaje:</strong> ${response.message}</p>
                             ${response.data && response.data.RSPMSGG ? `<p><strong>Detalle:</strong> ${response.data.RSPMSGG}</p>` : ''}
                             ${response.idtran ? `<p><strong>ID Transacción:</strong> ${response.idtran}</p>` : ''}
@@ -439,12 +446,12 @@ $(document).ready(function() {
                     $('#elegibilidadResult').slideDown();
                     $('#verXmlBtn').show();
                     $('#step1-indicator').removeClass('status-pending').addClass('status-error');
-                    showToast('Error en verificación de elegibilidad', 'error');
+                    showToast('Error en verificación de validación', 'error');
                 }
             },
             error: function() {
                 hideLoading();
-                showToast('Error en consulta de elegibilidad', 'error');
+                showToast('Error en consulta de validación', 'error');
             }
         });
     });
@@ -553,6 +560,10 @@ $(document).ready(function() {
         } else {
             section.slideDown();
             button.html('<i class="material-icons left">close</i>Ocultar entrada manual');
+            // Reinicializar el select cuando se muestra la sección
+            setTimeout(function() {
+                M.FormSelect.init(document.getElementById('tipo_manual'));
+            }, 100);
         }
     });
 
@@ -652,6 +663,9 @@ $(document).ready(function() {
                 `;
             }
 
+            // Mostrar tipo si está disponible
+            const tipoInfo = resultado.medicamento.tipo ? `<strong>Tipo:</strong> ${resultado.medicamento.tipo} (${resultado.medicamento.tipo === 'M' ? 'Medicamento' : 'Prestación'})<br>` : '';
+
             container.append(`
                 <div class="card">
                     <div class="card-content ${cardColor} ${textColor}">
@@ -661,6 +675,7 @@ $(document).ready(function() {
                         </div>
                         <div class="row">
                             <div class="col s6">
+                                ${tipoInfo}
                                 <strong>Código:</strong> ${resultado.medicamento.codigo}<br>
                                 <strong>Cantidad:</strong> ${resultado.medicamento.cantidad}<br>
                                 <strong>Status:</strong> ${resultado.status}
@@ -688,7 +703,7 @@ $(document).ready(function() {
     window.imprimirTicketRechazo = function(codigo, descripcion, idtran, motivo, detalle, adicional) {
         const params = new URLSearchParams({
             afiliado: afiliadoElegibilidad.codigo,
-            nombre: 'TITULAR', // Se puede mejorar obteniendo del resultado de elegibilidad
+            nombre: 'TITULAR', // Se puede mejorar obteniendo del resultado de validación
             apellido: 'PRUEBAS',
             plan: 'ACCORD DORADO',
             medicamento: descripcion,
@@ -736,7 +751,7 @@ $(document).ready(function() {
         M.toast({html: `<i class="material-icons left">${type === 'success' ? 'check' : 'error'}</i>${message}`, classes: color});
     }
 
-    // Consulta de Elegibilidad
+    // Validación de Afiliado
     $('#elegibilidadForm').on('submit', function(e) {
         e.preventDefault();
         showLoading();
@@ -777,12 +792,12 @@ $(document).ready(function() {
                     $('#elegibilidadData').html(elegibilidadHtml);
                     $('#elegibilidadResult').slideDown();
                     updateProgress(2);
-                    showToast('Elegibilidad verificada correctamente');
+                    showToast('Validación verificada correctamente');
                 } else {
                     // Mostrar error detallado
                     let errorHtml = `
                         <div class="red lighten-4 red-text text-darken-2" style="padding: 20px; border-radius: 8px;">
-                            <h6><i class="material-icons left">error</i>Error de Elegibilidad</h6>
+                            <h6><i class="material-icons left">error</i>Error de Validación</h6>
                             <p><strong>Mensaje:</strong> ${response.message}</p>
                             ${response.data && response.data.RSPMSGG ? `<p><strong>Detalle:</strong> ${response.data.RSPMSGG}</p>` : ''}
                             ${response.idtran ? `<p><strong>ID Transacción:</strong> ${response.idtran}</p>` : ''}
@@ -792,12 +807,12 @@ $(document).ready(function() {
                     $('#elegibilidadData').html(errorHtml);
                     $('#elegibilidadResult').slideDown();
                     $('#step1-indicator').removeClass('status-pending').addClass('status-error');
-                    showToast('Error en verificación de elegibilidad', 'error');
+                    showToast('Error en verificación de validación', 'error');
                 }
             },
             error: function() {
                 hideLoading();
-                showToast('Error en consulta de elegibilidad', 'error');
+                showToast('Error en consulta de validación', 'error');
             }
         });
     });
@@ -807,7 +822,7 @@ $(document).ready(function() {
         e.preventDefault();
         
         if (!$('#afiliado').val()) {
-            showToast('Primero debe consultar la elegibilidad', 'error');
+            showToast('Primero debe realizar la validación de afiliado', 'error');
             return;
         }
 
@@ -909,6 +924,7 @@ $(document).ready(function() {
 
     // Agregar medicamento manual
     $('#agregarManual').on('click', function() {
+        const tipo = $('#tipo_manual').val();
         const codigo = $('#codigo_manual').val().trim();
         const descripcion = $('#descripcion_manual').val().trim() || 'Medicamento manual';
         const cantidad = $('#cantidad_manual').val();
@@ -925,6 +941,7 @@ $(document).ready(function() {
         }
 
         const medicamento = {
+            tipo: tipo,
             codigo: codigo,
             descripcion: descripcion,
             cantidad: parseInt(cantidad),
@@ -939,7 +956,7 @@ $(document).ready(function() {
         $('#codigo_manual').val('');
         $('#descripcion_manual').val('');
         $('#cantidad_manual').val(1);
-        showToast('Código agregado manualmente');
+        showToast(`${tipo === 'P' ? 'Prestación' : 'Medicamento'} agregado manualmente`);
     });
 
     // Actualizar lista de medicamentos
@@ -948,12 +965,15 @@ $(document).ready(function() {
         container.empty();
 
         medicamentosAgregados.forEach(function(med, index) {
+            const tipoLabel = med.tipo ? `Tipo: ${med.tipo} | ` : '';
+            const manualLabel = med.manual ? ' (Manual)' : '';
+            
             container.append(`
                 <div class="medication-item">
                     <div class="row valign-wrapper">
                         <div class="col s8">
-                            <h6 class="no-margin">${med.descripcion}</h6>
-                            <p class="grey-text no-margin">Código: ${med.codigo} | Cantidad: ${med.cantidad} | Precio: $${med.precio}</p>
+                            <h6 class="no-margin">${med.descripcion}${manualLabel}</h6>
+                            <p class="grey-text no-margin">${tipoLabel}Código: ${med.codigo} | Cantidad: ${med.cantidad} | Precio: $${med.precio}</p>
                         </div>
                         <div class="col s4 right-align">
                             <button class="btn btn-danger waves-effect waves-light" onclick="eliminarMedicamento(${index})">
