@@ -7,6 +7,7 @@ use App\Models\UpConsumo;
 use App\Models\ArticulosZafiro;
 use App\Services\UnionPersonalSoapService;
 use App\Services\TwilioSender;
+use App\Enums\CodigosAlfabetaPermitidos;
 use CRUDBooster;
 use DB;
 
@@ -119,7 +120,8 @@ class TransaccionApController extends Controller
         try {
             $query = ArticulosZafiro::select('id_articulo', 'presentacion_completa', 'nro_registro_alfabeta', 'pcio_vta_siva')
                 ->whereNotNull('nro_registro_alfabeta')
-                ->where('nro_registro_alfabeta', '!=', '');
+                ->where('nro_registro_alfabeta', '!=', '')
+                ->whereIn('nro_registro_alfabeta', CodigosAlfabetaPermitidos::CODIGOS);
 
             if ($request->search) {
                 $query->where('presentacion_completa', 'like', '%' . $request->search . '%');
