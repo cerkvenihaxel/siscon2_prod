@@ -211,7 +211,7 @@
                             </div>
                             <div class="input-field col s12 m3">
                                 <input id="codigo_manual" type="text" class="validate" placeholder="1420107">
-                                <label for="codigo_manual">Código de Prestación</label>
+                                <label for="codigo_manual">CODIGO ALFABETA</label>
                             </div>
                             <div class="input-field col s12 m3">
                                 <input id="descripcion_manual" type="text" class="validate">
@@ -237,11 +237,30 @@
                         <div class="input-field col s12 m3">
                             <select id="tipo_matricula">
                                 <option value="" disabled selected>Seleccione tipo</option>
-                                <option value="Ciudad de B.Aires">Ciudad de B.Aires</option>
-                                <option value="Provincia de Buenos Aires">Provincia de Buenos Aires</option>
+                                <option value="Ciudad de Buenos Aires">Ciudad de Buenos Aires</option>
+                                <option value="Buenos Aires">Buenos Aires</option>
+                                <option value="Catamarca">Catamarca</option>
+                                <option value="Chaco">Chaco</option>
+                                <option value="Chubut">Chubut</option>
                                 <option value="Córdoba">Córdoba</option>
-                                <option value="Santa Fe">Santa Fe</option>
+                                <option value="Corrientes">Corrientes</option>
+                                <option value="Entre Ríos">Entre Ríos</option>
+                                <option value="Formosa">Formosa</option>
+                                <option value="Jujuy">Jujuy</option>
+                                <option value="La Pampa">La Pampa</option>
+                                <option value="La Rioja">La Rioja</option>
                                 <option value="Mendoza">Mendoza</option>
+                                <option value="Misiones">Misiones</option>
+                                <option value="Neuquén">Neuquén</option>
+                                <option value="Río Negro">Río Negro</option>
+                                <option value="Salta">Salta</option>
+                                <option value="San Juan">San Juan</option>
+                                <option value="San Luis">San Luis</option>
+                                <option value="Santa Cruz">Santa Cruz</option>
+                                <option value="Santa Fe">Santa Fe</option>
+                                <option value="Santiago del Estero">Santiago del Estero</option>
+                                <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                <option value="Tucumán">Tucumán</option>
                             </select>
                             <label>Tipo Matrícula</label>
                         </div>
