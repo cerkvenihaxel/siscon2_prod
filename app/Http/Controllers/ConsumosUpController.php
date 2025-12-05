@@ -230,6 +230,24 @@ class ConsumosUpController extends Controller
         $ambiente = $config['ambiente'];
         $ambienteConfig = $config[$ambiente];
         
+        // Obtener credenciales según el tipo de usuario
+        $currentPrivilege = \CRUDBooster::myPrivilegeName();
+        $currentUser = \CRUDBooster::me();
+        $currentEmail = $currentUser ? $currentUser->email : 'no-email';
+        
+        $isFarmaciaUp = $currentPrivilege == 'Farmacias UP';
+        
+        if ($isFarmaciaUp && $currentEmail && $currentEmail != 'no-email') {
+            $emailParts = explode('@', $currentEmail);
+            $usrid = $emailParts[0];
+            $usrpass = 'DIAB';
+            $idprestador = $usrid;
+        } else {
+            $usrid = $ambienteConfig['user_id'];
+            $usrpass = $ambienteConfig['user_pass'];
+            $idprestador = $ambienteConfig['prestador_id'];
+        }
+        
         $msgId = str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT);
         $fecha = date('Y-m-d');
         $time = date('Y-m-d\TH:i:s');
@@ -247,13 +265,13 @@ class ConsumosUpController extends Controller
             <SEGURIDAD>
                 <TIPOAUT>U</TIPOAUT>
                 <TIPOCON>PRES</TIPOCON>
-                <USRID>{$ambienteConfig['user_id']}</USRID>
-                <USRPASS>{$ambienteConfig['user_pass']}</USRPASS>
+                <USRID>{$usrid}</USRID>
+                <USRPASS>{$usrpass}</USRPASS>
             </SEGURIDAD>
             <OPER>
                 <TIPO>ATR</TIPO>
                 <IDASEG>UP</IDASEG>
-                <IDPRESTADOR>{$ambienteConfig['prestador_id']}</IDPRESTADOR>
+                <IDPRESTADOR>{$idprestador}</IDPRESTADOR>
                 <TIPOIDANUL>IDTRAN</TIPOIDANUL>
                 <IDANUL>{$consumo->idtran}</IDANUL>
                 <FECHA>{$fecha}</FECHA>
