@@ -1,4 +1,4 @@
-<div class="sidebar" style="position: fixed; left: 0; top: 0; width: 250px; height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 1000; overflow-y: auto;">
+<div class="sidebar" id="sidebar" style="position: fixed; left: 0; top: 0; width: 250px; height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 1000; overflow-y: auto; transition: transform 0.3s ease;">
     <div class="sidebar-header" style="padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2);">
         <h5 class="white-text no-margin">
             <i class="material-icons left">medical_services</i>
@@ -95,5 +95,8 @@ $(document).ready(function() {
 }
 .sidebar .collection-item:hover {
     background: rgba(255,255,255,0.1) !important;
+}
+.sidebar.collapsed {
+    transform: translateX(-250px);
 }
 </style>

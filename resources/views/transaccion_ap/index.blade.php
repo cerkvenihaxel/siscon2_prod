@@ -12,6 +12,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
     
+    <!-- Polyfills para navegadores antiguos -->
+    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=Promise,fetch,Object.assign,Array.from,URLSearchParams"></script>
+    
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -426,6 +429,12 @@ $(document).ready(function() {
                 
                 if (response.success && response.status === 'OK') {
                     let afiData = response.data.AFI || {};
+                    
+                    // Actualizar datos del afiliado con la respuesta
+                    afiliadoElegibilidad.nombre = afiData.NOMBRE || '';
+                    afiliadoElegibilidad.apellido = afiData.APELLIDO || '';
+                    afiliadoElegibilidad.plan_nombre = afiData.PLAN_NOMBRE || '';
+                    
                     let elegibilidadHtml = `
                         <div class="green lighten-4 green-text text-darken-2" style="padding: 20px; border-radius: 8px;">
                             <h6><i class="material-icons left">check_circle</i>Afiliado Elegible</h6>
@@ -722,9 +731,9 @@ $(document).ready(function() {
     window.imprimirTicketRechazo = function(codigo, descripcion, idtran, motivo, detalle, adicional) {
         const params = new URLSearchParams({
             afiliado: afiliadoElegibilidad.codigo,
-            nombre: 'TITULAR', // Se puede mejorar obteniendo del resultado de validación
-            apellido: 'PRUEBAS',
-            plan: 'ACCORD DORADO',
+            nombre: afiliadoElegibilidad.nombre,
+            apellido: afiliadoElegibilidad.apellido,
+            plan: afiliadoElegibilidad.plan_nombre ? `${afiliadoElegibilidad.plan_nombre} (${afiliadoElegibilidad.plan})` : afiliadoElegibilidad.plan,
             medicamento: descripcion,
             codigo_prestacion: codigo,
             cantidad: '1',

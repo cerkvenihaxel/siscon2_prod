@@ -11,17 +11,20 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     
+    <!-- Polyfills para navegadores antiguos -->
+    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=Promise,fetch,Object.assign,Array.from"></script>
+    
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     
     <style>
-        body { font-family: 'Roboto', sans-serif; background: #f5f5f5; margin-left: 250px; margin-top: 60px; }
+        body { font-family: 'Roboto', Arial, sans-serif; background: #f5f5f5; margin-left: 250px; margin-top: 60px; transition: margin-left 0.3s ease; }
         .main-content { padding: 20px; }
         .stats-card { margin-bottom: 20px; }
         .filter-card { margin-bottom: 20px; }
         .table-card { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .status-chip { padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+        .status-chip { padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; }
         .status-pendiente { background: #fff3cd; color: #856404; }
         .status-procesado { background: #ffeaa7; color: #d63031; }
         .status-remitado { background: #fdcb6e; color: #e17055; }
@@ -32,6 +35,8 @@
         .pagination-wrapper { display: inline-flex; align-items: center; }
         .pagination-wrapper .btn-flat { margin: 0 2px; min-width: 36px; height: 36px; line-height: 36px; padding: 0; text-align: center; }
         .pagination-wrapper .disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Fallback para iconos */
+        .material-icons { font-family: 'Material Icons'; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'liga'; }
     </style>
 </head>
 <body>
@@ -170,6 +175,7 @@
                                 <th>Nombre</th>
                                 <th>Medicamento</th>
                                 <th>Cantidad</th>
+                                <th>Usuario/Farmacia</th>
                                 <th>Nro Pedido</th>
                                 <th>Remito</th>
                                 <th>Transporte</th>
@@ -185,6 +191,7 @@
                                 <td>{{ $consumo->apellidos }}, {{ $consumo->nombres }}</td>
                                 <td>{{ $consumo->desc }}</td>
                                 <td>{{ $consumo->cant }}</td>
+                                <td>{{ $consumo->usuario_aprobacion ?? $consumo->usuario_carga ?? '-' }}</td>
                                 <td>{{ $consumo->nro_pedido ?? '-' }}</td>
                                 <td>{{ $consumo->remito ?? '-' }}</td>
                                 <td>{{ $consumo->nro_transporte ?? '-' }}</td>
@@ -219,7 +226,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="10" class="center">No hay consumos para mostrar</td>
+                                <td colspan="11" class="center">No hay consumos para mostrar</td>
                             </tr>
                             @endforelse
                         </tbody>

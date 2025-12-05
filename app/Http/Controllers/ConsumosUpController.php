@@ -149,8 +149,9 @@ class ConsumosUpController extends Controller
                 return response()->json(['success' => false, 'message' => 'No tiene permisos para anular este consumo']);
             }
             
-            if (!in_array($consumo->estado_calculado, ['pendiente', 'procesado', 'remitado', 'en_transito'])) {
-                return response()->json(['success' => false, 'message' => 'Este consumo no puede ser anulado en su estado actual']);
+            // No permitir anular consumos remitados o en tránsito
+            if (in_array($consumo->estado_calculado, ['remitado', 'en_transito', 'entregado', 'anulado'])) {
+                return response()->json(['success' => false, 'message' => 'No se puede anular un consumo en estado ' . strtoupper($consumo->estado_calculado)]);
             }
 
             // Todos los consumos van a la vista de anulación ATR
