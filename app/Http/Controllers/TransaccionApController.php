@@ -293,18 +293,20 @@ class TransaccionApController extends Controller
             }
         }
 
-        // Extraer localidad y provincia del domicilio (formato: "CIUDAD PROVINCIA")
-        $domicilio = (string)($xmlResponse->AFIDOM ?? '');
-        $localidad = '';
-        $provincia = '';
-        if (!empty($domicilio)) {
-            $partes = explode(' ', $domicilio);
-            if (count($partes) >= 2) {
-                $provincia = array_pop($partes);
-                $localidad = implode(' ', $partes);
-            } else {
-                $localidad = $domicilio;
-            }
+        // Extraer localidad y provincia del domicilio usando AFIPROV y AFILOC
+        $provincia = (string)($xmlResponse->AFIPROV ?? '');
+        $localidad = (string)($xmlResponse->AFILOC ?? '');
+
+        // Obtener USRID del usuario actual
+        $currentPrivilege = \CRUDBooster::myPrivilegeName();
+        $currentUser = \CRUDBooster::me();
+        $currentEmail = $currentUser ? $currentUser->email : null;
+        $isFarmaciaUp = $currentPrivilege == 'Farmacias UP';
+        
+        $usrid = config('union_personal.' . config('union_personal.ambiente') . '.prestador_id');
+        if ($isFarmaciaUp && $currentEmail) {
+            $emailParts = explode('@', $currentEmail);
+            $usrid = $emailParts[0];
         }
 
         $datos = [
@@ -314,12 +316,12 @@ class TransaccionApController extends Controller
             'nombres' => (string)($xmlResponse->AFINOM ?? ''),
             'modelo_plan' => (string)($xmlResponse->AFIPLAN ?? ''),
             'nombre_modelo_plan' => (string)($xmlResponse->AFIPLANNOM ?? ''),
-            'codigopostal' => '', // No viene en este XML
+            'codigopostal' => (string)($xmlResponse->AFICP ?? ''),
             'localidad' => $localidad,
             'provincia' => $provincia,
             'edad' => $edad,
             'tipo_afiliado' => (string)($xmlResponse->AFIAFIL ?? ''),
-            'titofam' => '', // No viene en este XML
+            'titofam' => (string)($xmlResponse->AFITITOFAM ?? ''),
 
             // Datos de la prestación
             'fecha_tran' => now(),
@@ -342,7 +344,7 @@ class TransaccionApController extends Controller
             'idtran_aprobacion' => (string)$xmlResponse->IDTRAN,
             'idaut' => (string)($xmlResponse->IDAUT ?? ''),
             'emisor_app' => config('union_personal.app_name'),
-            'cod_prestador' => config('union_personal.' . config('union_personal.ambiente') . '.prestador_id'),
+            'cod_prestador' => $usrid,
 
             // Campos de flujo - Como viene de AP ya aprobado
             'estado_flujo' => 'aprobado',
