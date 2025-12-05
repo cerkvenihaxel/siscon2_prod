@@ -32,9 +32,11 @@
         .status-entregado { background: #00b894; color: white; }
         .status-anulado { background: #d63031; color: white; }
         .btn-action { margin: 2px; }
-        .pagination-wrapper { display: inline-flex; align-items: center; }
-        .pagination-wrapper .btn-flat { margin: 0 2px; min-width: 36px; height: 36px; line-height: 36px; padding: 0; text-align: center; }
-        .pagination-wrapper .disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination-wrapper { display: inline-flex; align-items: center; gap: 4px; }
+        .pagination-wrapper .btn-flat { margin: 0; min-width: 36px; height: 36px; line-height: 36px; padding: 0 8px; text-align: center; border-radius: 4px; }
+        .pagination-wrapper .btn-flat:hover:not(.disabled) { background: #f0f0f0; }
+        .pagination-wrapper .active { background: #667eea; color: white !important; }
+        .pagination-wrapper .disabled { opacity: 0.5; cursor: not-allowed; color: #999; }
         /* Fallback para iconos */
         .material-icons { font-family: 'Material Icons'; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'liga'; }
     </style>
@@ -244,18 +246,62 @@
                     <div class="col s6 right-align">
                         @if ($consumos->hasPages())
                             <div class="pagination-wrapper">
+                                {{-- Primera página --}}
                                 @if ($consumos->onFirstPage())
-                                    <span class="btn-flat disabled grey-text">‹</span>
+                                    <span class="btn-flat disabled">«</span>
+                                @else
+                                    <a href="{{ $consumos->url(1) }}" class="btn-flat waves-effect">«</a>
+                                @endif
+                                
+                                {{-- Anterior --}}
+                                @if ($consumos->onFirstPage())
+                                    <span class="btn-flat disabled">‹</span>
                                 @else
                                     <a href="{{ $consumos->previousPageUrl() }}" class="btn-flat waves-effect">‹</a>
                                 @endif
                                 
-                                <span class="btn-flat disabled">{{ $consumos->currentPage() }}</span>
+                                {{-- Páginas numeradas --}}
+                                @php
+                                    $current = $consumos->currentPage();
+                                    $last = $consumos->lastPage();
+                                    $start = max(1, $current - 2);
+                                    $end = min($last, $current + 2);
+                                @endphp
                                 
+                                @if($start > 1)
+                                    <a href="{{ $consumos->url(1) }}" class="btn-flat waves-effect">1</a>
+                                    @if($start > 2)
+                                        <span class="btn-flat disabled">...</span>
+                                    @endif
+                                @endif
+                                
+                                @for ($i = $start; $i <= $end; $i++)
+                                    @if ($i == $current)
+                                        <span class="btn-flat active">{{ $i }}</span>
+                                    @else
+                                        <a href="{{ $consumos->url($i) }}" class="btn-flat waves-effect">{{ $i }}</a>
+                                    @endif
+                                @endfor
+                                
+                                @if($end < $last)
+                                    @if($end < $last - 1)
+                                        <span class="btn-flat disabled">...</span>
+                                    @endif
+                                    <a href="{{ $consumos->url($last) }}" class="btn-flat waves-effect">{{ $last }}</a>
+                                @endif
+                                
+                                {{-- Siguiente --}}
                                 @if ($consumos->hasMorePages())
                                     <a href="{{ $consumos->nextPageUrl() }}" class="btn-flat waves-effect">›</a>
                                 @else
-                                    <span class="btn-flat disabled grey-text">›</span>
+                                    <span class="btn-flat disabled">›</span>
+                                @endif
+                                
+                                {{-- Última página --}}
+                                @if ($consumos->currentPage() == $consumos->lastPage())
+                                    <span class="btn-flat disabled">»</span>
+                                @else
+                                    <a href="{{ $consumos->url($consumos->lastPage()) }}" class="btn-flat waves-effect">»</a>
                                 @endif
                             </div>
                         @endif
