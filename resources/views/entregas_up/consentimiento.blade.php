@@ -125,7 +125,7 @@
 <!-- PÁGINA 1: DATOS DE LA ENTREGA -->
 <div class="page">
     <div class="header">
-        <img src="{{ asset('siscon.png') }}" alt="SISCON Logo">
+        <img src="{{ asset('SISCON.png') }}" alt="SISCON Logo">
         <h1>COMPROBANTE DE ENTREGA DE PRESTACIÓN</h1>
         <h2>Unión Personal - Sistema SISCON</h2>
         <p>ID Entrega: #{{ $entrega->id }} | Fecha: {{ $entrega->fecha_entrega->format('d/m/Y') }}</p>
@@ -282,7 +282,7 @@
 <!-- PÁGINA 2: CONSENTIMIENTO Y FIRMA -->
 <div class="page">
     <div class="header">
-        <img src="{{ asset('siscon.png') }}" alt="SISCON Logo">
+        <img src="{{ asset('SISCON.png') }}" alt="SISCON Logo">
         <h1>CONSENTIMIENTO DE ENTREGA</h1>
         <h2>ID Entrega: #{{ $entrega->id }}</h2>
     </div>

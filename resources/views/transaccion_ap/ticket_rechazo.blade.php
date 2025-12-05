@@ -27,7 +27,7 @@
     <div class="ticket">
         <!-- Header -->
         <div class="header">
-            <img src="{{ asset('siscon.png') }}" alt="SISCON" class="logo">
+            <img src="{{ asset('SISCON.png') }}" alt="SISCON" class="logo">
             <div class="title">COMPROBANTE DE RECHAZO</div>
             <div class="subtitle">Transacción de Autorización Previa (AP)</div>
         </div>

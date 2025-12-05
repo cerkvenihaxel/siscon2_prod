@@ -100,7 +100,7 @@
 <body>
     <div class="ticket">
         <div class="header">
-            <img src="{{ asset('siscon.png') }}" alt="SISCON Logo">
+            <img src="{{ asset('SISCON.png') }}" alt="SISCON Logo">
             <h1>SOLICITUD COMPLETA DE PRESTACIÓN</h1>
             <h2>Unión Personal - Sistema SISCON</h2>
             <p>ID Consumo: #{{ $consumo->id }}</p>

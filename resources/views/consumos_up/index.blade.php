@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Consumos UP - Sistema de Gestión</title>
-    <link rel="icon" type="image/png" href="{{ asset('siscon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('SISCON.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
@@ -186,7 +186,7 @@
                         <tbody>
                             @forelse($consumos as $consumo)
                             <tr>
-                                <td>{{ $consumo->fecha_tran ? $consumo->fecha_tran->format('d/m/Y H:i') : '-' }}</td>
+                                <td>{{ $consumo->fecha_tran ? $consumo->fecha_tran->format('d-m-Y H:i') : '-' }}</td>
                                 <td>{{ $consumo->afiliado }}</td>
                                 <td>{{ $consumo->apellidos }}, {{ $consumo->nombres }}</td>
                                 <td>{{ $consumo->desc }}</td>

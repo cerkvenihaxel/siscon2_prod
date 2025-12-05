@@ -148,7 +148,7 @@
 <!-- PÁGINA 1: FORMULARIO DE ENTREGA -->
 <div class="page">
     <div class="header">
-        <img src="{{ asset('siscon.png') }}" alt="SISCON Logo">
+        <img src="{{ asset('SISCON.png') }}" alt="SISCON Logo">
         <h1>FORMULARIO DE ENTREGA DE PRESTACIÓN</h1>
         <h2>Unión Personal - Sistema SISCON</h2>
         <p>Consumo ID: #{{ $consumo->id }} | Fecha: {{ now()->format('d/m/Y') }}</p>
@@ -297,7 +297,7 @@
 <!-- PÁGINA 2: CONSENTIMIENTO -->
 <div class="page">
     <div class="header">
-        <img src="{{ asset('siscon.png') }}" alt="SISCON Logo">
+        <img src="{{ asset('SISCON.png') }}" alt="SISCON Logo">
         <h1>CONSENTIMIENTO DE ENTREGA</h1>
         <h2>Consumo ID: #{{ $consumo->id }}</h2>
     </div>
