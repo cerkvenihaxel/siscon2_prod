@@ -293,9 +293,16 @@ class TransaccionApController extends Controller
             }
         }
 
-        // Extraer localidad y provincia del domicilio usando AFIPROV y AFILOC
+        // Extraer localidad y provincia del domicilio
         $provincia = (string)($xmlResponse->AFIPROV ?? '');
         $localidad = (string)($xmlResponse->AFILOC ?? '');
+        
+        // Si no vienen AFIPROV/AFILOC, parsear AFIDOM
+        if (empty($localidad) && empty($provincia) && !empty($xmlResponse->AFIDOM)) {
+            $parsed = $this->parsearDomicilioArgentino((string)$xmlResponse->AFIDOM);
+            $localidad = $parsed['localidad'];
+            $provincia = $parsed['provincia'];
+        }
 
         // Obtener USRID del usuario actual
         $currentPrivilege = \CRUDBooster::myPrivilegeName();
@@ -627,5 +634,27 @@ class TransaccionApController extends Controller
                 'message' => 'Error: ' . $e->getMessage()
             ]);
         }
+    }
+
+    private function parsearDomicilioArgentino($domicilio)
+    {
+        $provincias = [
+            'BUENOS AIRES', 'CATAMARCA', 'CHACO', 'CHUBUT', 'CORDOBA', 'CORRIENTES',
+            'ENTRE RIOS', 'FORMOSA', 'JUJUY', 'LA PAMPA', 'LA RIOJA', 'MENDOZA',
+            'MISIONES', 'NEUQUEN', 'RIO NEGRO', 'SALTA', 'SAN JUAN', 'SAN LUIS',
+            'SANTA CRUZ', 'SANTA FE', 'SANTIAGO DEL ESTERO', 'TIERRA DEL FUEGO',
+            'TUCUMAN', 'CABA', 'CIUDAD AUTONOMA DE BUENOS AIRES'
+        ];
+
+        $domicilioUpper = strtoupper(trim($domicilio));
+        
+        foreach ($provincias as $prov) {
+            if (strpos($domicilioUpper, $prov) !== false) {
+                $localidad = trim(str_replace($prov, '', $domicilioUpper));
+                return ['localidad' => $localidad, 'provincia' => $prov];
+            }
+        }
+
+        return ['localidad' => $domicilio, 'provincia' => ''];
     }
 }
