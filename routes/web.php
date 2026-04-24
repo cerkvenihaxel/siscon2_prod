@@ -24,6 +24,9 @@ use App\Http\Controllers\AfiliadoArticuloController;
 use App\Http\Controllers\AccidentesReportController;
 
 use App\Http\Controllers\BuscadorAfiliadoConvenioController;
+use App\Http\Controllers\TrackingController;
+use App\Http\Controllers\PagoController;
+use App\Http\Controllers\WspPedidosController;
 
 
 /*
@@ -514,6 +517,26 @@ Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'farmacia
     Route::get('/admin/anulaciones-up/imprimir/{id}', 'App\Http\Controllers\AnulacionesUpController@imprimir');
     Route::get('/admin/anulaciones-up/xml/{id}', 'App\Http\Controllers\AnulacionesUpController@verXml');
 });
+
+// Pedidos WhatsApp Agent
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'wsp.pedidos'])->group(function () {
+    Route::get('/wsp/pedidos',                     [WspPedidosController::class, 'index'])->name('wsp.pedidos.index');
+    Route::get('/wsp/pedidos/{pedidoId}/detalle',  [WspPedidosController::class, 'show'])->name('wsp.pedidos.show');
+    Route::post('/wsp/pedidos/{pedidoId}/estado',  [WspPedidosController::class, 'actualizarEstado'])->name('wsp.pedidos.estado');
+    Route::post('/wsp/pedidos/{pedidoId}/notas',   [WspPedidosController::class, 'actualizarNotas'])->name('wsp.pedidos.notas');
+});
+
+// Tracking de envíos — Droguería Global Médica (DB remota)
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend'])->group(function () {
+    Route::get('/tracking', [TrackingController::class, 'index'])->name('tracking.index');
+    Route::get('/api/tracking/envios', [TrackingController::class, 'apiEnvios'])->name('tracking.api');
+});
+
+// Pasarela de pagos
+Route::get('/pagar/{pagoId}', [PagoController::class, 'show'])->name('pagos.show');
+Route::get('/confirmar/{pagoId}', [PagoController::class, 'confirmar'])->name('pagos.confirmar');
+Route::post('/api/pagos/crear', [PagoController::class, 'crear'])->name('pagos.crear');
+Route::get('/api/pagos/estado/{pagoId}', [PagoController::class, 'estado'])->name('pagos.estado');
 
 // Redirección automática para usuarios Farmacias UP
 Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend'])->group(function () {

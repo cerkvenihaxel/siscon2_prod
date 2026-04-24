@@ -63,6 +63,20 @@ return [
             ]) : [],
         ],
 
+        'drogueria' => [
+            'driver' => 'mysql',
+            'host' => env('DROGUERIA_DB_HOST', '190.136.183.125'),
+            'port' => env('DROGUERIA_DB_PORT', '3306'),
+            'database' => env('DROGUERIA_DB_DATABASE', 'drogueria'),
+            'username' => env('DROGUERIA_DB_USERNAME', 'admin'),
+            'password' => env('DROGUERIA_DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

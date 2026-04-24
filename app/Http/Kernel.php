@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'farmacias.up' => \App\Http\Middleware\FarmaciasUpMiddleware::class,
         'redirect.farmacias.up' => \App\Http\Middleware\RedirectFarmaciasUp::class,
+        'wsp.pedidos' => \App\Http\Middleware\WspPedidosMiddleware::class,
     ];
 }
