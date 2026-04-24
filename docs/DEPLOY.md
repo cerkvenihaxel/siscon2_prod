@@ -204,7 +204,7 @@ nano config/.env
 SISCON_HOST=localhost
 SISCON_PORT=3306
 SISCON_USER=openclaw
-SISCON_PASS=openclaw
+SISCON_PASS=Openclaw2026!
 SISCON_DB=siscon
 SISCON_TABLE=articulosZafiro
 
@@ -212,7 +212,7 @@ SISCON_TABLE=articulosZafiro
 APOS_HOST=localhost
 APOS_PORT=3306
 APOS_USER=openclaw
-APOS_PASS=openclaw
+APOS_PASS=Openclaw2026!
 APOS_DB=apos
 APOS_TABLE=afiliados
 

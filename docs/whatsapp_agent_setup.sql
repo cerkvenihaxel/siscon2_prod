@@ -15,8 +15,10 @@ SET time_zone = '-03:00';
 -- ---------------------------------------------------------------------------
 
 -- Usuario para el agente WhatsApp (acceso a whatsapp_agent + siscon)
-CREATE USER IF NOT EXISTS 'openclaw'@'localhost' IDENTIFIED BY 'openclaw';
-CREATE USER IF NOT EXISTS 'openclaw'@'%'          IDENTIFIED BY 'openclaw';
+-- IMPORTANTE: cambiar la contraseña antes de correr en producción.
+-- Debe cumplir la política: mínimo 8 caracteres, mayúscula, número y símbolo.
+CREATE USER IF NOT EXISTS 'openclaw'@'localhost' IDENTIFIED BY 'Openclaw2026!';
+CREATE USER IF NOT EXISTS 'openclaw'@'%'          IDENTIFIED BY 'Openclaw2026!';
 
 -- ---------------------------------------------------------------------------
 -- 2. BASE DE DATOS: whatsapp_agent
