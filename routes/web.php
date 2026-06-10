@@ -27,6 +27,7 @@ use App\Http\Controllers\BuscadorAfiliadoConvenioController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\WspPedidosController;
+use App\Http\Controllers\ObraSocial\OspladController;
 
 
 /*
@@ -518,6 +519,23 @@ Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'farmacia
     Route::get('/admin/anulaciones-up/xml/{id}', 'App\Http\Controllers\AnulacionesUpController@verXml');
 });
 
+// Flujo Obras Sociales — OSPLAD (drogueria.osplad_consumos), escalable multi-OS
+// PENDIENTES -> En tránsito -> Entregas. Filtra por farmacia (id_cliente) según rol.
+Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'obra.social'])->group(function () {
+    Route::get('/admin/osplad', function () { return redirect('/admin/osplad/pendientes'); });
+    Route::get('/admin/osplad/pendientes', [OspladController::class, 'pendientes']);
+    Route::get('/admin/osplad/transito',   [OspladController::class, 'transito']);
+    Route::get('/admin/osplad/entregas',   [OspladController::class, 'entregas']);
+    // Entrega unificada (varios pedidos, mismo afiliado + mismo remito) + consentimiento
+    Route::post('/admin/osplad/entregar',       [OspladController::class, 'entregar']);
+    Route::get('/admin/osplad/consentimiento',  [OspladController::class, 'consentimiento']);
+    // Reporte Excel de entregas (solo admin): semana | mes | rango
+    Route::get('/admin/osplad/export/{periodo}', [OspladController::class, 'exportarExcel'])
+        ->where('periodo', 'semana|mes|rango');
+    // Ver / imprimir detalle de un consumo (debe ir último por el comodín {id})
+    Route::get('/admin/osplad/{id}/detalle', [OspladController::class, 'detalle'])->whereNumber('id');
+});
+
 // Pedidos WhatsApp Agent
 Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'wsp.pedidos'])->group(function () {
     Route::get('/wsp/pedidos',                     [WspPedidosController::class, 'index'])->name('wsp.pedidos.index');
@@ -541,6 +559,10 @@ Route::get('/api/pagos/estado/{pagoId}', [PagoController::class, 'estado'])->nam
 // Redirección automática para usuarios Farmacias UP
 Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend'])->group(function () {
     Route::get('/admin', function() {
+        // Usuarios de farmacia: redirigir a su módulo correspondiente
+        if (CRUDBooster::myPrivilegeName() == 'Farmacias OSPLAD') {
+            return redirect('/admin/osplad/pendientes');
+        }
         // Si es usuario "Farmacias UP", redirigir a transaccion-ap
         if (CRUDBooster::myPrivilegeName() == 'Farmacias UP') {
             return redirect('/admin/transaccion-ap');
