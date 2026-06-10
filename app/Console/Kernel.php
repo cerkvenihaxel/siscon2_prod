@@ -18,6 +18,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->job(new NotifyPendingRemitosJob)->hourly();
+
+        // OSPLAD: notificar "procesando" a pedidos que pasaron a En tránsito
+        $schedule->command('osplad:notificar-transito')->everyFiveMinutes()->withoutOverlapping();
     }
 
     /**

@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\RestrictObraSocialFarmacia::class,
         ],
 
         'api' => [
@@ -67,5 +68,6 @@ class Kernel extends HttpKernel
         'farmacias.up' => \App\Http\Middleware\FarmaciasUpMiddleware::class,
         'redirect.farmacias.up' => \App\Http\Middleware\RedirectFarmaciasUp::class,
         'wsp.pedidos' => \App\Http\Middleware\WspPedidosMiddleware::class,
+        'obra.social' => \App\Http\Middleware\ObraSocialMiddleware::class,
     ];
 }

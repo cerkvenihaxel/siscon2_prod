@@ -1,0 +1,62 @@
+# Control de versiones
+.git
+.gitignore
+.gitattributes
+.github
+
+# Editor / IDE
+.editorconfig
+.idea
+.vscode
+.phpactor.json
+.styleci.yml
+*.swp
+.DS_Store
+**/.DS_Store
+
+# Entorno local (NO se debe filtrar dentro de la imagen)
+.env
+.env.backup
+.env.example
+
+# Dependencias instaladas (las reinstala el build)
+node_modules
+vendor
+
+# Cachés y compilados que se regeneran
+public/hot
+public/storage
+public/mix-manifest.json
+public/css/app.css
+storage/logs/*.log
+storage/framework/cache/data
+storage/framework/sessions/*
+storage/framework/testing
+storage/framework/views/*.php
+storage/debugbar
+.phpunit.result.cache
+
+# Tests (no se necesitan en producción, --no-dev los excluye igual)
+tests
+phpunit.xml
+
+# Documentación pesada (no la necesita el runtime)
+docs
+documentacion up
+docs-twilio-sender
+*.md
+articulos UP.xlsx
+
+# Scripts auxiliares de desarrollo
+migrate_branch.sh
+migrate_branch.bat
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Logs varios
+*.log
+npm-debug.log
+yarn-error.log
