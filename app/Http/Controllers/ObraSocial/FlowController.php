@@ -107,7 +107,17 @@ abstract class FlowController extends Controller
     protected function veTodo(): bool
     {
         return CRUDBooster::isSuperadmin()
-            || CRUDBooster::myPrivilegeName() === 'Administrador General';
+            || in_array(CRUDBooster::myPrivilegeName(), ['Administrador General', 'Super Administrador OSPLAD'], true);
+    }
+
+    /**
+     * Quién puede ENVIAR el WhatsApp de confirmación: Super Admin global o el rol
+     * "Super Administrador OSPLAD". Las farmacias NO (por ahora).
+     */
+    protected function puedeConfirmar(): bool
+    {
+        return CRUDBooster::isSuperadmin()
+            || CRUDBooster::myPrivilegeName() === 'Super Administrador OSPLAD';
     }
 
     protected function idClienteUsuario()
@@ -208,8 +218,8 @@ abstract class FlowController extends Controller
             'ruta_base' => $this->rutaBase(),
             'etapa'     => $etapa,
             've_todo'   => $this->veTodo(),
-            // Solo Super Administradores pueden enviar el WhatsApp de confirmación (por ahora)
-            'es_superadmin' => CRUDBooster::isSuperadmin(),
+            // Quién puede enviar el WhatsApp de confirmación (Super Admin global o Super Administrador OSPLAD)
+            'puede_confirmar' => $this->puedeConfirmar(),
             // Datos para el selector (solo admin)
             'os_activa_id'    => $osActiva->id,
             'obras_sociales'  => $this->veTodo() ? $this->obrasSocialesDisponibles() : collect(),
@@ -435,9 +445,9 @@ abstract class FlowController extends Controller
     public function enviarConfirmacion(Request $request)
     {
         try {
-            // Por ahora, solo Super Administradores pueden enviar la confirmación.
-            if (!CRUDBooster::isSuperadmin()) {
-                return $this->error('No autorizado: solo Super Administradores pueden enviar la confirmación.', 403);
+            // Por ahora, solo Super Admin global o "Super Administrador OSPLAD" pueden enviar.
+            if (!$this->puedeConfirmar()) {
+                return $this->error('No autorizado: no tiene permiso para enviar la confirmación.', 403);
             }
 
             $dni = trim((string) $request->input('dni'));
