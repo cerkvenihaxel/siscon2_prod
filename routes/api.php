@@ -40,6 +40,19 @@ Route::get('/articulos_oxigeno', [\App\Http\Controllers\API\ArticulosO2Terapia::
 
 /*
 |--------------------------------------------------------------------------
+| Webhook entrante de WhatsApp — Confirmación de retiro OSPLAD
+|--------------------------------------------------------------------------
+| El gateway de WhatsApp/Twilio reenvía aquí la respuesta del afiliado (1/2).
+| Público (sin sesión): se protege con un token compartido que debe enviarse
+| en el header 'X-Webhook-Token' o como parámetro 'token'
+| (ver env OSPLAD_WSP_WEBHOOK_TOKEN). Acepta formato Twilio (From/Body) o JSON.
+| URL final: POST /api/osplad/whatsapp/inbound
+*/
+Route::post('/osplad/whatsapp/inbound', [\App\Http\Controllers\ObraSocial\OspladController::class, 'webhookRespuesta']);
+
+
+/*
+|--------------------------------------------------------------------------
 | Rutas API - Unión Personal SOAP
 |--------------------------------------------------------------------------
 | Endpoints para integración con servicios SOAP de Unión Personal

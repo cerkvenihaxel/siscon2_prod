@@ -208,3 +208,47 @@ Checklist:
   en el selector y el título/PDF tomarán su nombre automáticamente.
 - **Twilio (error 21656)**: las variables de plantilla no admiten saltos de línea/tabs;
   `TwilioSender::limpiarVariableTwilio()` ya lo maneja.
+
+---
+
+## 11. Confirmación de retiro por WhatsApp (estado CONF)
+
+Permite que, desde **PENDIENTES**, se le envíe al afiliado por WhatsApp la lista de su
+medicación pendiente y éste confirme (1) o cancele (2). La confirmación marca el consumo
+como **CONF** (Confirmado por afiliado) y completa `fecha_validacion`.
+
+### Componentes
+- **Estado** `CONF` en `App\Support\ObraSocial\EstadoConsumo` (etapa *pendientes*, badge azul).
+- **Migración** `2026_06_19_000001_add_confirmacion_columns_to_osplad_consumos`:
+  agrega `notif_confirmacion_at`, `confirmacion_respuesta`, `confirmacion_respuesta_at`.
+  Ejecutar (igual que las otras, contra la conexión `drogueria`):
+  ```bash
+  php artisan migrate --path=/database/migrations/2026_06_19_000001_add_confirmacion_columns_to_osplad_consumos.php
+  ```
+- **Envío**: `TwilioSender::sendObraSocialConfirmacion()` vía `/general-message` del gateway.
+- **Acción admin** (protegida por login/perfil): `POST /admin/osplad/confirmar-whatsapp`
+  con body `{ "dni": "<dni>" }` — agrupa toda la medicación pendiente del afiliado.
+- **Webhook entrante** (público, sin sesión): `POST /api/osplad/whatsapp/inbound`.
+
+### Configuración requerida
+1. En `.env` definir un token compartido para el webhook:
+   ```
+   OSPLAD_WSP_WEBHOOK_TOKEN=<token-largo-aleatorio>
+   ```
+2. Configurar el **gateway de WhatsApp/Twilio** (`SEND_NOTIFICATION_WSP_URL`) para que,
+   al recibir una respuesta del afiliado, haga `POST` a:
+   ```
+   POST https://<host-siscon>/api/osplad/whatsapp/inbound
+   Header: X-Webhook-Token: <token>           (o ?token=<token>)
+   Body  : From=whatsapp:+549XXXXXXXXXX & Body=1   (formato Twilio)
+           ó  { "phone": "+549...", "body": "1" } (JSON)
+   ```
+   - `1` (o "confirmar"/"sí") → estado **CONF** + `fecha_validacion = ahora`.
+   - `2` (o "cancelar"/"no")  → estado **ANUL**.
+   - El matching afiliado↔respuesta es por teléfono (últimos 8 dígitos, tolerante a formatos)
+     entre los consumos PEND que ya recibieron el pedido de confirmación.
+
+> Seguridad: el webhook es un endpoint **público**. Su única protección es el token
+> compartido (`OSPLAD_WSP_WEBHOOK_TOKEN`), por lo que debe ser largo y secreto, y servirse
+> siempre por HTTPS. Sin el token configurado, el webhook responde 401.
+

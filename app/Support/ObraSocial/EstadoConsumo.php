@@ -12,6 +12,7 @@ namespace App\Support\ObraSocial;
 class EstadoConsumo
 {
     public const PENDIENTE   = 'PEND';
+    public const CONFIRMADO  = 'CONF'; // Confirmado por el afiliado (irá a retirarlo)
     public const EN_TRANSITO = 'EM';
     public const ENTREGADO   = 'ENT';
     public const ANULADO     = 'ANUL';
@@ -28,6 +29,7 @@ class EstadoConsumo
      */
     private const META = [
         self::PENDIENTE   => ['label' => 'Pendiente',   'color' => 'warning', 'icon' => 'fa-clock-o'],
+        self::CONFIRMADO  => ['label' => 'Confirmado por afiliado', 'color' => 'primary', 'icon' => 'fa-whatsapp'],
         self::EN_TRANSITO => ['label' => 'En tránsito', 'color' => 'info',    'icon' => 'fa-truck'],
         self::ENTREGADO   => ['label' => 'Entregado',   'color' => 'success', 'icon' => 'fa-check-circle'],
         self::ANULADO     => ['label' => 'Anulado',     'color' => 'danger',  'icon' => 'fa-ban'],
@@ -39,7 +41,7 @@ class EstadoConsumo
     public static function estadosDeEtapa(string $etapa): array
     {
         switch ($etapa) {
-            case self::ETAPA_PENDIENTES: return [self::PENDIENTE];
+            case self::ETAPA_PENDIENTES: return [self::PENDIENTE, self::CONFIRMADO];
             case self::ETAPA_TRANSITO:   return [self::EN_TRANSITO];
             case self::ETAPA_ENTREGAS:   return [self::ENTREGADO];
             default:                     return [];

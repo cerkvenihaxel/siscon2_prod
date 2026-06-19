@@ -38,6 +38,8 @@ class ObraSocialConsumo extends Model
         'fecha_pedido'     => 'datetime',
         'fecha_validacion' => 'datetime',
         'notif_transito_at' => 'datetime',
+        'notif_confirmacion_at' => 'datetime',
+        'confirmacion_respuesta_at' => 'datetime',
     ];
 
     /* ----------------------------------------------------------------------
@@ -93,6 +95,66 @@ class ObraSocialConsumo extends Model
                  ->where('telefono', '!=', '');
     }
 
+    /**
+     * Consumos pendientes (PEND) de un afiliado con teléfono cargado, candidatos
+     * a recibir el pedido de confirmación por WhatsApp.
+     */
+    public function scopePendientesConTelefono(Builder $q): Builder
+    {
+        return $q->enEstado(EstadoConsumo::PENDIENTE)
+                 ->whereNotNull('telefono')
+                 ->where('telefono', '!=', '');
+    }
+
+    /**
+     * Consumos a los que ya se les envió el pedido de confirmación y siguen
+     * pendientes (PEND), es decir, esperando la respuesta del afiliado.
+     */
+    public function scopeEsperandoConfirmacion(Builder $q): Builder
+    {
+        return $q->enEstado(EstadoConsumo::PENDIENTE)
+                 ->whereNotNull('notif_confirmacion_at');
+    }
+
+    /* ----------------------------------------------------------------------
+     | Teléfono: normalización y matching (para asociar respuestas entrantes)
+     | ---------------------------------------------------------------------- */
+
+    /**
+     * Devuelve solo los dígitos significativos del teléfono para comparar.
+     * Quita símbolos, prefijo país (54), prefijo 9 de WhatsApp, ceros y el 15.
+     * Se queda con los últimos 8 dígitos (número local sin característica corta),
+     * que es lo más estable para hacer matching entre formatos distintos.
+     */
+    public static function digitosComparables(?string $telefono): string
+    {
+        $tel = preg_replace('/\D+/', '', (string) $telefono);
+        if ($tel === '') {
+            return '';
+        }
+        // Quitar prefijo internacional argentino y el 9 de WhatsApp.
+        if (strpos($tel, '549') === 0) {
+            $tel = substr($tel, 3);
+        } elseif (strpos($tel, '54') === 0) {
+            $tel = substr($tel, 2);
+        }
+        $tel = ltrim($tel, '0');
+        // Quitar el 15 de celular si quedó como prefijo del número local.
+        if (strlen($tel) > 8 && strpos($tel, '15') === 0) {
+            $tel = substr($tel, 2);
+        }
+        // Nos quedamos con los últimos 8 dígitos.
+        return strlen($tel) > 8 ? substr($tel, -8) : $tel;
+    }
+
+    /** True si este consumo corresponde al teléfono recibido (matching tolerante). */
+    public function telefonoCoincideCon(?string $telefono): bool
+    {
+        $a = self::digitosComparables($this->telefono);
+        $b = self::digitosComparables($telefono);
+        return $a !== '' && $a === $b;
+    }
+
     /* ----------------------------------------------------------------------
      | Accessors / helpers de estado
      | ---------------------------------------------------------------------- */
@@ -115,6 +177,11 @@ class ObraSocialConsumo extends Model
     public function esPendiente(): bool
     {
         return $this->estado_codigo === EstadoConsumo::PENDIENTE;
+    }
+
+    public function esConfirmado(): bool
+    {
+        return $this->estado_codigo === EstadoConsumo::CONFIRMADO;
     }
 
     public function esEnTransito(): bool
