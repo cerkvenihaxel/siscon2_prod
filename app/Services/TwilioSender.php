@@ -125,6 +125,52 @@ class TwilioSender
     }
 
     /**
+     * Pedido de confirmación de retiro (flujo PENDIENTES de obra social).
+     *
+     * Usa el template dedicado `osplad_confirmacion_retiro` (endpoint /osplad-confirmacion
+     * del microservicio Go). El cuerpo —con sus saltos de línea y la aclaración de
+     * equivalentes— vive en el template; acá solo se envían las 2 variables:
+     *   {{1}} = nombre del afiliado
+     *   {{2}} = listado de medicación (bullets en línea; WhatsApp no admite saltos de
+     *           línea dentro de las variables de un template, error 21656).
+     *
+     * El afiliado responde 1 (Confirmar) o 2 (Cancelar); la respuesta llega por el webhook.
+     *
+     * @param string          $telefono Teléfono del afiliado (cualquier formato).
+     * @param string          $afiliado Nombre del afiliado.
+     * @param array<string>   $items    Lista de medicación (un string por ítem).
+     * @param string|int|null $ref      Referencia para el log (ej: id_consumo o dni).
+     */
+    public function sendObraSocialConfirmacion($telefono, $afiliado, array $items, $ref = null)
+    {
+        if (!env('SEND_NOTIFICATION_WSP_FLAG', false)) {
+            return false;
+        }
+        if (empty($telefono)) {
+            $this->logError($ref, '', '/osplad-confirmacion', [], 'Teléfono vacío');
+            return false;
+        }
+
+        // Listado de medicación como "bullet list" en línea (las viñetas van en una sola
+        // variable; no es posible un ítem por línea por la restricción de WhatsApp 21656).
+        $lista = implode(' ', array_map(function ($i) {
+            return '• ' . $this->limpiarVariableTwilio($i);
+        }, $items));
+
+        $nombre = $this->limpiarVariableTwilio((string) $afiliado);
+        if ($nombre === '') {
+            $nombre = 'Afiliado/a';
+        }
+
+        $messageVars = [
+            "1" => $nombre,
+            "2" => $lista,
+        ];
+
+        return $this->sendRequest('/osplad-confirmacion', $this->normalizarTelefono($telefono), $messageVars, $ref);
+    }
+
+    /**
      * Sanea un valor para usarlo como variable de plantilla de Twilio.
      * Quita saltos de línea/tabs y colapsa espacios múltiples (evita ApiError 21656).
      */

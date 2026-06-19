@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use CRUDBooster;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Controlador base, reutilizable y escalable, del flujo de consumos de obra social.
@@ -207,6 +208,8 @@ abstract class FlowController extends Controller
             'ruta_base' => $this->rutaBase(),
             'etapa'     => $etapa,
             've_todo'   => $this->veTodo(),
+            // Solo Super Administradores pueden enviar el WhatsApp de confirmación (por ahora)
+            'es_superadmin' => CRUDBooster::isSuperadmin(),
             // Datos para el selector (solo admin)
             'os_activa_id'    => $osActiva->id,
             'obras_sociales'  => $this->veTodo() ? $this->obrasSocialesDisponibles() : collect(),
@@ -412,6 +415,212 @@ abstract class FlowController extends Controller
             default: // rango (desde-hasta del filtro)
                 return [$request->fecha_desde, $request->fecha_hasta];
         }
+    }
+
+    /* ----------------------------------------------------------------------
+     | PENDIENTES: confirmación por WhatsApp del afiliado
+     |
+     | 1) enviarConfirmacion(): la farmacia/admin envía al afiliado la lista de
+     |    su medicación pendiente y le pide confirmar (1) o cancelar (2).
+     | 2) webhookRespuesta(): endpoint público que recibe la respuesta del
+     |    afiliado desde el gateway de WhatsApp/Twilio y actualiza el estado:
+     |       "1" -> CONF (Confirmado por afiliado) + fecha_validacion = ahora
+     |       "2" -> ANUL (operación cancelada)
+     | ---------------------------------------------------------------------- */
+
+    /**
+     * Envía el pedido de confirmación por WhatsApp a un afiliado, agrupando toda
+     * su medicación pendiente (mismo DNI). Marca notif_confirmacion_at.
+     */
+    public function enviarConfirmacion(Request $request)
+    {
+        try {
+            // Por ahora, solo Super Administradores pueden enviar la confirmación.
+            if (!CRUDBooster::isSuperadmin()) {
+                return $this->error('No autorizado: solo Super Administradores pueden enviar la confirmación.', 403);
+            }
+
+            $dni = trim((string) $request->input('dni'));
+            if ($dni === '') {
+                return $this->error('Falta el DNI del afiliado.', 422);
+            }
+
+            // Solo ítems pendientes (PEND) con teléfono, respetando el filtro por farmacia.
+            $consumos = $this->baseQuery()
+                ->pendientesConTelefono()
+                ->where('dni', $dni)
+                ->get();
+
+            if ($consumos->isEmpty()) {
+                return $this->error('No hay medicación pendiente con teléfono cargado para ese afiliado.', 404);
+            }
+
+            $primero  = $consumos->first();
+            $telefono = $consumos->pluck('telefono')->filter()->first();
+
+            if (empty($telefono)) {
+                return $this->error('El afiliado no tiene un teléfono válido cargado.', 422);
+            }
+
+            // Lista de medicación: "ARTÍCULO (xCANTIDAD)".
+            $items = $consumos->map(function ($c) {
+                $art  = trim((string) $c->articulo);
+                $cant = (int) $c->cantidad;
+                return $cant > 1 ? ($art . ' (x' . $cant . ')') : $art;
+            })->all();
+
+            $ok = $this->twilio->sendObraSocialConfirmacion(
+                $telefono,
+                $primero->afiliado,
+                $items,
+                $dni
+            );
+
+            if (!$ok) {
+                return $this->error('No se pudo enviar el WhatsApp (verifique el gateway de notificaciones).', 502);
+            }
+
+            // Marca de envío (idempotencia / auditoría) en todos los ítems del afiliado.
+            $ahora = now();
+            foreach ($consumos as $c) {
+                $c->notif_confirmacion_at = $ahora;
+                $c->save();
+            }
+
+            return $this->ok('Se envió la confirmación por WhatsApp al afiliado (' . count($items) . ' ítem/s).');
+        } catch (\Throwable $e) {
+            return $this->error($e->getMessage());
+        }
+    }
+
+    /**
+     * Webhook público: recibe la respuesta del afiliado desde el gateway de
+     * WhatsApp/Twilio. No usa sesión/CRUDBooster (no hay usuario logueado);
+     * se protege con un token compartido y opera sobre la OS del controller.
+     *
+     * Acepta tanto el formato de Twilio (From / Body) como JSON propio
+     * (phone|telefono / body|mensaje|message).
+     */
+    public function webhookRespuesta(Request $request)
+    {
+        // 1) Verificación de token compartido.
+        $tokenEsperado = (string) env('OSPLAD_WSP_WEBHOOK_TOKEN', '');
+        $tokenRecibido = (string) ($request->header('X-Webhook-Token')
+            ?: $request->input('token', ''));
+
+        if ($tokenEsperado === '' || !hash_equals($tokenEsperado, $tokenRecibido)) {
+            Log::warning('OSPLAD webhook: token inválido o ausente', ['ip' => $request->ip()]);
+            return response()->json(['success' => false, 'message' => 'No autorizado'], 401);
+        }
+
+        // 2) Extracción flexible de teléfono y cuerpo del mensaje.
+        $telefono = (string) ($request->input('From')
+            ?: $request->input('phone')
+            ?: $request->input('telefono', ''));
+        $telefono = preg_replace('/^whatsapp:/i', '', trim($telefono));
+
+        $body = (string) ($request->input('Body')
+            ?? $request->input('body')
+            ?? $request->input('mensaje')
+            ?? $request->input('message', ''));
+        $body = trim($body);
+
+        if ($telefono === '') {
+            return response()->json(['success' => false, 'message' => 'Falta el teléfono'], 422);
+        }
+
+        $opcion = $this->interpretarRespuesta($body);
+
+        // 3) Buscar los consumos del afiliado que esperan confirmación, por OS y teléfono.
+        $osId = $this->obraSocialDefault()->id;
+        $candidatos = ObraSocialConsumo::deObraSocial($osId)
+            ->esperandoConfirmacion()
+            ->get()
+            ->filter(fn($c) => $c->telefonoCoincideCon($telefono));
+
+        if ($candidatos->isEmpty()) {
+            Log::info('OSPLAD webhook: sin consumos esperando confirmación', [
+                'telefono' => $telefono, 'opcion' => $opcion,
+            ]);
+            // Sin pedidos esperando confirmación: respondemos TwiML vacío (sin auto-reply)
+            // para no enviarle mensajes no solicitados a quien escribe sin contexto.
+            return $this->twiml(null);
+        }
+
+        // 4) Aplicar la respuesta.
+        $ahora = now();
+        $nuevoEstado = null;
+        if ($opcion === 'confirmar') {
+            $nuevoEstado = EstadoConsumo::CONFIRMADO;
+        } elseif ($opcion === 'cancelar') {
+            $nuevoEstado = EstadoConsumo::ANULADO;
+        }
+
+        foreach ($candidatos as $c) {
+            $c->confirmacion_respuesta    = mb_substr($body, 0, 50);
+            $c->confirmacion_respuesta_at = $ahora;
+            if ($nuevoEstado === EstadoConsumo::CONFIRMADO) {
+                $c->estado_pedido    = EstadoConsumo::CONFIRMADO;
+                $c->fecha_validacion = $ahora;
+            } elseif ($nuevoEstado === EstadoConsumo::ANULADO) {
+                $c->estado_pedido = EstadoConsumo::ANULADO;
+            }
+            $c->save();
+        }
+
+        Log::info('OSPLAD webhook: respuesta procesada', [
+            'telefono' => $telefono,
+            'opcion'   => $opcion,
+            'estado'   => $nuevoEstado,
+            'items'    => $candidatos->count(),
+        ]);
+
+        if ($nuevoEstado === null) {
+            // No se entendió la respuesta: pedimos que elija una opción válida.
+            return $this->twiml('No entendimos tu respuesta. Respondé *1* para CONFIRMAR el retiro o *2* para CANCELAR.');
+        }
+
+        if ($nuevoEstado === EstadoConsumo::CONFIRMADO) {
+            return $this->twiml('✅ ¡Confirmamos tu pedido! Tu medicación se enviará a la farmacia más cercana. ¡Gracias!');
+        }
+
+        // ANULADO
+        return $this->twiml('Tu pedido fue cancelado. Si fue un error, respondé *1* para confirmar el retiro.');
+    }
+
+    /**
+     * Construye una respuesta TwiML para Twilio (WhatsApp). Si $mensaje es null/vacío
+     * devuelve un <Response/> sin auto-reply. El mensaje se envía como sesión dentro
+     * de la ventana de 24 h (no requiere plantilla aprobada).
+     */
+    protected function twiml(?string $mensaje = null)
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+        if ($mensaje !== null && $mensaje !== '') {
+            $xml .= '<Response><Message>'
+                  . htmlspecialchars($mensaje, ENT_XML1 | ENT_QUOTES, 'UTF-8')
+                  . '</Message></Response>';
+        } else {
+            $xml .= '<Response></Response>';
+        }
+
+        return response($xml, 200)->header('Content-Type', 'text/xml; charset=UTF-8');
+    }
+
+    /** Interpreta el texto del afiliado: 'confirmar' | 'cancelar' | null. */
+    protected function interpretarRespuesta(string $body): ?string
+    {
+        $t = mb_strtolower(trim($body));
+        // Normalizar: quitar acentos básicos.
+        $t = strtr($t, ['á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u']);
+
+        if ($t === '1' || preg_match('/\b(1|confirm|confirmar|si|sí|acepto|ok|dale)\b/', $t)) {
+            return 'confirmar';
+        }
+        if ($t === '2' || preg_match('/\b(2|cancel|cancelar|no|anular|baja)\b/', $t)) {
+            return 'cancelar';
+        }
+        return null;
     }
 
     /* ----------------------------------------------------------------------

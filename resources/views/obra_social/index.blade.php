@@ -27,6 +27,7 @@
         .pill { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
         .pill-warning { background: #fff3cd; color: #856404; }
         .pill-info    { background: #cfe8ff; color: #084298; }
+        .pill-primary { background: #d6d2f7; color: #2e1a72; }
         .pill-success { background: #d4edda; color: #155724; }
         .pill-danger  { background: #f8d7da; color: #721c24; }
         .pill-default { background: #e0e0e0; color: #555; }
@@ -185,6 +186,19 @@
                             <td>{{ $c->id_remito ?: '—' }}</td>
                             <td><span class="pill pill-{{ EstadoConsumo::color($c->estado_codigo) }}">{{ $c->estado_label }}</span></td>
                             <td class="right-align" style="white-space: nowrap;">
+                                @if($etapa === 'pendientes' && $c->esPendiente() && ($cfg['es_superadmin'] ?? false))
+                                    @if(!empty($c->telefono))
+                                        <button type="button"
+                                                class="btn-small {{ $c->notif_confirmacion_at ? 'teal lighten-2' : 'green' }} btn-confirmar"
+                                                data-dni="{{ $c->dni }}"
+                                                data-afiliado="{{ $c->afiliado }}"
+                                                title="{{ $c->notif_confirmacion_at ? 'Reenviar WhatsApp de confirmación (enviado '.optional($c->notif_confirmacion_at)->format('d/m/Y H:i').')' : 'Enviar WhatsApp de confirmación al afiliado' }}">
+                                            <i class="material-icons">{{ $c->notif_confirmacion_at ? 'done_all' : 'send' }}</i>
+                                        </button>
+                                    @else
+                                        <span class="grey-text" title="El afiliado no tiene teléfono cargado">sin tel.</span>
+                                    @endif
+                                @endif
                                 <a class="btn-small blue lighten-1" href="{{ $base }}/{{ $c->id_consumo }}/detalle" title="Ver detalle">
                                     <i class="material-icons">visibility</i>
                                 </a>
@@ -223,6 +237,36 @@ $(document).ready(function () {
 
     // Inicializar selects de Materialize (selector OS / farmacias del admin)
     if (window.M && M.FormSelect) { M.FormSelect.init(document.querySelectorAll('select')); }
+
+    @if($etapa === 'pendientes')
+    // Enviar WhatsApp de confirmación de retiro al afiliado (agrupado por DNI)
+    $('.btn-confirmar').on('click', function () {
+        const btn = $(this);
+        const dni = btn.data('dni');
+        const afiliado = btn.data('afiliado') || 'el afiliado';
+        if (!dni) { M.toast({ html: 'El afiliado no tiene DNI cargado', classes: 'red' }); return; }
+        if (!confirm('¿Enviar WhatsApp de confirmación de retiro a ' + afiliado + '?\nSe listará toda su medicación pendiente.')) return;
+
+        btn.prop('disabled', true);
+        fetch(base + '/confirmar-whatsapp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token, 'Accept': 'application/json' },
+            body: JSON.stringify({ dni: String(dni) })
+        }).then(async r => ({ ok: r.ok, data: await r.json().catch(() => ({})) }))
+          .then(res => {
+              if (res.ok && res.data.success) {
+                  M.toast({ html: res.data.message, classes: 'green' });
+                  setTimeout(() => location.reload(), 1400);
+              } else {
+                  M.toast({ html: (res.data && res.data.message) || 'No se pudo enviar', classes: 'red' });
+                  btn.prop('disabled', false);
+              }
+          }).catch(() => {
+              M.toast({ html: 'Error de red al enviar', classes: 'red' });
+              btn.prop('disabled', false);
+          });
+    });
+    @endif
 
     @if($etapa === 'transito')
     function selected() { return $('.chk-row:checked'); }

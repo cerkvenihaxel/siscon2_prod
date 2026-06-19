@@ -528,6 +528,8 @@ Route::middleware(['crocodicstudio\crudbooster\middlewares\CBBackend', 'obra.soc
     Route::get('/admin/osplad/entregas',   [OspladController::class, 'entregas']);
     // Entrega unificada (varios pedidos, mismo afiliado + mismo remito) + consentimiento
     Route::post('/admin/osplad/entregar',       [OspladController::class, 'entregar']);
+    // PENDIENTES: enviar WhatsApp de confirmación de retiro al afiliado (agrupado por DNI)
+    Route::post('/admin/osplad/confirmar-whatsapp', [OspladController::class, 'enviarConfirmacion']);
     Route::get('/admin/osplad/consentimiento',  [OspladController::class, 'consentimiento']);
     // Reporte Excel de entregas (solo admin): semana | mes | rango
     Route::get('/admin/osplad/export/{periodo}', [OspladController::class, 'exportarExcel'])
