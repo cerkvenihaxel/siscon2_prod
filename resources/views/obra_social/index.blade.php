@@ -186,7 +186,7 @@
                             <td>{{ $c->id_remito ?: '—' }}</td>
                             <td><span class="pill pill-{{ EstadoConsumo::color($c->estado_codigo) }}">{{ $c->estado_label }}</span></td>
                             <td class="right-align" style="white-space: nowrap;">
-                                @if($etapa === 'pendientes' && $c->esPendiente() && ($cfg['es_superadmin'] ?? false))
+                                @if($etapa === 'pendientes' && $c->esPendiente() && ($cfg['puede_confirmar'] ?? false))
                                     @if(!empty($c->telefono))
                                         <button type="button"
                                                 class="btn-small {{ $c->notif_confirmacion_at ? 'teal lighten-2' : 'green' }} btn-confirmar"

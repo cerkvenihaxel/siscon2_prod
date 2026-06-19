@@ -17,9 +17,10 @@ use Illuminate\Http\Request;
  */
 class RestrictObraSocialFarmacia
 {
-    /** Privilegios de farmacia confinados a su módulo de obra social. */
+    /** Privilegios confinados a su módulo de obra social (solo /admin/osplad/*). */
     private array $confinados = [
-        'Farmacias OSPLAD' => '/admin/osplad/pendientes',
+        'Farmacias OSPLAD'           => '/admin/osplad/pendientes',
+        'Super Administrador OSPLAD' => '/admin/osplad/pendientes',
     ];
 
     public function handle(Request $request, Closure $next)

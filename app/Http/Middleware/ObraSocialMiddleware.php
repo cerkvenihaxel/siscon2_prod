@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
  * Control de acceso para el flujo de obras sociales (OSPLAD y futuras).
  *
  * - Super Admin y Administrador General: acceso total (ven todas las farmacias).
+ * - Super Administrador OSPLAD: visión total dentro de OSPLAD, pero confinado al módulo
+ *   (ver RestrictObraSocialFarmacia) y sin acceso al resto del panel.
  * - Privilegios de farmacia (ej: "Farmacias OSPLAD"): acceso, ven solo su id_cliente.
  * - Resto: denegado.
  *
@@ -30,7 +32,8 @@ class ObraSocialMiddleware
             return redirect(CRUDBooster::adminPath('login'));
         }
 
-        if (CRUDBooster::isSuperadmin() || CRUDBooster::myPrivilegeName() === 'Administrador General') {
+        if (CRUDBooster::isSuperadmin()
+            || in_array(CRUDBooster::myPrivilegeName(), ['Administrador General', 'Super Administrador OSPLAD'], true)) {
             return $next($request);
         }
 
